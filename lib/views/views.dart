@@ -8,6 +8,7 @@ export 'developer.dart';
 export 'disclaimer.dart';
 export 'dns_queries.dart';
 export 'logs.dart';
+export 'nexo/home.dart';
 export 'profiles/profiles.dart';
 export 'proxies/proxies.dart';
 export 'resources.dart';

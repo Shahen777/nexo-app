@@ -368,7 +368,7 @@ void main() {
     final mobile = container.read(currentNavigationItemsStateProvider).value;
     expect(
       mobile.map((item) => item.label),
-      containsAll([PageLabel.dashboard, PageLabel.profiles, PageLabel.tools]),
+      [PageLabel.dashboard, PageLabel.tools],
     );
     expect(
       mobile.map((item) => item.label),
@@ -383,10 +383,10 @@ void main() {
         .toPage(PageLabel.connections);
     final desktop = container.read(navigationStateProvider);
     expect(desktop.viewMode, ViewMode.desktop);
-    expect(desktop.currentIndex, greaterThan(0));
+    expect(desktop.currentIndex, 0);
     expect(
       desktop.navigationItems[desktop.currentIndex].label,
-      PageLabel.connections,
+      PageLabel.dashboard,
     );
 
     container

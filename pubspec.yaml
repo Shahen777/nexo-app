@@ -117,6 +117,12 @@ flutter:
     - family: Twemoji
       fonts:
         - asset: assets/fonts/Twemoji.Mozilla.ttf
+    - family: Unbounded
+      fonts:
+        - asset: assets/fonts/nexo/Unbounded-Variable.ttf
+    - family: Manrope
+      fonts:
+        - asset: assets/fonts/nexo/Manrope-Variable.ttf
 flutter_intl:
   enabled: true
   class_name: AppLocalizations

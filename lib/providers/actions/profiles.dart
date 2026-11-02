@@ -1,5 +1,7 @@
 part of '../action.dart';
 
+const _nexoProfileUpdateDuration = Duration(hours: 6);
+
 @Riverpod(keepAlive: true)
 class ProfilesAction extends _$ProfilesAction {
   CoreController get _core => ref.read(coreHandlerProvider);
@@ -346,7 +348,7 @@ class ProfilesAction extends _$ProfilesAction {
     if (globalState.navigatorKey.currentState?.canPop() ?? false) {
       globalState.navigatorKey.currentState?.popUntil((route) => route.isFirst);
     }
-    ref.read(currentPageLabelProvider.notifier).value = PageLabel.profiles;
+    ref.read(currentPageLabelProvider.notifier).value = PageLabel.dashboard;
   }
 
   Future<void> addProfileFromLink(
@@ -363,7 +365,10 @@ class ProfilesAction extends _$ProfilesAction {
               Profile.normal(
                 label: label,
                 url: link,
-              ).copyWith(ageSecretKey: ageSecretKey),
+              ).copyWith(
+                ageSecretKey: ageSecretKey,
+                autoUpdateDuration: _nexoProfileUpdateDuration,
+              ),
               _download,
             ),
       title: currentAppLocalizations.addProfile,
@@ -385,9 +390,19 @@ class ProfilesAction extends _$ProfilesAction {
       [
         for (final link in links)
           if (!link.isShareLink)
-            (profile: Profile.normal(url: link), shareLinks: const <String>[])
+            (
+              profile: Profile.normal(url: link).copyWith(
+                autoUpdateDuration: _nexoProfileUpdateDuration,
+              ),
+              shareLinks: const <String>[],
+            )
           else if (link == shareLinks.first)
-            (profile: Profile.normal(), shareLinks: shareLinks),
+            (
+              profile: Profile.normal().copyWith(
+                autoUpdateDuration: _nexoProfileUpdateDuration,
+              ),
+              shareLinks: shareLinks,
+            ),
       ],
       (item) async => putProfile(
         await (item.shareLinks.isEmpty

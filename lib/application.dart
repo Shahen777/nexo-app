@@ -87,8 +87,14 @@ class ApplicationState extends ConsumerState<Application> {
   }
 
   void _initLink() {
-    linkManager.initAppLinksListen((url) async {
+    linkManager.initAppLinksListenWithSource((url, source) async {
       unawaited(window?.show());
+      if (source.scheme == 'nexo') {
+        unawaited(
+          ref.read(profilesActionProvider.notifier).addProfileFromLink(url),
+        );
+        return;
+      }
       final message = currentAppLocalizations.createProfileFromUrlTip(url);
       final parts = message.split(url);
       final res = await dialogs.showMessage(
@@ -181,6 +187,8 @@ class ApplicationState extends ConsumerState<Application> {
           scrollBehavior: const BaseScrollBehavior(),
           title: appName,
           locale: getLocaleForString(locale),
+          localeResolutionCallback: (requested, supported) =>
+              resolveAppLocale(requested, supported),
           supportedLocales: AppLocalizations.delegate.supportedLocales,
           themeMode: themeProps.themeMode,
           theme: watchAppTheme(ref, Brightness.light),

@@ -93,6 +93,7 @@ void main() {
       expect(profile.type, ProfileType.file);
       expect(profile.url, isEmpty);
       expect(profile.label, 'HK');
+      expect(profile.autoUpdateDuration, const Duration(hours: 6));
       expect(await savedProxies(profile), [
         {'name': 'HK', 'type': 'vless', 'server': 'hk.example.com'},
       ]);
