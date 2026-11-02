@@ -71,7 +71,9 @@ jobs:
       - name: Setup Xcode
         if: matrix.platform == 'macos'
         run: |
-          sudo xcode-select -s /Applications/Xcode_26.3.app || sudo xcode-select -s /Applications/Xcode_26.2.app
+          # newest Xcode the runner image has (macos-14 images do not ship Xcode 26)
+          latest=$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)
+          sudo xcode-select -s "$latest"
           xcodebuild -version
 
       - name: Setup NDK
