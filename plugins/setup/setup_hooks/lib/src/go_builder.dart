@@ -32,7 +32,10 @@ class GoBuilder {
   String get _corePath => p.join(rootDir, config.coreDir);
   String get _outputPath => p.join(rootDir, config.outputDir);
 
-  Future<BuildExecution> build(Target target) async {
+  Future<BuildExecution> build(
+    Target target, {
+    bool macosUniversal = false,
+  }) async {
     final outDir = p.join(_outputPath, target.platformDir);
     ensureDir(outDir);
 
@@ -40,8 +43,12 @@ class GoBuilder {
     final outFile = p.join(outDir, fileName);
 
     return cache.run(
-      key: '${target.platformDir}-${target.goarch}-core',
-      fingerprint: () => _calculateFingerprint(target),
+      key:
+          '${target.platformDir}-'
+          '${macosUniversal ? 'universal' : target.goarch}-core',
+      fingerprint: () => macosUniversal
+          ? _calculateUniversalFingerprint()
+          : _calculateFingerprint(target),
       primaryOutput: outFile,
       notice: notice,
       build: () async {
@@ -54,12 +61,35 @@ class GoBuilder {
         );
         final staged = p.join(stagingDir.path, fileName);
         try {
-          await runCommandStream(
-            'go',
-            _buildArguments(target, outFile: staged),
-            workingDirectory: _corePath,
-            environment: env,
-          );
+          stagingDir.createSync(recursive: true);
+          if (macosUniversal) {
+            final slices = <String>[];
+            for (final slice in [Target.macosArm64, Target.macosAmd64]) {
+              final slicePath = p.join(
+                stagingDir.path,
+                '${fileName}_${slice.goarch}',
+              );
+              await runCommandStream(
+                'go',
+                _buildArguments(slice, outFile: slicePath),
+                workingDirectory: _corePath,
+                environment: _buildEnvironment(slice),
+              );
+              slices.add(slicePath);
+            }
+            await runCommandStream(
+              'lipo',
+              ['-create', ...slices, '-output', staged],
+              workingDirectory: _corePath,
+            );
+          } else {
+            await runCommandStream(
+              'go',
+              _buildArguments(target, outFile: staged),
+              workingDirectory: _corePath,
+              environment: env,
+            );
+          }
           replaceFile(staged, outFile);
 
           _log.info('Built: $outFile');
@@ -70,6 +100,18 @@ class GoBuilder {
           }
         }
       },
+    );
+  }
+
+  Future<Fingerprint> _calculateUniversalFingerprint() async {
+    final arm = await _calculateFingerprint(Target.macosArm64);
+    final intel = await _calculateFingerprint(Target.macosAmd64);
+    final builder = FingerprintBuilder(rootDir: rootDir)
+      ..addValue('arm64', arm.hash)
+      ..addValue('amd64', intel.hash);
+    return Fingerprint(
+      builder.finish(),
+      inputs: {...arm.inputs, ...intel.inputs}.toList()..sort(),
     );
   }
 

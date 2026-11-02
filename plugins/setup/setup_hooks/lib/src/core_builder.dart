@@ -22,11 +22,14 @@ final class CoreBuilder implements Builder {
   const CoreBuilder({
     CoreBuildFunction build = buildPlatform,
     Architecture? hostArchitecture,
+    bool? macosUniversal,
   }) : _build = build,
-       _hostArchitecture = hostArchitecture;
+       _hostArchitecture = hostArchitecture,
+       _macosUniversal = macosUniversal;
 
   final CoreBuildFunction _build;
   final Architecture? _hostArchitecture;
+  final bool? _macosUniversal;
 
   @override
   Future<void> run({
@@ -123,6 +126,10 @@ final class CoreBuilder implements Builder {
       rootDir: rootDir,
       harnessDir: p.join(p.fromUri(input.packageRoot), 'setup_hooks'),
       target: target,
+      macosUniversal:
+          code.targetOS == OS.macOS &&
+          (_macosUniversal ??
+              Platform.environment['NEXO_MAC_UNIVERSAL'] == '1'),
     );
   }
 

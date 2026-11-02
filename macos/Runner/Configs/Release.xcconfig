@@ -2,9 +2,10 @@
 #include "Warnings.xcconfig"
 
 // flutter_tools builds release and profile for a generic destination, which
-// defaults to a universal binary; every FlClash artifact ships one slice.
+// defaults to a universal binary; ordinary FlClash builds ship one slice.
 // :default= keeps an unlisted host from resolving ARCHS to the empty string.
 FLCLASH_HOST_ARCH_arm64e = arm64
 FLCLASH_HOST_ARCH_arm64 = arm64
 FLCLASH_HOST_ARCH_x86_64 = x86_64
-ARCHS = $(FLCLASH_HOST_ARCH_$(NATIVE_ARCH_ACTUAL):default=$(NATIVE_ARCH))
+FLCLASH_UNIVERSAL_ARCHS_1 = arm64 x86_64
+ARCHS = $(FLCLASH_UNIVERSAL_ARCHS_$(NEXO_MAC_UNIVERSAL):default=$(FLCLASH_HOST_ARCH_$(NATIVE_ARCH_ACTUAL):default=$(NATIVE_ARCH)))

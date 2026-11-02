@@ -15,22 +15,17 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       HAS_KEYSTORE: ${{ secrets.KEYSTORE != '' }}
+      NEXO_MAC_UNIVERSAL: ${{ matrix.universal || '' }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - platform: android
             os: ubuntu-latest
-          # Apple Silicon queues are often full; two images, whichever starts first gives a build
-          - platform: macos
-            os: macos-26
-            arch: arm64
-          - platform: macos
-            os: macos-15
-            arch: arm64
           - platform: macos
             os: macos-15-intel
-            arch: amd64
+            universal: '1'
+            artifact: nexo-macos-universal
           - platform: windows
             os: windows-2022
     steps:
@@ -80,6 +75,11 @@ jobs:
           sudo xcode-select -s "$latest"
           xcodebuild -version
 
+      - name: Install macOS Rust targets
+        if: matrix.platform == 'macos'
+        working-directory: plugins/rust_api/rust
+        run: rustup target add aarch64-apple-darwin x86_64-apple-darwin
+
       - name: Setup NDK
         if: matrix.platform == 'android'
         uses: nttld/setup-ndk@v1
@@ -108,9 +108,49 @@ jobs:
           ANDROID_NDK_HOME: ${{ steps.build-ndk.outputs.ndk-path }}
         run: dart setup.dart ${{ matrix.platform }} --env stable -v
 
+      - name: Verify universal macOS app
+        if: matrix.platform == 'macos'
+        shell: bash
+        run: |
+          set -euo pipefail
+          dmgs=(./dist/*.dmg)
+          if [ "${#dmgs[@]}" -ne 1 ] || [ ! -f "${dmgs[0]}" ]; then
+            echo 'Expected exactly one DMG in dist' >&2
+            exit 1
+          fi
+          mountpoint=$(mktemp -d)
+          mounted=0
+          cleanup() {
+            if [ "$mounted" -eq 1 ]; then hdiutil detach "$mountpoint"; fi
+            rmdir "$mountpoint"
+          }
+          trap cleanup EXIT
+          hdiutil attach "${dmgs[0]}" -readonly -nobrowse -mountpoint "$mountpoint"
+          mounted=1
+          app="$mountpoint/Nexo.app"
+          check_slices() {
+            local binary="$1" slices arch
+            slices=$(lipo -archs "$binary")
+            echo "$binary: $slices"
+            for arch in arm64 x86_64; do
+              case " $slices " in
+                *" $arch "*) ;;
+                *) echo "Missing $arch in $binary" >&2; return 1 ;;
+              esac
+            done
+          }
+          check_slices "$app/Contents/MacOS/Nexo"
+          check_slices "$app/Contents/MacOS/FlClashCore"
+          rust_library=$(find "$app/Contents" -name '*rust_api*.dylib' -type f -print -quit)
+          if [ -z "$rust_library" ]; then
+            echo 'Rust native asset not found in the app' >&2
+            exit 1
+          fi
+          check_slices "$rust_library"
+
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: nexo-${{ matrix.platform }}${{ matrix.arch && format('-{0}-{1}', matrix.arch, matrix.os) || '' }}
+          name: ${{ matrix.artifact || format('nexo-{0}', matrix.platform) }}
           path: ./dist
           retention-days: 14

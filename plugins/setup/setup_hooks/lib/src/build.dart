@@ -16,12 +16,14 @@ class BuildRequest {
     required this.rootDir,
     required this.target,
     this.harnessDir,
+    this.macosUniversal = false,
   });
 
   final String rootDir;
   final Target target;
 
   final String? harnessDir;
+  final bool macosUniversal;
 }
 
 class BuildReport {
@@ -60,7 +62,7 @@ Future<BuildReport> buildPlatform(BuildRequest request) async {
     cache: cache,
     notice: notice,
     harnessInputs: harnessInputs,
-  ).build(target);
+  ).build(target, macosUniversal: request.macosUniversal);
   if (!target.hasHelper) {
     _log.info('Done in ${stopwatch.elapsed}: ${core.primaryOutput}');
     return _report([core]);

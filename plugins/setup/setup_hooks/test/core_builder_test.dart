@@ -122,6 +122,32 @@ void main() {
       );
     });
 
+    test('requests a universal Core only for the macOS host slice', () {
+      const builder = CoreBuilder(
+        hostArchitecture: Architecture.x64,
+        macosUniversal: true,
+      );
+
+      expect(
+        builder.requestFor(
+          buildInput(os: OS.macOS, architecture: Architecture.arm64),
+        ),
+        isNull,
+      );
+      final request = builder.requestFor(
+        buildInput(os: OS.macOS, architecture: Architecture.x64),
+      )!;
+      expect(request.macosUniversal, isTrue);
+      expect(
+        builder
+            .requestFor(
+              buildInput(os: OS.linux, architecture: Architecture.x64),
+            )!
+            .macosUniversal,
+        isFalse,
+      );
+    });
+
     test('leaves Android to the :core Gradle module', () {
       final bin = p.join(repository.path, 'ndk', 'prebuilt', 'host', 'bin');
 
