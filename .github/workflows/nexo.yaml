@@ -154,7 +154,7 @@ jobs:
           }
           check_slices "$app/Contents/MacOS/Nexo"
           check_slices "$app/Contents/MacOS/FlClashCore"
-          rust_library=$(find "$app/Contents" -name '*rust_api*.dylib' -type f -print -quit)
+          rust_library=$(find "$app/Contents/Frameworks" -path '*rust_api.framework/*' -name rust_api -type f -print -quit)
           if [ -z "$rust_library" ]; then
             echo 'Rust native asset not found in the app' >&2
             exit 1
