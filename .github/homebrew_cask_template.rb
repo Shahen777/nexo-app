@@ -1,4 +1,4 @@
-cask "flclash" do
+cask "nexo" do
   version "VERSION"
 
   on_macos do
@@ -7,12 +7,12 @@ cask "flclash" do
     sha256 arm:   "ARM_SHA256",
            intel: "AMD_SHA256"
 
-    url "https://github.com/chen08209/FlClash/releases/download/v#{version}/FlClash-#{version}-macos-#{arch}.dmg"
+    url "https://github.com/Shahen777/nexo-app/releases/download/v#{version}/Nexo-#{version}-macos-#{arch}.dmg"
   end
 
-  name "FlClash"
-  desc "Multi-platform proxy client based on ClashMeta"
-  homepage "https://github.com/chen08209/FlClash"
+  name "Nexo"
+  desc "Client app for the Nexo VPN service"
+  homepage "https://github.com/Shahen777/nexo-app"
 
   livecheck do
     url :url
@@ -21,21 +21,21 @@ cask "flclash" do
 
   depends_on :macos
 
-  app "FlClash.app"
+  app "Nexo.app"
 
   postflight_steps do
     run "/usr/bin/xattr",
-        args:           ["-rd", "com.apple.quarantine", "{{appdir}}/FlClash.app"],
-        writable_paths: ["FlClash.app"],
+        args:           ["-rd", "com.apple.quarantine", "{{appdir}}/Nexo.app"],
+        writable_paths: ["Nexo.app"],
         writable_base:  :appdir
   end
 
-  uninstall quit: "com.follow.clash"
+  uninstall quit: "app.nexo.vpn"
 
   zap trash: [
-    "~/Library/Application Support/com.follow.clash",
-    "~/Library/Caches/com.follow.clash",
-    "~/Library/Preferences/com.follow.clash.plist",
-    "~/Library/Saved Application State/com.follow.clash.savedState",
+    "~/Library/Application Support/app.nexo.vpn",
+    "~/Library/Caches/app.nexo.vpn",
+    "~/Library/Preferences/app.nexo.vpn.plist",
+    "~/Library/Saved Application State/app.nexo.vpn.savedState",
   ]
 end

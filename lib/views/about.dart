@@ -95,6 +95,12 @@ class AboutView extends ConsumerWidget {
                 label: 'github.com/$repository',
               ),
               _buildLinkItem(
+                glyph: AppGlyphs.code,
+                title: appLocalizations.basedOnFlClash,
+                url: 'https://github.com/chen08209/FlClash',
+                label: 'github.com/chen08209/FlClash',
+              ),
+              _buildLinkItem(
                 glyph: AppGlyphs.cpu,
                 title: appLocalizations.core,
                 url: 'https://github.com/chen08209/Clash.Meta/tree/FlClash',
