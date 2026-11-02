@@ -360,7 +360,12 @@ class ProfilesAction extends _$ProfilesAction {
     final profile = await globalState.loadingRun(
       tag: LoadingTag.profiles,
       () => link.isShareLink
-          ? _fromShareLinks(Profile.normal(label: label), [link])
+          ? _fromShareLinks(
+              Profile.normal(
+                label: label,
+              ).copyWith(autoUpdateDuration: _nexoProfileUpdateDuration),
+              [link],
+            )
           : _withAgeSecretKey(
               Profile.normal(label: label, url: link).copyWith(
                 ageSecretKey: ageSecretKey,

@@ -250,7 +250,7 @@ class _ServerCard extends ConsumerWidget {
       onPressed: group == null ? null : () => _openPicker(context),
       child: Row(
         children: [
-          _ServerMark(name: selectedName),
+          Flexible(child: _ServerMark(name: selectedName)),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
