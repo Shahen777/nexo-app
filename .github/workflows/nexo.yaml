@@ -21,8 +21,12 @@ jobs:
         include:
           - platform: android
             os: ubuntu-latest
+          # Apple Silicon queues are often full; two images, whichever starts first gives a build
           - platform: macos
-            os: macos-14
+            os: macos-26
+            arch: arm64
+          - platform: macos
+            os: macos-15
             arch: arm64
           - platform: macos
             os: macos-15-intel
@@ -107,6 +111,6 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: nexo-${{ matrix.platform }}${{ matrix.arch && format('-{0}', matrix.arch) || '' }}
+          name: nexo-${{ matrix.platform }}${{ matrix.arch && format('-{0}-{1}', matrix.arch, matrix.os) || '' }}
           path: ./dist
           retention-days: 14
