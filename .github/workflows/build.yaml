@@ -1,11 +1,7 @@
 name: build
 
+# Nexo fork: upstream checks run only by hand.
 on:
-  push:
-    branches:
-      - '**'
-    tags:
-      - 'v*'
   workflow_dispatch:
 
 concurrency:
