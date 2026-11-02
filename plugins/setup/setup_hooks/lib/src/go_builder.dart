@@ -77,11 +77,12 @@ class GoBuilder {
               );
               slices.add(slicePath);
             }
-            await runCommandStream(
-              'lipo',
-              ['-create', ...slices, '-output', staged],
-              workingDirectory: _corePath,
-            );
+            await runCommandStream('lipo', [
+              '-create',
+              ...slices,
+              '-output',
+              staged,
+            ], workingDirectory: _corePath);
           } else {
             await runCommandStream(
               'go',
