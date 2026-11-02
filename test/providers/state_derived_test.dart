@@ -366,10 +366,10 @@ void main() {
         .read(viewSizeProvider.notifier)
         .update((_) => Size(maxMobileWidth.toDouble(), 800));
     final mobile = container.read(currentNavigationItemsStateProvider).value;
-    expect(
-      mobile.map((item) => item.label),
-      [PageLabel.dashboard, PageLabel.tools],
-    );
+    expect(mobile.map((item) => item.label), [
+      PageLabel.dashboard,
+      PageLabel.tools,
+    ]);
     expect(
       mobile.map((item) => item.label),
       isNot(contains(PageLabel.connections)),

@@ -59,20 +59,21 @@ Widget _stack({required bool isDesktop}) {
 void main() {
   test('locale resolution keeps a supported system language', () {
     expect(
-      resolveAppLocale(
-        const Locale('fr', 'FR'),
-        const [Locale('en'), Locale('fr'), Locale('ru')],
-      ),
+      resolveAppLocale(const Locale('fr', 'FR'), const [
+        Locale('en'),
+        Locale('fr'),
+        Locale('ru'),
+      ]),
       const Locale('fr'),
     );
   });
 
   test('locale resolution falls back to Russian', () {
     expect(
-      resolveAppLocale(
-        const Locale('de', 'DE'),
-        const [Locale('en'), Locale('ru')],
-      ),
+      resolveAppLocale(const Locale('de', 'DE'), const [
+        Locale('en'),
+        Locale('ru'),
+      ]),
       const Locale('ru'),
     );
   });

@@ -362,10 +362,7 @@ class ProfilesAction extends _$ProfilesAction {
       () => link.isShareLink
           ? _fromShareLinks(Profile.normal(label: label), [link])
           : _withAgeSecretKey(
-              Profile.normal(
-                label: label,
-                url: link,
-              ).copyWith(
+              Profile.normal(label: label, url: link).copyWith(
                 ageSecretKey: ageSecretKey,
                 autoUpdateDuration: _nexoProfileUpdateDuration,
               ),
@@ -391,9 +388,9 @@ class ProfilesAction extends _$ProfilesAction {
         for (final link in links)
           if (!link.isShareLink)
             (
-              profile: Profile.normal(url: link).copyWith(
-                autoUpdateDuration: _nexoProfileUpdateDuration,
-              ),
+              profile: Profile.normal(
+                url: link,
+              ).copyWith(autoUpdateDuration: _nexoProfileUpdateDuration),
               shareLinks: const <String>[],
             )
           else if (link == shareLinks.first)

@@ -21,8 +21,7 @@ class NexoStrings {
   static const disconnected = 'Защита выключена';
   static const noAccessKey = 'Нет ключа доступа';
   static const addAccessKey = 'Добавьте ключ доступа';
-  static const accessKeyHint =
-      'Ключ — в веб-кабинете или в Telegram-боте';
+  static const accessKeyHint = 'Ключ — в веб-кабинете или в Telegram-боте';
   static const pasteLink = 'Вставить ссылку';
   static const scanQr = 'Сканировать QR';
   static const invalidAccessLink = 'В буфере нет подходящей ссылки';

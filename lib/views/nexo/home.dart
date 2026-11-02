@@ -37,11 +37,13 @@ TextStyle _manrope(
   double weight = 400,
   Color? color,
 }) {
-  return style.of(context).copyWith(
-    color: color ?? _textColor(context),
-    fontFamily: 'Manrope',
-    fontVariations: [FontVariation('wght', weight)],
-  );
+  return style
+      .of(context)
+      .copyWith(
+        color: color ?? _textColor(context),
+        fontFamily: 'Manrope',
+        fontVariations: [FontVariation('wght', weight)],
+      );
 }
 
 class NexoHomeView extends ConsumerWidget {
@@ -72,19 +74,16 @@ class NexoHomeView extends ConsumerWidget {
       backgroundColor: _pageColor(context),
       titleWidget: Text(
         NexoStrings.appName,
-        style: AppTextStyle.pageTitle.of(context).copyWith(
-          color: _textColor(context),
-          fontFamily: 'Unbounded',
-          fontVariations: const [FontVariation('wght', 650)],
-        ),
+        style: AppTextStyle.pageTitle
+            .of(context)
+            .copyWith(
+              color: _textColor(context),
+              fontFamily: 'Unbounded',
+              fontVariations: const [FontVariation('wght', 650)],
+            ),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.fromLTRB(
-          20,
-          72,
-          20,
-          24 + context.bottomInset,
-        ),
+        padding: EdgeInsets.fromLTRB(20, 72, 20, 24 + context.bottomInset),
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: _contentWidth),
@@ -236,9 +235,7 @@ class _ServerCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final groups = ref.watch(groupsProvider);
     final group = groups.getGroup(NexoStrings.appName);
-    final selected = ref.watch(
-      selectedProxyNameProvider(NexoStrings.appName),
-    );
+    final selected = ref.watch(selectedProxyNameProvider(NexoStrings.appName));
     final selectedName = (selected ?? '').takeFirstValid([
       group?.realNow ?? '',
       NexoStrings.automatic,
@@ -274,11 +271,7 @@ class _ServerCard extends ConsumerWidget {
                   _serverTitle(selectedName),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: _manrope(
-                    context,
-                    AppTextStyle.headline,
-                    weight: 650,
-                  ),
+                  style: _manrope(context, AppTextStyle.headline, weight: 650),
                 ),
                 if (actual.isNotEmpty) ...[
                   const SizedBox(height: 3),
@@ -366,12 +359,8 @@ class _ServerPicker extends ConsumerWidget {
     final proxies = group == null
         ? const <Proxy>[]
         : [
-            ...group.all.where(
-              (proxy) => proxy.name == NexoStrings.automatic,
-            ),
-            ...group.all.where(
-              (proxy) => proxy.name != NexoStrings.automatic,
-            ),
+            ...group.all.where((proxy) => proxy.name == NexoStrings.automatic),
+            ...group.all.where((proxy) => proxy.name != NexoStrings.automatic),
           ];
     return CommonScaffold(
       title: NexoStrings.chooseServer,
@@ -391,7 +380,9 @@ class _ServerPicker extends ConsumerWidget {
             ),
           const SizedBox(height: 12),
           FilledButton(
-            onPressed: group == null || testing ? null : () => _test(ref, group),
+            onPressed: group == null || testing
+                ? null
+                : () => _test(ref, group),
             style: const ButtonStyle(
               backgroundColor: WidgetStatePropertyAll(_accent),
               foregroundColor: WidgetStatePropertyAll(Colors.white),
@@ -626,11 +617,7 @@ class _EmptyState extends ConsumerWidget {
           Text(
             NexoStrings.addAccessKey,
             textAlign: TextAlign.center,
-            style: _manrope(
-              context,
-              AppTextStyle.title3,
-              weight: 650,
-            ),
+            style: _manrope(context, AppTextStyle.title3, weight: 650),
           ),
           const SizedBox(height: 8),
           Text(
@@ -704,10 +691,7 @@ class _NexoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final content = Padding(
-      padding: const EdgeInsets.all(18),
-      child: child,
-    );
+    final content = Padding(padding: const EdgeInsets.all(18), child: child);
     return DecoratedBox(
       decoration: ShapeDecoration(
         color: _cardColor(context),
