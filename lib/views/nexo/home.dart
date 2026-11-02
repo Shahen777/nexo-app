@@ -239,7 +239,8 @@ class _ServerCard extends ConsumerWidget {
       group?.realNow ?? '',
       NexoStrings.automatic,
     ]);
-    final autoNow = groups.getGroup(NexoStrings.automatic)?.realNow ??
+    final autoNow =
+        groups.getGroup(NexoStrings.automatic)?.realNow ??
         group?.all
             .where((proxy) => proxy.name == NexoStrings.automatic)
             .firstOrNull
