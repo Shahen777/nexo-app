@@ -234,12 +234,17 @@ class _ServerCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final groups = ref.watch(groupsProvider);
     final group = groups.getGroup(NexoStrings.appName);
-    final selected = ref.watch(selectedProxyNameProvider(NexoStrings.appName));
+    final selected = ref.watch(proxyNameProvider(NexoStrings.appName));
     final selectedName = (selected ?? '').takeFirstValid([
       group?.realNow ?? '',
       NexoStrings.automatic,
     ]);
-    final autoNow = groups.getGroup(NexoStrings.automatic)?.realNow ?? '';
+    final autoNow = groups.getGroup(NexoStrings.automatic)?.realNow ??
+        group?.all
+            .where((proxy) => proxy.name == NexoStrings.automatic)
+            .firstOrNull
+            ?.now ??
+        '';
     final actual = selectedName == NexoStrings.automatic ? autoNow : '';
     final delay = group == null
         ? null
@@ -250,7 +255,9 @@ class _ServerCard extends ConsumerWidget {
       onPressed: group == null ? null : () => _openPicker(context),
       child: Row(
         children: [
-          Flexible(child: _ServerMark(name: selectedName)),
+          Flexible(
+            child: _ServerMark(name: actual.isNotEmpty ? actual : selectedName),
+          ),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
@@ -275,7 +282,7 @@ class _ServerCard extends ConsumerWidget {
                 if (actual.isNotEmpty) ...[
                   const SizedBox(height: 3),
                   EmojiText(
-                    actual,
+                    NexoStrings.currentServer(_serverTitle(actual)),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: _manrope(
@@ -760,12 +767,20 @@ String _serverFlag(String name) {
   final trimmed = name.trim();
   if (trimmed.isEmpty) return '';
   final token = trimmed.split(RegExp(r'\s+')).first;
-  return token.runes.length == 2 ? token : '';
+  final runes = token.runes.toList();
+  return runes.length == 2 &&
+          runes.every((rune) => rune >= 0x1F1E6 && rune <= 0x1F1FF)
+      ? token
+      : '';
 }
 
 String _serverTitle(String name) {
   final flag = _serverFlag(name);
-  return flag.isEmpty ? name : name.substring(flag.length).trim();
+  final trimmed = name.trim();
+  final withoutFlag = flag.isEmpty
+      ? trimmed
+      : trimmed.substring(flag.length).trim();
+  return withoutFlag.replaceFirst(RegExp(r'^Nexo\s*—\s*'), '').trim();
 }
 
 String _delayText(int? delay) {

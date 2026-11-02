@@ -366,6 +366,10 @@ void main() {
         .read(viewSizeProvider.notifier)
         .update((_) => Size(maxMobileWidth.toDouble(), 800));
     final mobile = container.read(currentNavigationItemsStateProvider).value;
+    expect(
+      container.read(navigationStateProvider).pageLabel,
+      PageLabel.dashboard,
+    );
     expect(mobile.map((item) => item.label), [
       PageLabel.dashboard,
       PageLabel.tools,

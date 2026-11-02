@@ -647,7 +647,6 @@ class CurrentSSID extends _$CurrentSSID with AutoDisposeNotifierMixin {
 List<Override> buildAppStateOverrides(AppState appState) {
   return [
     initProvider.overrideWithBuild((_, _) => appState.isInit),
-    currentPageLabelProvider.overrideWithBuild((_, _) => appState.pageLabel),
     packagesProvider.overrideWithBuild((_, _) => appState.packages),
     sortNumProvider.overrideWithBuild((_, _) => appState.sortNum),
     viewSizeProvider.overrideWithBuild((_, _) => appState.viewSize),

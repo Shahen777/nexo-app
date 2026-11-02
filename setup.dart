@@ -172,7 +172,14 @@ Future<int> _package(
   );
   final descriptionArgs = <String>[];
   if (platform != 'android') {
-    descriptionArgs.addAll(['--description', arch]);
+    descriptionArgs.addAll([
+      '--description',
+      packageDescription(
+        platform,
+        arch,
+        Platform.environment['NEXO_MAC_UNIVERSAL'],
+      ),
+    ]);
   }
 
   final depExit = await _ensureDependencies(platform);
@@ -222,6 +229,10 @@ Future<int> _package(
   });
   final exitCode = await process.exitCode;
   return exitCode;
+}
+
+String packageDescription(String platform, String arch, String? universal) {
+  return platform == 'macos' && universal == '1' ? 'universal' : arch;
 }
 
 String _detectArch() {

@@ -34,6 +34,8 @@ class NexoStrings {
   static const unavailable = 'Недоступен';
   static const unlimitedAccess = 'Доступ без срока';
 
+  static String currentServer(String name) => 'Сейчас: $name';
+
   static String daysLeft(int days) => 'Осталось $days дней';
 
   static String delay(int milliseconds) => '$milliseconds мс';

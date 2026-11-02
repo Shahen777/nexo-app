@@ -245,7 +245,7 @@ class _HomePageViewState extends ConsumerState<_HomePageView> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: _pageIndex);
+    _pageController = PageController(initialPage: _pageIndex, keepPage: false);
     ref.listenManual(currentPageLabelProvider, (prev, next) {
       if (prev != next) {
         _toPage(next);

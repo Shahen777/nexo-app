@@ -8,6 +8,8 @@ import 'package:fl_clash/providers/database.dart';
 import 'package:fl_clash/providers/state.dart';
 import 'package:fl_clash/state.dart';
 import 'package:fl_clash/ui/paged_sheet.dart';
+import 'package:fl_clash/ui/text.dart';
+import 'package:fl_clash/views/nexo/home.dart';
 import 'package:fl_clash/ui/popup.dart';
 import 'package:fl_clash/views/config/advanced.dart';
 import 'package:fl_clash/views/config/custom_resources.dart';
@@ -241,6 +243,56 @@ void main() {
     expect(container.read(patchClashConfigProvider), before);
     expect(_portField('SOCKS port'), findsOneWidget);
     expect(find.text('SOCKS port cannot be empty'), findsOneWidget);
+  });
+
+  testWidgets('Nexo shows automatic selection and cleans server names', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1000, 1000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    const server = '🇦🇹 Nexo — Вена Fast';
+    final profile = Profile.normal().copyWith(
+      selectedMap: {'Nexo': 'Автовыбор'},
+    );
+    const group = Group(
+      name: 'Nexo',
+      type: GroupType.Selector,
+      now: server,
+      all: [
+        Proxy(name: 'Автовыбор', type: 'URLTest', now: server),
+        Proxy(name: server, type: 'Direct'),
+      ],
+    );
+    final container = ProviderContainer(
+      overrides: [
+        currentProfileProvider.overrideWithValue(profile),
+        groupsProvider.overrideWithValue([group]),
+      ],
+    );
+    addTearDown(container.dispose);
+    globalState.container = container;
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const TestApp(child: NexoHomeView()),
+      ),
+    );
+    await tester.pump();
+
+    Finder emoji(String text) => find.byWidgetPredicate(
+      (widget) => widget is EmojiText && widget.text == text,
+    );
+    expect(emoji('Автовыбор'), findsOneWidget);
+    expect(emoji('Сейчас: Вена Fast'), findsOneWidget);
+    expect(emoji('🇦🇹'), findsOneWidget);
+
+    await tester.tap(emoji('Автовыбор'));
+    await tester.pumpAndSettle();
+    expect(emoji('Вена Fast'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('proxies renders populated tab and list layouts', (tester) async {

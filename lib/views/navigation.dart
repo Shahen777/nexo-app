@@ -19,6 +19,7 @@ class Navigation implements NavigationPort {
         label: PageLabel.dashboard,
         builder: (_) =>
             const NexoHomeView(key: GlobalObjectKey(PageLabel.dashboard)),
+        modes: const [NavigationItemMode.desktop, NavigationItemMode.mobile],
       ),
       NavigationItem(
         glyph: AppGlyphs.proxies,

@@ -67,6 +67,13 @@ hooks:
       expect(setup.createPackageTargets('macos', null), 'dmg');
     });
 
+    test('labels only universal macOS packages as universal', () {
+      expect(setup.packageDescription('macos', 'amd64', '1'), 'universal');
+      expect(setup.packageDescription('macos', 'arm64', ''), 'arm64');
+      expect(setup.packageDescription('linux', 'amd64', '1'), 'amd64');
+      expect(setup.packageDescription('macos', 'arm64', 'true'), 'arm64');
+    });
+
     test('downloads the appimagetool build matching the host', () {
       expect(setup.appImageToolArch('arm64'), 'aarch64');
       expect(setup.appImageToolArch('amd64'), 'x86_64');
