@@ -1,14 +1,20 @@
 import 'package:fl_clash/common/common.dart';
-import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/l10n/l10n.dart';
-import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/ui/icons/icons.dart';
 import 'package:fl_clash/views/about.dart';
 import 'package:fl_clash/views/access.dart';
 import 'package:fl_clash/views/backup_and_restore.dart';
+import 'package:fl_clash/views/connection/connections.dart';
+import 'package:fl_clash/views/connection/requests.dart';
 import 'package:fl_clash/views/config/general.dart';
+import 'package:fl_clash/views/dns_queries.dart';
 import 'package:fl_clash/views/hotkey.dart';
+import 'package:fl_clash/views/logs.dart';
+import 'package:fl_clash/views/nexo/strings.dart';
+import 'package:fl_clash/views/profiles/profiles.dart';
+import 'package:fl_clash/views/proxies/proxies.dart';
+import 'package:fl_clash/views/resources.dart';
 import 'package:fl_clash/widgets/widgets.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,15 +33,6 @@ class ToolsView extends ConsumerStatefulWidget {
 }
 
 class _ToolViewState extends ConsumerState<ToolsView> {
-  Widget _buildNavigationMenuItem(NavigationItem navigationItem) {
-    return ListItem.open(
-      leading: GlyphIcon(navigationItem.glyph),
-      title: Text(navigationItem.label.label),
-      widget: navigationItem.builder(context),
-      forceFull: navigationItem.modes.contains(NavigationItemMode.moreFull),
-    );
-  }
-
   Widget _getOtherList(bool enableDeveloperMode) {
     return generateSection(
       title: context.appLocalizations.other,
@@ -69,28 +66,61 @@ class _ToolViewState extends ConsumerState<ToolsView> {
     );
   }
 
+  Widget _getAdvancedList() {
+    return generateSection(
+      title: NexoStrings.advanced,
+      items: const [
+        _AdvancedPageItem(
+          glyph: AppGlyphs.proxies,
+          title: NexoStrings.proxies,
+          page: ProxiesView(),
+        ),
+        _AdvancedPageItem(
+          glyph: AppGlyphs.profiles,
+          title: NexoStrings.profiles,
+          page: ProfilesView(),
+        ),
+        _AdvancedPageItem(
+          glyph: AppGlyphs.requests,
+          title: NexoStrings.requests,
+          page: RequestsView(),
+        ),
+        _AdvancedPageItem(
+          glyph: AppGlyphs.connections,
+          title: NexoStrings.connections,
+          page: ConnectionsView(),
+        ),
+        _AdvancedPageItem(
+          glyph: AppGlyphs.dns,
+          title: NexoStrings.dns,
+          page: DnsQueriesView(),
+        ),
+        _AdvancedPageItem(
+          glyph: AppGlyphs.resources,
+          title: NexoStrings.resources,
+          page: ResourcesView(),
+        ),
+        _AdvancedPageItem(
+          glyph: AppGlyphs.logs,
+          title: NexoStrings.logs,
+          page: LogsView(),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final developerMode = ref.watch(
       appSettingProvider.select((state) => state.developerMode),
     );
     final items = [
-      Consumer(
-        builder: (_, ref, _) {
-          final state = ref.watch(moreToolsSelectorStateProvider);
-          if (state.navigationItems.isEmpty) {
-            return Container();
-          }
-          return generateSection(
-            items: state.navigationItems.map(_buildNavigationMenuItem),
-          );
-        },
-      ),
       _getSettingList(),
+      _getAdvancedList(),
       _getOtherList(developerMode),
     ];
     return CommonScaffold(
-      title: context.appLocalizations.tools,
+      title: NexoStrings.settings,
       body: Builder(
         builder: (context) => ListView.builder(
           key: toolsStoreKey,
@@ -104,6 +134,27 @@ class _ToolViewState extends ConsumerState<ToolsView> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _AdvancedPageItem extends StatelessWidget {
+  const _AdvancedPageItem({
+    required this.glyph,
+    required this.title,
+    required this.page,
+  });
+
+  final Glyph glyph;
+  final String title;
+  final Widget page;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListItem.open(
+      leading: GlyphIcon(glyph),
+      title: Text(title),
+      widget: page,
     );
   }
 }

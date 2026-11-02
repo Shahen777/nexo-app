@@ -60,6 +60,18 @@ class LinkManager {
   Future<void> initAppLinksListen(
     Function(String url) installConfigCallBack,
   ) async {
+    return _initAppLinksListen((url, _) => installConfigCallBack(url));
+  }
+
+  Future<void> initAppLinksListenWithSource(
+    void Function(String url, Uri source) installConfigCallBack,
+  ) async {
+    return _initAppLinksListen(installConfigCallBack);
+  }
+
+  Future<void> _initAppLinksListen(
+    void Function(String url, Uri source) installConfigCallBack,
+  ) async {
     destroy();
     subscription = uriLinkStream().listen((uri) {
       _handle(uri, installConfigCallBack);
@@ -71,11 +83,14 @@ class LinkManager {
     }
   }
 
-  void _handle(Uri uri, Function(String url) installConfigCallBack) {
+  void _handle(
+    Uri uri,
+    void Function(String url, Uri source) installConfigCallBack,
+  ) {
     commonPrint.log('onAppLink: $uri');
     final url = _installConfigUrl(uri);
     if (url != null) {
-      installConfigCallBack(url);
+      installConfigCallBack(url, uri);
     }
   }
 

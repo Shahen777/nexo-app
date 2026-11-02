@@ -15,13 +15,33 @@ import 'package:fl_clash/l10n/l10n.dart';
 import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/state.dart';
-import 'package:fl_clash/views/disclaimer.dart';
 import 'package:fl_clash/views/navigation.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_color_utilities/palettes/tonal_palette.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+
+Locale resolveAppLocale(Locale? requested, Iterable<Locale> supported) {
+  final locales = supported.toList();
+  if (requested != null) {
+    for (final locale in locales) {
+      if (locale.languageCode == requested.languageCode &&
+          locale.countryCode == requested.countryCode) {
+        return locale;
+      }
+    }
+    for (final locale in locales) {
+      if (locale.languageCode == requested.languageCode) {
+        return locale;
+      }
+    }
+  }
+  return locales.firstWhere(
+    (locale) => locale.languageCode == 'ru',
+    orElse: () => locales.first,
+  );
+}
 
 class Bootstrap {
   static Bootstrap? _instance;
@@ -139,9 +159,14 @@ class Bootstrap {
         );
     final profiles = await database.profilesDao.query().get();
     container.read(profilesProvider.notifier).reorder(profiles);
+    final requestedLocale =
+        getLocaleForString(config.appSettingProps.locale) ??
+        WidgetsBinding.instance.platformDispatcher.locale;
     await AppLocalizations.load(
-      getLocaleForString(config.appSettingProps.locale) ??
-          WidgetsBinding.instance.platformDispatcher.locale,
+      resolveAppLocale(
+        requestedLocale,
+        AppLocalizations.delegate.supportedLocales,
+      ),
     );
     await window?.init(version, config.windowProps);
     if (system.isAndroid) {
@@ -233,26 +258,12 @@ class Bootstrap {
     await _container.read(systemActionProvider.notifier).handleExit(false);
   }
 
-  /// Unattended desktop installs, such as a container nobody watches, accept
-  /// up front: the core only starts after the disclaimer is accepted.
-  bool get _isDisclaimerAcceptedByEnvironment =>
-      system.isDesktop &&
-      Platform.environment['FLCLASH_ACCEPT_DISCLAIMER'] == '1';
-
-  /// Android's exit only finishes the activity, so Dart keeps running after
-  /// [SystemAction.handleExit] returns and must not go on to start the app.
   Future<bool> _handlerDisclaimer() async {
     final acceptedVersion = _container.read(
       appSettingProvider.select((state) => state.acceptedDisclaimerVersion),
     );
     if (acceptedVersion >= disclaimerVersion) {
       return true;
-    }
-    final isDisclaimerAccepted =
-        _isDisclaimerAcceptedByEnvironment || await requestDisclaimerConsent();
-    if (!isDisclaimerAccepted) {
-      await _container.read(systemActionProvider.notifier).handleExit();
-      return false;
     }
     _container
         .read(appSettingProvider.notifier)

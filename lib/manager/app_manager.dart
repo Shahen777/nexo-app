@@ -7,6 +7,7 @@ import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/state.dart';
 import 'package:fl_clash/ui/ui.dart';
+import 'package:fl_clash/views/nexo/strings.dart';
 import 'package:fl_clash/widgets/icon.dart';
 import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
@@ -161,7 +162,7 @@ class _Sidebar extends ConsumerWidget {
     return NavigationSidebar(
       destinations: [
         for (final item in items)
-          SidebarDestination(glyph: item.glyph, label: item.label.label),
+          SidebarDestination(glyph: item.glyph, label: item.label.nexoLabel),
       ],
       selectedIndex: currentIndex,
       expanded: canExpand && sidebarExpanded,

@@ -39,6 +39,19 @@ void main() {
     expect(received, ['https://example.com/a.yaml']);
   });
 
+  test('a source-aware listener receives the deep-link scheme', () async {
+    String? sourceScheme;
+    await linkManager.initAppLinksListenWithSource((url, source) {
+      received.add(url);
+      sourceScheme = source.scheme;
+    });
+
+    await emit('nexo://install-config?url=https://example.com/a.yaml');
+
+    expect(received, ['https://example.com/a.yaml']);
+    expect(sourceScheme, 'nexo');
+  });
+
   test('an install-config link without a url is ignored', () async {
     await listen();
 

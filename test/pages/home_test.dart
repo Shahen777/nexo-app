@@ -266,7 +266,7 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
     expect(tester.getSize(sidebar).width, 48);
-    expect(find.text('Tools'), findsNWidgets(2));
+    expect(find.text('Настройки'), findsNWidgets(2));
     expect(container.read(appSettingProvider).sidebarExpanded, isTrue);
     expect(tester.takeException(), isNull);
   });

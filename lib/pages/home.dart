@@ -4,6 +4,7 @@ import 'package:fl_clash/manager/app_manager.dart';
 import 'package:fl_clash/models/common.dart';
 import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/ui/icons/icons.dart';
+import 'package:fl_clash/views/nexo/strings.dart';
 import 'package:fl_clash/widgets/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
@@ -96,7 +97,7 @@ class _HomeShell extends ConsumerWidget {
                           for (final item in navigationItems)
                             NavigationDockDestination(
                               glyph: item.glyph,
-                              label: item.label.label,
+                              label: item.label.nexoLabel,
                             ),
                         ],
                         selectedIndex: state.currentIndex,
@@ -121,7 +122,7 @@ class _HomeShell extends ConsumerWidget {
                         glyph: item.glyph,
                         filled: index == state.currentIndex,
                       ),
-                      label: item.label.label,
+                      label: item.label.nexoLabel,
                     ),
                 ],
                 selectedIndex: state.currentIndex,

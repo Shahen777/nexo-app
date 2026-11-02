@@ -1,4 +1,5 @@
 import 'package:fl_clash/application.dart';
+import 'package:fl_clash/bootstrap.dart';
 import 'package:fl_clash/manager/hotkey_manager.dart';
 import 'package:fl_clash/manager/manager.dart';
 import 'package:material_ui/material_ui.dart';
@@ -56,6 +57,26 @@ Widget _stack({required bool isDesktop}) {
 }
 
 void main() {
+  test('locale resolution keeps a supported system language', () {
+    expect(
+      resolveAppLocale(
+        const Locale('fr', 'FR'),
+        const [Locale('en'), Locale('fr'), Locale('ru')],
+      ),
+      const Locale('fr'),
+    );
+  });
+
+  test('locale resolution falls back to Russian', () {
+    expect(
+      resolveAppLocale(
+        const Locale('de', 'DE'),
+        const [Locale('en'), Locale('ru')],
+      ),
+      const Locale('ru'),
+    );
+  });
+
   test('the desktop manager stack nests in ownership order', () {
     expect(_chainFrom(_stack(isDesktop: true)), [
       AppEnvManager,
