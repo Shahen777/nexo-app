@@ -22,7 +22,7 @@ jobs:
           - platform: android
             os: ubuntu-latest
           - platform: macos
-            os: macos-15
+            os: macos-14
             arch: arm64
           - platform: macos
             os: macos-15-intel
