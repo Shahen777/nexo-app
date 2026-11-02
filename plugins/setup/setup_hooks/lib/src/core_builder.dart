@@ -128,8 +128,7 @@ final class CoreBuilder implements Builder {
       target: target,
       macosUniversal:
           code.targetOS == OS.macOS &&
-          (_macosUniversal ??
-              Platform.environment['NEXO_MAC_UNIVERSAL'] == '1'),
+          (_macosUniversal ?? input.userDefines['macos_universal'] == true),
     );
   }
 

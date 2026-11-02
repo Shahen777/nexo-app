@@ -89,6 +89,19 @@ jobs:
           add-to-path: true
           link-to-sdk: true
 
+      # Build hooks see a filtered environment, so the universal switch goes through pubspec user_defines.
+      - name: Enable universal macOS core
+        if: matrix.platform == 'macos' && matrix.universal
+        run: |
+          python3 - <<'PY'
+          p = 'pubspec.yaml'
+          s = open(p).read()
+          s = s.replace('    setup:\n      build_assets: true\n',
+                        '    setup:\n      build_assets: true\n      macos_universal: true\n', 1)
+          assert 'macos_universal: true' in s
+          open(p, 'w').write(s)
+          PY
+
       - name: Get Flutter dependencies
         run: flutter pub get
 
