@@ -22,7 +22,11 @@ jobs:
           - platform: android
             os: ubuntu-latest
           - platform: macos
-            os: macos-latest
+            os: macos-15
+            arch: arm64
+          - platform: macos
+            os: macos-15-intel
+            arch: amd64
           - platform: windows
             os: windows-2022
     steps:
@@ -101,6 +105,6 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: nexo-${{ matrix.platform }}
+          name: nexo-${{ matrix.platform }}${{ matrix.arch && format('-{0}', matrix.arch) || '' }}
           path: ./dist
           retention-days: 14
