@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui' show FontVariation;
 
 import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/enum/enum.dart';
@@ -374,9 +373,9 @@ class _ServerPicker extends ConsumerWidget {
               group: group!,
               proxy: proxy,
               selected:
-                  (selected ?? '').takeFirstValid([group!.realNow]) ==
+                  (selected ?? '').takeFirstValid([group.realNow]) ==
                   proxy.name,
-              onPressed: () => _select(context, ref, group!, proxy),
+              onPressed: () => _select(context, ref, group, proxy),
             ),
           const SizedBox(height: 12),
           FilledButton(
