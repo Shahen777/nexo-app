@@ -3,6 +3,7 @@ package com.follow.clash.plugins
 import android.Manifest
 import android.app.Activity
 import android.app.ActivityManager
+import android.app.AlertDialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -12,6 +13,7 @@ import android.net.VpnService
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -65,6 +67,10 @@ class AppPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware 
     private lateinit var scope: CoroutineScope
 
     private val vpnPrepareCallback = PendingCallback<Boolean>()
+
+    private var vpnConsentShownAt = 0L
+
+    private var alwaysOnVpnHint: AlertDialog? = null
 
     private val requestNotificationCallback = PendingCallback<Boolean>()
 
@@ -392,6 +398,7 @@ class AppPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware 
             if (activity == null) {
                 invokeVpnPrepareCallback(false)
             } else {
+                vpnConsentShownAt = SystemClock.elapsedRealtime()
                 @Suppress("DEPRECATION")
                 activity.startActivityForResult(intent, VPN_PERMISSION_REQUEST_CODE)
             }
@@ -501,9 +508,49 @@ class AppPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware 
         if (requestCode != VPN_PERMISSION_REQUEST_CODE) {
             return false
         }
-        invokeVpnPrepareCallback(resultCode == Activity.RESULT_OK)
+        val granted = resultCode == Activity.RESULT_OK
+        // The system closes its consent dialog before it is drawn when another app is set as
+        // always-on VPN; nobody declines that fast, so tell the user what blocks the start.
+        if (!granted && SystemClock.elapsedRealtime() - vpnConsentShownAt < INSTANT_REFUSAL_MS) {
+            showAlwaysOnVpnHint()
+        }
+        invokeVpnPrepareCallback(granted)
         return true
     }
+
+    private fun showAlwaysOnVpnHint() {
+        val activity = activity ?: return
+        if (alwaysOnVpnHint?.isShowing == true) {
+            return
+        }
+        val other = alwaysOnVpnLabel()
+        val app = other?.let { "«$it»" } ?: "другое VPN-приложение"
+        alwaysOnVpnHint = AlertDialog.Builder(activity)
+            .setTitle("Мешает другой VPN")
+            .setMessage(
+                "В настройках телефона $app включено как «Постоянная VPN». " +
+                    "Пока так, Android не даёт подключиться Nexo.\n\n" +
+                    "Откройте настройки VPN, нажмите на шестерёнку рядом с ${other ?: "этим приложением"} " +
+                    "и выключите «Постоянная VPN». Затем снова нажмите «Подключить»."
+            )
+            .setPositiveButton("Открыть настройки VPN") { _, _ ->
+                runCatching {
+                    activity.startActivity(Intent(Settings.ACTION_VPN_SETTINGS))
+                }
+            }
+            .setNegativeButton("Закрыть", null)
+            .show()
+    }
+
+    // Hidden setting: readable on some Android versions only, so the hint also works without it.
+    private fun alwaysOnVpnLabel(): String? = runCatching {
+        val pkg = Settings.Secure.getString(GlobalState.application.contentResolver, "always_on_vpn_app")
+        if (pkg.isNullOrEmpty() || pkg == GlobalState.application.packageName) {
+            return@runCatching null
+        }
+        val pm = GlobalState.application.packageManager
+        pm.getApplicationLabel(pm.getApplicationInfo(pkg, 0)).toString()
+    }.getOrNull()
 
     private fun onRequestPermissionsResultListener(
         requestCode: Int,
@@ -539,6 +586,7 @@ class AppPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware 
     private companion object {
         val SHORTCUT_ORDER = listOf(QuickAction.START, QuickAction.STOP, QuickAction.TOGGLE)
         const val VPN_PERMISSION_REQUEST_CODE = 1001
+        const val INSTANT_REFUSAL_MS = 1000L
         const val NOTIFICATION_PERMISSION_REQUEST_CODE = 1002
         const val INSTALLED_APPS_PERMISSION_REQUEST_CODE = 1003
         const val LOCAL_NETWORK_PERMISSION_REQUEST_CODE = 1004
