@@ -1,14 +1,17 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi' show Abi;
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:crypto/crypto.dart' show sha256;
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/state.dart';
 import 'package:flutter/foundation.dart' show visibleForTesting;
+import 'package:path/path.dart' show join;
 
 class Request {
   late final Dio dio;
@@ -85,46 +88,81 @@ class Request {
     }
   }
 
-  /// Null when this build is current; throws when GitHub cannot be asked.
+  /// Null when this build is current or nothing is published for this device;
+  /// throws when the update server cannot be asked.
   Future<Map<String, dynamic>?> checkForUpdate() async {
-    final release = await latestRelease();
-    final remoteVersion = release['tag_name'] as String;
-    final version = globalState.packageInfo.version;
-    final hasUpdate =
-        compareVersions(remoteVersion.replaceAll('v', ''), version) > 0;
-    return hasUpdate ? release : null;
+    if (updateManifestUrl.isEmpty) return null;
+    final response = await getTextResponseForUrl(updateManifestUrl);
+    return newerRelease(
+      jsonDecode(response.data!) as Map<String, dynamic>,
+      platform: updatePlatform,
+      currentVersion: globalState.packageInfo.version,
+      manifestUrl: updateManifestUrl,
+    );
   }
 
-  /// The release page redirect still answers once the hourly API quota is spent.
-  @visibleForTesting
-  Future<Map<String, dynamic>> latestRelease() async {
-    try {
-      final response = await dio.get<Map<String, dynamic>>(
-        'https://api.github.com/repos/$repository/releases/latest',
-        options: Options(responseType: ResponseType.json),
-      );
-      return response.data!;
-    } on DioException catch (error) {
-      commonPrint.log(
-        'latest release API failed: ${compactError(error)}',
-        logLevel: LogLevel.warning,
-      );
-    }
-    final response = await dio.get<void>(
-      'https://github.com/$repository/releases/latest',
-      options: Options(
-        followRedirects: false,
-        validateStatus: (status) => status != null && status < 400,
-      ),
-    );
-    final location = response.headers.value(HttpHeaders.locationHeader);
-    final segments = Uri.tryParse(location ?? '')?.pathSegments ?? const [];
-    final tagIndex = segments.indexOf('tag') + 1;
-    if (tagIndex == 0 || tagIndex >= segments.length) {
-      throw FormatException('No release tag in the redirect', location);
-    }
-    return {'tag_name': segments[tagIndex]};
+  Future<String> get _updateFilePath async {
+    final cacheDir = await appPath.cacheDir.future;
+    return join(cacheDir.path, 'update', 'Nexo.apk');
   }
+
+  /// Returns the installer's path once its checksum matches the release's.
+  Future<String> downloadUpdate(
+    Map<String, dynamic> release, {
+    required CancelToken cancelToken,
+    required void Function(double progress) onProgress,
+  }) async {
+    final path = await _updateFilePath;
+    await _clashDio.download(
+      release['url'] as String,
+      path,
+      cancelToken: cancelToken,
+      options: Options(receiveTimeout: const Duration(seconds: 60)),
+      onReceiveProgress: (received, total) {
+        if (total > 0) onProgress(received / total);
+      },
+    );
+    final digest = await sha256.bind(File(path).openRead()).first;
+    if (digest.toString() != release['sha256']) {
+      await File(path).delete();
+      throw const FormatException('The installer checksum does not match');
+    }
+    return path;
+  }
+
+  /// An installed update leaves its installer behind in the cache.
+  Future<void> removeDownloadedUpdate() async {
+    final file = File(await _updateFilePath);
+    if (await file.exists()) await file.delete();
+  }
+}
+
+/// The manifest key of the installer this device can run.
+String? get updatePlatform => switch (Abi.current()) {
+  Abi.androidArm64 => 'android-arm64',
+  Abi.androidArm => 'android-arm',
+  Abi.windowsX64 => 'windows',
+  Abi.macosArm64 || Abi.macosX64 => 'macos',
+  _ => null,
+};
+
+@visibleForTesting
+Map<String, dynamic>? newerRelease(
+  Map<String, dynamic> manifest, {
+  required String? platform,
+  required String currentVersion,
+  required String manifestUrl,
+}) {
+  final entry = manifest[platform];
+  if (entry is! Map<String, dynamic>) return null;
+  final version = entry['version'] as String;
+  if (compareVersions(version, currentVersion) <= 0) return null;
+  return {
+    'tag_name': 'v$version',
+    'body': entry['body'] as String?,
+    'url': Uri.parse(manifestUrl).resolve(entry['file'] as String).toString(),
+    'sha256': entry['sha256'] as String,
+  };
 }
 
 final request = Request();

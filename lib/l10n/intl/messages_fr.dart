@@ -2017,6 +2017,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "Désépingler la fenêtre",
     ),
     "update": MessageLookupByLibrary.simpleMessage("Mettre à jour"),
+    "updateDownloading": MessageLookupByLibrary.simpleMessage(
+      "Téléchargement de la mise à jour",
+    ),
+    "updateFailed": MessageLookupByLibrary.simpleMessage(
+      "Impossible de mettre à jour l'application. Vérifiez votre connexion internet et réessayez.",
+    ),
+    "updateVpnTip": MessageLookupByLibrary.simpleMessage(
+      "Le VPN se coupera un instant pendant l'installation. Ouvrez ensuite Nexo et reconnectez-vous.",
+    ),
     "upload": MessageLookupByLibrary.simpleMessage("Envoi"),
     "uploadBandwidth": MessageLookupByLibrary.simpleMessage(
       "Bande passante d’envoi",

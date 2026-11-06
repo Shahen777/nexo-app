@@ -1959,6 +1959,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "unnamed": MessageLookupByLibrary.simpleMessage("Без названия"),
     "unpinWindow": MessageLookupByLibrary.simpleMessage("Открепить окно"),
     "update": MessageLookupByLibrary.simpleMessage("Обновить"),
+    "updateDownloading": MessageLookupByLibrary.simpleMessage(
+      "Скачиваем обновление",
+    ),
+    "updateFailed": MessageLookupByLibrary.simpleMessage(
+      "Не удалось обновить приложение. Проверьте интернет и попробуйте ещё раз.",
+    ),
+    "updateVpnTip": MessageLookupByLibrary.simpleMessage(
+      "Во время установки VPN ненадолго отключится. Затем откройте Nexo и подключитесь снова.",
+    ),
     "upload": MessageLookupByLibrary.simpleMessage("Отдача"),
     "uploadBandwidth": MessageLookupByLibrary.simpleMessage("Скорость отдачи"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),

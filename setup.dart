@@ -125,7 +125,11 @@ List<String> createFlutterBuildArgs({
 }
 
 Map<String, String> createBuildEnvironment(String env) {
-  return {'APP_ENV': env};
+  final updateManifestUrl = Platform.environment['NEXO_UPDATE_URL'] ?? '';
+  return {
+    'APP_ENV': env,
+    if (updateManifestUrl.isNotEmpty) 'UPDATE_MANIFEST_URL': updateManifestUrl,
+  };
 }
 
 /// Packages whose build hook `pubspec.yaml` turns into a no-op.

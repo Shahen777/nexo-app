@@ -133,6 +133,10 @@ class App {
     _packageIconTasks.clear();
   }
 
+  Future<bool?> installApk(String path) async {
+    return methodChannel.invokeMethod<bool>('installApk', {'path': path});
+  }
+
   Future<bool?> tip(String? message) async {
     return methodChannel.invokeMethod<bool>('tip', {'message': '$message'});
   }

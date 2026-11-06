@@ -1241,6 +1241,36 @@ class AppLocalizations {
     return Intl.message('Download', name: 'goDownload', desc: '', args: []);
   }
 
+  /// `VPN turns off for a moment during installation. Then open Nexo and connect again.`
+  String get updateVpnTip {
+    return Intl.message(
+      'VPN turns off for a moment during installation. Then open Nexo and connect again.',
+      name: 'updateVpnTip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Downloading the update`
+  String get updateDownloading {
+    return Intl.message(
+      'Downloading the update',
+      name: 'updateDownloading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not update the app. Check your internet connection and try again.`
+  String get updateFailed {
+    return Intl.message(
+      'Could not update the app. Check your internet connection and try again.',
+      name: 'updateFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Unknown`
   String get unknown {
     return Intl.message('Unknown', name: 'unknown', desc: '', args: []);

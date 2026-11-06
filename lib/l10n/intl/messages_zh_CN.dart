@@ -1461,6 +1461,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "unnamed": MessageLookupByLibrary.simpleMessage("未命名"),
     "unpinWindow": MessageLookupByLibrary.simpleMessage("取消置顶"),
     "update": MessageLookupByLibrary.simpleMessage("更新"),
+    "updateDownloading": MessageLookupByLibrary.simpleMessage("正在下载更新"),
+    "updateFailed": MessageLookupByLibrary.simpleMessage("无法更新应用。请检查网络连接后重试。"),
+    "updateVpnTip": MessageLookupByLibrary.simpleMessage(
+      "安装期间 VPN 会短暂断开。之后请打开 Nexo 并重新连接。",
+    ),
     "upload": MessageLookupByLibrary.simpleMessage("上传"),
     "uploadBandwidth": MessageLookupByLibrary.simpleMessage("上行带宽"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),

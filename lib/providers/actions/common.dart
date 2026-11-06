@@ -83,6 +83,7 @@ class CommonAction extends _$CommonAction {
   }
 
   Future<bool> autoCheckUpdate() async {
+    if (system.isAndroid) unawaited(request.removeDownloadedUpdate());
     if (!ref.read(appSettingProvider).autoCheckUpdate) return false;
     final Map<String, dynamic>? res;
     try {
@@ -142,6 +143,26 @@ class CommonAction extends _$CommonAction {
     ];
   }
 
+  Future<void> _applyUpdate(Map<String, dynamic> release) async {
+    if (!system.isAndroid) {
+      await launchUrl(
+        Uri.parse(release['url'] as String),
+        mode: LaunchMode.externalApplication,
+      );
+      return;
+    }
+    final started = await dialogs.showCommonDialog<bool>(
+      dismissible: false,
+      child: UpdateDownloadDialog(release: release),
+    );
+    if (started == false) {
+      await dialogs.showAlert(
+        title: currentAppLocalizations.checkUpdate,
+        message: TextSpan(text: currentAppLocalizations.updateFailed),
+      );
+    }
+  }
+
   Future<void> checkUpdateResultHandle({
     Map<String, dynamic>? data,
     bool isUser = false,
@@ -150,20 +171,24 @@ class CommonAction extends _$CommonAction {
       final context = globalState.navigatorKey.currentContext!;
       final res = await dialogs.showMessage(
         title: currentAppLocalizations.discoverNewVersion,
-        message: _releaseSpan(
-          context,
-          data['tag_name'] as String,
-          data['body'] as String?,
+        message: TextSpan(
+          children: [
+            _releaseSpan(
+              context,
+              data['tag_name'] as String,
+              data['body'] as String?,
+            ),
+            if (system.isAndroid)
+              TextSpan(text: '\n${currentAppLocalizations.updateVpnTip}'),
+          ],
         ),
-        confirmText: currentAppLocalizations.goDownload,
+        confirmText: system.isAndroid
+            ? currentAppLocalizations.update
+            : currentAppLocalizations.goDownload,
         cancelText: isUser ? null : currentAppLocalizations.noLongerRemind,
       );
       if (res == true) {
-        unawaited(
-          launchUrl(
-            Uri.parse('https://github.com/$repository/releases/latest'),
-          ),
-        );
+        unawaited(_applyUpdate(data));
       } else if (!isUser && res == false) {
         ref
             .read(appSettingProvider.notifier)

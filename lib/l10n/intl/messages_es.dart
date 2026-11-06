@@ -2016,6 +2016,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "unnamed": MessageLookupByLibrary.simpleMessage("Sin nombre"),
     "unpinWindow": MessageLookupByLibrary.simpleMessage("Desfijar ventana"),
     "update": MessageLookupByLibrary.simpleMessage("Actualizar"),
+    "updateDownloading": MessageLookupByLibrary.simpleMessage(
+      "Descargando la actualización",
+    ),
+    "updateFailed": MessageLookupByLibrary.simpleMessage(
+      "No se pudo actualizar la aplicación. Comprueba tu conexión a internet e inténtalo de nuevo.",
+    ),
+    "updateVpnTip": MessageLookupByLibrary.simpleMessage(
+      "La VPN se desactivará un momento durante la instalación. Luego abre Nexo y conéctate de nuevo.",
+    ),
     "upload": MessageLookupByLibrary.simpleMessage("Subida"),
     "uploadBandwidth": MessageLookupByLibrary.simpleMessage(
       "Ancho de banda de subida",

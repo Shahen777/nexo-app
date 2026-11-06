@@ -122,6 +122,9 @@ const bootRecordKey = 'boot_record';
 const appliedConfigMd5Key = 'applied_config_md5';
 const defaultSystemDnsFallback = '223.5.5.5';
 const repository = 'Shahen777/nexo-app';
+
+/// Set at build time: this repository is public and names no server.
+const updateManifestUrl = String.fromEnvironment('UPDATE_MANIFEST_URL');
 const maxMobileWidth = 600;
 const maxLaptopWidth = 840;
 const defaultTestUrl = 'https://www.gstatic.com/generate_204';

@@ -1583,6 +1583,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "unnamed": MessageLookupByLibrary.simpleMessage("이름 없음"),
     "unpinWindow": MessageLookupByLibrary.simpleMessage("창 고정 해제"),
     "update": MessageLookupByLibrary.simpleMessage("업데이트"),
+    "updateDownloading": MessageLookupByLibrary.simpleMessage("업데이트 다운로드 중"),
+    "updateFailed": MessageLookupByLibrary.simpleMessage(
+      "앱을 업데이트하지 못했습니다. 인터넷 연결을 확인하고 다시 시도하세요.",
+    ),
+    "updateVpnTip": MessageLookupByLibrary.simpleMessage(
+      "설치 중에는 VPN이 잠시 꺼집니다. 그런 다음 Nexo를 열고 다시 연결하세요.",
+    ),
     "upload": MessageLookupByLibrary.simpleMessage("업로드"),
     "uploadBandwidth": MessageLookupByLibrary.simpleMessage("업로드 대역폭"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),

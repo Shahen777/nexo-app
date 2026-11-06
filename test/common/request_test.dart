@@ -20,24 +20,6 @@ class _StalledHttpClient extends Fake implements HttpClient {
       Completer<HttpClientRequest>().future;
 }
 
-class _HostAdapter implements HttpClientAdapter {
-  _HostAdapter(this.byHost);
-
-  final Map<String, ResponseBody Function()> byHost;
-
-  @override
-  Future<ResponseBody> fetch(
-    RequestOptions options,
-    Stream<Uint8List>? requestStream,
-    Future<void>? cancelFuture,
-  ) async {
-    return byHost[options.uri.host]!();
-  }
-
-  @override
-  void close({bool force = false}) {}
-}
-
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -69,55 +51,65 @@ void main() {
     );
   });
 
-  group('latestRelease', () {
-    Request requestAnswering(Map<String, ResponseBody Function()> byHost) {
-      return Request()..dio.httpClientAdapter = _HostAdapter(byHost);
-    }
+  group('newerRelease', () {
+    const manifestUrl = 'https://updates.test:8444/nexo/update.json';
+    const manifest = <String, dynamic>{
+      'android-arm64': {
+        'version': '1.2.4',
+        'file': 'download/Nexo-android.apk',
+        'sha256': 'abc',
+        'body': '- Notes',
+      },
+    };
 
-    test('reads the release from the API', () async {
-      final request = requestAnswering({
-        'api.github.com': () => ResponseBody.fromString(
-          '{"tag_name":"v1.2.3","body":"notes"}',
-          200,
-          headers: {
-            Headers.contentTypeHeader: [Headers.jsonContentType],
-          },
+    test('describes a newer installer for this device', () {
+      expect(
+        newerRelease(
+          manifest,
+          platform: 'android-arm64',
+          currentVersion: '1.2.3',
+          manifestUrl: manifestUrl,
         ),
-      });
-
-      expect(await request.latestRelease(), {
-        'tag_name': 'v1.2.3',
-        'body': 'notes',
-      });
+        {
+          'tag_name': 'v1.2.4',
+          'body': '- Notes',
+          'url': 'https://updates.test:8444/nexo/download/Nexo-android.apk',
+          'sha256': 'abc',
+        },
+      );
     });
 
-    test(
-      'falls back to the release page when the API is rate limited',
-      () async {
-        final request = requestAnswering({
-          'api.github.com': () => ResponseBody.fromString('{}', 403),
-          'github.com': () => ResponseBody.fromString(
-            '',
-            302,
-            headers: {
-              HttpHeaders.locationHeader: [
-                'https://github.com/owner/repo/releases/tag/v1.2.4',
-              ],
-            },
-          ),
-        });
+    test('is empty when the build is current', () {
+      expect(
+        newerRelease(
+          manifest,
+          platform: 'android-arm64',
+          currentVersion: '1.2.4',
+          manifestUrl: manifestUrl,
+        ),
+        isNull,
+      );
+    });
 
-        expect(await request.latestRelease(), {'tag_name': 'v1.2.4'});
-      },
-    );
-
-    test('fails instead of answering when neither endpoint does', () async {
-      final request = requestAnswering({
-        'api.github.com': () => ResponseBody.fromString('{}', 403),
-        'github.com': () => ResponseBody.fromString('', 503),
-      });
-
-      await expectLater(request.latestRelease(), throwsA(isA<DioException>()));
+    test('is empty when nothing is published for this device', () {
+      expect(
+        newerRelease(
+          manifest,
+          platform: 'android-arm',
+          currentVersion: '1.2.3',
+          manifestUrl: manifestUrl,
+        ),
+        isNull,
+      );
+      expect(
+        newerRelease(
+          manifest,
+          platform: null,
+          currentVersion: '1.2.3',
+          manifestUrl: manifestUrl,
+        ),
+        isNull,
+      );
     });
   });
 
