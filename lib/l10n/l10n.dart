@@ -2496,295 +2496,295 @@ class AppLocalizations {
     );
   }
 
-  /// `Disclaimer`
+  /// `Terms of use`
   String get disclaimer {
-    return Intl.message('Disclaimer', name: 'disclaimer', desc: '', args: []);
+    return Intl.message('Terms of use', name: 'disclaimer', desc: '', args: []);
   }
 
-  /// `Before using Nexo ("the Software"), please read this statement carefully and make sure you understand all of it. Tapping "Agree" means you have read, understood, and accept every term below. If you do not agree, tap "Exit" and stop using the Software.`
+  /// `This page explains Nexo access, connections, updates, and the use of external configurations. You can return to it in Settings at any time.`
   String get disclaimerDesc {
     return Intl.message(
-      'Before using Nexo ("the Software"), please read this statement carefully and make sure you understand all of it. Tapping "Agree" means you have read, understood, and accept every term below. If you do not agree, tap "Exit" and stop using the Software.',
+      'This page explains Nexo access, connections, updates, and the use of external configurations. You can return to it in Settings at any time.',
       name: 'disclaimerDesc',
       desc: '',
       args: [],
     );
   }
 
-  /// `Nature of the software`
+  /// `About Nexo`
   String get disclaimerSoftwareTitle {
     return Intl.message(
-      'Nature of the software',
+      'About Nexo',
       name: 'disclaimerSoftwareTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `The Software is an open-source network proxy client built on the Clash.Meta (mihomo) core. It only provides local tooling such as configuration management, rule-based routing, and traffic forwarding.`
+  /// `Nexo is an app for connecting to the Nexo VPN service and managing connection settings.`
   String get disclaimerSoftwareContent {
     return Intl.message(
-      'The Software is an open-source network proxy client built on the Clash.Meta (mihomo) core. It only provides local tooling such as configuration management, rule-based routing, and traffic forwarding.',
+      'Nexo is an app for connecting to the Nexo VPN service and managing connection settings.',
       name: 'disclaimerSoftwareContent',
       desc: '',
       args: [],
     );
   }
 
-  /// `The Software itself does not provide any proxy server, node, subscription, or network access service, and has no partnership, agency, or guarantee relationship with any provider of such services.`
+  /// `Access to Nexo VPN servers is provided under a valid access key or subscription.`
   String get disclaimerNoServiceStatement {
     return Intl.message(
-      'The Software itself does not provide any proxy server, node, subscription, or network access service, and has no partnership, agency, or guarantee relationship with any provider of such services.',
+      'Access to Nexo VPN servers is provided under a valid access key or subscription.',
       name: 'disclaimerNoServiceStatement',
       desc: '',
       args: [],
     );
   }
 
-  /// `Restrictions on use`
+  /// `Access and subscriptions`
   String get disclaimerUsageTitle {
     return Intl.message(
-      'Restrictions on use',
+      'Access and subscriptions',
       name: 'disclaimerUsageTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `The Software is intended only for non-commercial uses such as learning, exchange, and technical research. Using it for any commercial purpose is strictly prohibited, including but not limited to paid distribution, bundled sales, use as part of a commercial service, or doing business in the name of the Software. Any commercial activity is unrelated to the Software and its developers.\n\nUsing the Software for anything that violates the laws and regulations of your country or region is strictly prohibited, including but not limited to bypassing lawfully imposed network access restrictions, spreading illegal content, launching network attacks, or infringing the lawful rights of others.`
+  /// `The available servers, features, and access period depend on your key or subscription. Check the price, duration, and renewal conditions shown when obtaining or renewing access.`
   String get disclaimerUsageContent {
     return Intl.message(
-      'The Software is intended only for non-commercial uses such as learning, exchange, and technical research. Using it for any commercial purpose is strictly prohibited, including but not limited to paid distribution, bundled sales, use as part of a commercial service, or doing business in the name of the Software. Any commercial activity is unrelated to the Software and its developers.\n\nUsing the Software for anything that violates the laws and regulations of your country or region is strictly prohibited, including but not limited to bypassing lawfully imposed network access restrictions, spreading illegal content, launching network attacks, or infringing the lawful rights of others.',
+      'The available servers, features, and access period depend on your key or subscription. Check the price, duration, and renewal conditions shown when obtaining or renewing access.',
       name: 'disclaimerUsageContent',
       desc: '',
       args: [],
     );
   }
 
-  /// `Your responsibility`
+  /// `Safe use`
   String get disclaimerResponsibilityTitle {
     return Intl.message(
-      'Your responsibility',
+      'Safe use',
       name: 'disclaimerResponsibilityTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `You are responsible for making sure that using the Software is lawful where you live, and you alone bear the legal responsibility for everything you do with it and its consequences.\n\nThe subscriptions, nodes, and configurations you import are your own choice. Whether their source is lawful, their content is safe, and their service is reliable is a matter between you and their providers.`
+  /// `Use Nexo in accordance with the rules that apply to you. Do not use the service for attacks, fraud, malware, or violations of other people's rights. Store your access keys and subscription links securely.`
   String get disclaimerResponsibilityContent {
     return Intl.message(
-      'You are responsible for making sure that using the Software is lawful where you live, and you alone bear the legal responsibility for everything you do with it and its consequences.\n\nThe subscriptions, nodes, and configurations you import are your own choice. Whether their source is lawful, their content is safe, and their service is reliable is a matter between you and their providers.',
+      'Use Nexo in accordance with the rules that apply to you. Do not use the service for attacks, fraud, malware, or violations of other people\'s rights. Store your access keys and subscription links securely.',
       name: 'disclaimerResponsibilityContent',
       desc: '',
       args: [],
     );
   }
 
-  /// `Third-party content`
+  /// `External configurations`
   String get disclaimerThirdPartyTitle {
     return Intl.message(
-      'Third-party content',
+      'External configurations',
       name: 'disclaimerThirdPartyTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Subscription links, configuration files, rule sets, scripts, external resources, and external links are all provided by third parties. The developers cannot and do not review or guarantee their legality, accuracy, security, or availability.\n\nAny data leak, financial loss, account ban, or other loss caused by third-party content is to be settled between you and the third party; the developers bear no responsibility for it.`
+  /// `You can add subscriptions, configurations, rules, and scripts from other providers. Check their source and add only resources you trust. Their content and availability depend on those providers.`
   String get disclaimerThirdPartyContent {
     return Intl.message(
-      'Subscription links, configuration files, rule sets, scripts, external resources, and external links are all provided by third parties. The developers cannot and do not review or guarantee their legality, accuracy, security, or availability.\n\nAny data leak, financial loss, account ban, or other loss caused by third-party content is to be settled between you and the third party; the developers bear no responsibility for it.',
+      'You can add subscriptions, configurations, rules, and scripts from other providers. Check their source and add only resources you trust. Their content and availability depend on those providers.',
       name: 'disclaimerThirdPartyContent',
       desc: '',
       args: [],
     );
   }
 
-  /// `No warranty`
+  /// `Connection availability`
   String get disclaimerWarrantyTitle {
     return Intl.message(
-      'No warranty',
+      'Connection availability',
       name: 'disclaimerWarrantyTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `The Software is provided "as is" and "as available", without warranty of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, non-infringement, uninterrupted availability, freedom from errors, or freedom from security vulnerabilities.\n\nThe developers do not guarantee that the Software will meet your needs or that it will run without interruption or error.`
+  /// `Speed and availability depend on the selected server, internet provider, network restrictions, device, and settings. Connections may be interrupted. If a connection fails, check your internet access and try another available server or automatic selection.`
   String get disclaimerWarrantyContent {
     return Intl.message(
-      'The Software is provided "as is" and "as available", without warranty of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, non-infringement, uninterrupted availability, freedom from errors, or freedom from security vulnerabilities.\n\nThe developers do not guarantee that the Software will meet your needs or that it will run without interruption or error.',
+      'Speed and availability depend on the selected server, internet provider, network restrictions, device, and settings. Connections may be interrupted. If a connection fails, check your internet access and try another available server or automatic selection.',
       name: 'disclaimerWarrantyContent',
       desc: '',
       args: [],
     );
   }
 
-  /// `Limitation of liability`
+  /// `App updates`
   String get disclaimerLiabilityTitle {
     return Intl.message(
-      'Limitation of liability',
+      'App updates',
       name: 'disclaimerLiabilityTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `To the maximum extent permitted by applicable law, neither the developers nor any contributor shall be liable for any direct, indirect, incidental, special, punitive, or consequential damages arising from the use of or inability to use the Software, including but not limited to data loss, device damage, network failures, business interruption, lost profits, or any resulting legal dispute, even if advised of the possibility of such damages.`
+  /// `Check for updates in About. When a new version is available, Nexo downloads and verifies the update package. Installation uses the method supported on your device and may require system confirmation and an app restart. The VPN connection may briefly stop during installation.`
   String get disclaimerLiabilityContent {
     return Intl.message(
-      'To the maximum extent permitted by applicable law, neither the developers nor any contributor shall be liable for any direct, indirect, incidental, special, punitive, or consequential damages arising from the use of or inability to use the Software, including but not limited to data loss, device damage, network failures, business interruption, lost profits, or any resulting legal dispute, even if advised of the possibility of such damages.',
+      'Check for updates in About. When a new version is available, Nexo downloads and verifies the update package. Installation uses the method supported on your device and may require system confirmation and an app restart. The VPN connection may briefly stop during installation.',
       name: 'disclaimerLiabilityContent',
       desc: '',
       args: [],
     );
   }
 
-  /// `Data collection and privacy`
+  /// `Data and network requests`
   String get disclaimerPrivacyTitle {
     return Intl.message(
-      'Data collection and privacy',
+      'Data and network requests',
       name: 'disclaimerPrivacyTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `The Software does not collect or upload your subscription URLs, node details, configuration content, visited websites, connection records, traffic content, or logs. This data stays on your device and the developers have no access to it.\n\nThe Software only reaches the network when you use a feature that needs it, such as fetching the subscription URL you provided when updating a profile, or contacting GitHub when checking for updates.\n\nThe Software includes no analytics or crash reporting service on any platform.`
+  /// `Nexo contacts its service to check access and obtain configurations, server lists, and updates. These requests include the information needed for authentication and the requested function. Traffic routed through the VPN passes through the selected server.\n\nSettings and local configuration copies are stored on your device. You can export logs and save backups to a destination you choose. Importing external subscriptions or loading resources also contacts the sources you specify.`
   String get disclaimerPrivacyContent {
     return Intl.message(
-      'The Software does not collect or upload your subscription URLs, node details, configuration content, visited websites, connection records, traffic content, or logs. This data stays on your device and the developers have no access to it.\n\nThe Software only reaches the network when you use a feature that needs it, such as fetching the subscription URL you provided when updating a profile, or contacting GitHub when checking for updates.\n\nThe Software includes no analytics or crash reporting service on any platform.',
+      'Nexo contacts its service to check access and obtain configurations, server lists, and updates. These requests include the information needed for authentication and the requested function. Traffic routed through the VPN passes through the selected server.\n\nSettings and local configuration copies are stored on your device. You can export logs and save backups to a destination you choose. Importing external subscriptions or loading resources also contacts the sources you specify.',
       name: 'disclaimerPrivacyContent',
       desc: '',
       args: [],
     );
   }
 
-  /// `Open-source license`
+  /// `Open-source licenses`
   String get disclaimerLicenseTitle {
     return Intl.message(
-      'Open-source license',
+      'Open-source licenses',
       name: 'disclaimerLicenseTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `The Software is open source under the GPL-3.0 license. You may use, modify, and distribute it freely as long as you comply with that license, which requires derivative works to be released under GPL-3.0 as well and the original copyright notices to be kept.\n\nThird-party components in the Software, including the Clash.Meta core, follow their own licenses. The original authors are not responsible for any issue arising from modified or redistributed versions.`
+  /// `The app's source code is distributed under GPL-3.0. FlClash, Clash.Meta, and other components retain their licenses and copyright notices. The source-code license is separate from the conditions for access to the VPN service.`
   String get disclaimerLicenseContent {
     return Intl.message(
-      'The Software is open source under the GPL-3.0 license. You may use, modify, and distribute it freely as long as you comply with that license, which requires derivative works to be released under GPL-3.0 as well and the original copyright notices to be kept.\n\nThird-party components in the Software, including the Clash.Meta core, follow their own licenses. The original authors are not responsible for any issue arising from modified or redistributed versions.',
+      'The app\'s source code is distributed under GPL-3.0. FlClash, Clash.Meta, and other components retain their licenses and copyright notices. The source-code license is separate from the conditions for access to the VPN service.',
       name: 'disclaimerLicenseContent',
       desc: '',
       args: [],
     );
   }
 
-  /// `Changes to this statement`
+  /// `Changes`
   String get disclaimerChangesTitle {
     return Intl.message(
-      'Changes to this statement',
+      'Changes',
       name: 'disclaimerChangesTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `The developers may revise this statement with any release, and the revision takes effect when that release is published. Continuing to use the Software after updating means you accept the revised statement.`
+  /// `Server lists, app features, and the information on this page may change with updates. Current access information is shown in your subscription, and the app version is shown in About.`
   String get disclaimerChangesContent {
     return Intl.message(
-      'The developers may revise this statement with any release, and the revision takes effect when that release is published. Continuing to use the Software after updating means you accept the revised statement.',
+      'Server lists, app features, and the information on this page may change with updates. Current access information is shown in your subscription, and the app version is shown in About.',
       name: 'disclaimerChangesContent',
       desc: '',
       args: [],
     );
   }
 
-  /// `Acceptance`
+  /// `About these terms`
   String get disclaimerAcceptTitle {
     return Intl.message(
-      'Acceptance',
+      'About these terms',
       name: 'disclaimerAcceptTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `By installing, copying, or using the Software, you are deemed to have read and agreed to this entire statement. If you disagree with any of its terms, stop using and uninstall the Software immediately.`
+  /// `This page provides information about using Nexo and is available in Settings. If an action separately asks for your agreement, read its message before confirming.`
   String get disclaimerAcceptContent {
     return Intl.message(
-      'By installing, copying, or using the Software, you are deemed to have read and agreed to this entire statement. If you disagree with any of its terms, stop using and uninstall the Software immediately.',
+      'This page provides information about using Nexo and is available in Settings. If an action separately asks for your agreement, read its message before confirming.',
       name: 'disclaimerAcceptContent',
       desc: '',
       args: [],
     );
   }
 
-  /// `Restate the statement`
+  /// `Confirm access terms`
   String get disclaimerRestateTitle {
     return Intl.message(
-      'Restate the statement',
+      'Confirm access terms',
       name: 'disclaimerRestateTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `To confirm you understand, enter the following statement in full in the field below:`
+  /// `To confirm that you understand the access terms, enter the text below:`
   String get disclaimerRestateTip {
     return Intl.message(
-      'To confirm you understand, enter the following statement in full in the field below:',
+      'To confirm that you understand the access terms, enter the text below:',
       name: 'disclaimerRestateTip',
       desc: '',
       args: [],
     );
   }
 
-  /// `Enter the statement above`
+  /// `Enter the access statement above`
   String get disclaimerRestateHint {
     return Intl.message(
-      'Enter the statement above',
+      'Enter the access statement above',
       name: 'disclaimerRestateHint',
       desc: '',
       args: [],
     );
   }
 
-  /// `Does not match the statement`
+  /// `The text does not match`
   String get disclaimerRestateMismatch {
     return Intl.message(
-      'Does not match the statement',
+      'The text does not match',
       name: 'disclaimerRestateMismatch',
       desc: '',
       args: [],
     );
   }
 
-  /// `Confirm the statement`
+  /// `Confirm access terms`
   String get disclaimerAcknowledgeTitle {
     return Intl.message(
-      'Confirm the statement',
+      'Confirm access terms',
       name: 'disclaimerAcknowledgeTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `To confirm you understand, read the following statement and check the box below:`
+  /// `Read the access statement and select the checkbox below:`
   String get disclaimerAcknowledgeTip {
     return Intl.message(
-      'To confirm you understand, read the following statement and check the box below:',
+      'Read the access statement and select the checkbox below:',
       name: 'disclaimerAcknowledgeTip',
       desc: '',
       args: [],
     );
   }
 
-  /// `I have read and understand this statement`
+  /// `I have read and understand this access statement`
   String get disclaimerAcknowledgeLabel {
     return Intl.message(
-      'I have read and understand this statement',
+      'I have read and understand this access statement',
       name: 'disclaimerAcknowledgeLabel',
       desc: '',
       args: [],

@@ -309,14 +309,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "back": MessageLookupByLibrary.simpleMessage("뒤로"),
     "backgroundBlur": MessageLookupByLibrary.simpleMessage("배경 흐림"),
     "backup": MessageLookupByLibrary.simpleMessage("백업"),
-    "basedOnFlClash": MessageLookupByLibrary.simpleMessage(
-      "Nexo는 FlClash(GPL-3.0)를 기반으로 합니다",
-    ),
     "backupAndRestore": MessageLookupByLibrary.simpleMessage("백업 및 복원"),
     "backupFromNewerVersion": MessageLookupByLibrary.simpleMessage(
       "이 백업은 더 최신 버전의 앱에서 만들어졌습니다. 복원하기 전에 앱을 업데이트하세요",
     ),
     "backupSuccess": MessageLookupByLibrary.simpleMessage("백업 완료"),
+    "basedOnFlClash": MessageLookupByLibrary.simpleMessage(
+      "Nexo는 FlClash(GPL-3.0)를 기반으로 합니다",
+    ),
     "basicInfo": MessageLookupByLibrary.simpleMessage("기본 정보"),
     "basicStrategy": MessageLookupByLibrary.simpleMessage("기본 전략"),
     "batchAdd": MessageLookupByLibrary.simpleMessage("일괄 추가"),
@@ -527,80 +527,80 @@ class MessageLookup extends MessageLookupByLibrary {
     "disableUDP": MessageLookupByLibrary.simpleMessage("UDP 사용 안 함"),
     "disabled": MessageLookupByLibrary.simpleMessage("사용 안 함"),
     "discardChanges": MessageLookupByLibrary.simpleMessage("변경 사항을 취소하시겠습니까?"),
-    "disclaimer": MessageLookupByLibrary.simpleMessage("면책 조항"),
+    "disclaimer": MessageLookupByLibrary.simpleMessage("이용 조건"),
     "disclaimerAcceptContent": MessageLookupByLibrary.simpleMessage(
-      "본 소프트웨어를 설치, 복사 또는 사용하면 이 문서 전체를 읽고 동의한 것으로 간주합니다. 어느 조항이라도 동의하지 않는 경우 즉시 본 소프트웨어의 사용을 중단하고 삭제하세요.",
+      "이 페이지는 Nexo 사용에 관한 정보를 제공하며 설정에서 확인할 수 있습니다. 특정 작업에서 별도로 동의를 요청하면 확인하기 전에 해당 메시지를 읽으세요.",
     ),
-    "disclaimerAcceptTitle": MessageLookupByLibrary.simpleMessage("동의"),
+    "disclaimerAcceptTitle": MessageLookupByLibrary.simpleMessage(
+      "이 이용 조건에 대해",
+    ),
     "disclaimerAcknowledgeLabel": MessageLookupByLibrary.simpleMessage(
-      "이 문구를 읽고 이해했습니다",
+      "이 이용 조건을 읽고 이해했습니다",
     ),
     "disclaimerAcknowledgeTip": MessageLookupByLibrary.simpleMessage(
-      "내용을 이해했는지 확인하기 위해 다음 문구를 읽고 아래 항목에 체크하세요.",
+      "이용 조건 문구를 읽고 아래 체크박스를 선택하세요:",
     ),
-    "disclaimerAcknowledgeTitle": MessageLookupByLibrary.simpleMessage("문구 확인"),
+    "disclaimerAcknowledgeTitle": MessageLookupByLibrary.simpleMessage(
+      "이용 조건 확인",
+    ),
     "disclaimerChangesContent": MessageLookupByLibrary.simpleMessage(
-      "개발자는 릴리스와 함께 본 문서를 개정할 수 있으며, 개정 내용은 해당 릴리스가 공개되는 시점에 효력이 발생합니다. 업데이트 후에도 본 소프트웨어를 계속 사용하면 개정된 문서를 수락한 것으로 간주합니다.",
+      "서버 목록, 앱 기능 및 이 페이지의 정보는 업데이트에 따라 달라질 수 있습니다. 현재 이용 정보는 구독에 표시되며 앱 버전은 “정보”에 표시됩니다.",
     ),
-    "disclaimerChangesTitle": MessageLookupByLibrary.simpleMessage("본 문서의 변경"),
+    "disclaimerChangesTitle": MessageLookupByLibrary.simpleMessage("변경 사항"),
     "disclaimerDesc": MessageLookupByLibrary.simpleMessage(
-      "Nexo(이하 “본 소프트웨어”)를 사용하기 전에 이 문서를 주의 깊게 읽고 모든 내용을 이해했는지 확인하세요. “동의”를 누르면 아래 모든 조항을 읽고 이해했으며 수락한 것으로 간주합니다. 동의하지 않으면 “종료”를 누르고 본 소프트웨어의 사용을 중단하세요.",
+      "이 페이지에서는 Nexo 이용, 연결, 업데이트 및 외부 설정 사용에 대해 설명합니다. 설정에서 언제든 다시 확인할 수 있습니다.",
     ),
     "disclaimerLiabilityContent": MessageLookupByLibrary.simpleMessage(
-      "관련 법률이 허용하는 최대 범위에서, 개발자와 기여자는 본 소프트웨어의 사용 또는 사용 불능으로 발생하는 직접, 간접, 부수적, 특별, 징벌적 또는 결과적 손해에 대해 책임을 지지 않습니다. 여기에는 데이터 손실, 기기 손상, 네트워크 장애, 사업 중단, 이익 손실 및 그로 인한 법적 분쟁이 포함되며 이에 국한되지 않고, 그러한 손해의 가능성을 사전에 통지받은 경우에도 마찬가지입니다.",
+      "“정보”에서 업데이트를 확인할 수 있습니다. 새 버전이 있으면 Nexo가 업데이트 패키지를 다운로드하고 검증합니다. 기기에서 지원하는 방식으로 설치하며 시스템 확인이나 앱 재시작이 필요할 수 있습니다. 설치 중에는 VPN 연결이 잠시 끊길 수 있습니다.",
     ),
-    "disclaimerLiabilityTitle": MessageLookupByLibrary.simpleMessage("책임의 제한"),
+    "disclaimerLiabilityTitle": MessageLookupByLibrary.simpleMessage("앱 업데이트"),
     "disclaimerLicenseContent": MessageLookupByLibrary.simpleMessage(
-      "본 소프트웨어는 GPL-3.0 라이선스로 공개된 오픈 소스입니다. 파생 저작물도 GPL-3.0으로 배포하고 원저작권 고지를 유지해야 하는 라이선스 조건을 준수하는 한 자유롭게 사용, 수정, 배포할 수 있습니다.\n\nClash.Meta 코어를 포함한 본 소프트웨어의 제3자 구성 요소는 각자의 라이선스를 따릅니다. 원저작자는 수정 또는 재배포된 버전에서 발생하는 어떠한 문제에도 책임을 지지 않습니다.",
+      "앱의 소스 코드는 GPL-3.0에 따라 배포됩니다. FlClash, Clash.Meta 및 기타 구성 요소의 라이선스와 저작권 고지는 유지됩니다. 소스 코드 라이선스는 VPN 서비스 이용 조건과 별개입니다.",
     ),
     "disclaimerLicenseTitle": MessageLookupByLibrary.simpleMessage(
       "오픈 소스 라이선스",
     ),
     "disclaimerNoServiceStatement": MessageLookupByLibrary.simpleMessage(
-      "본 소프트웨어 자체는 프록시 서버, 노드, 구독, 네트워크 접속 서비스를 일절 제공하지 않으며, 이러한 서비스의 어떤 제공자와도 제휴, 대리 또는 보증 관계가 없습니다.",
+      "Nexo VPN 서버는 유효한 액세스 키 또는 구독에 따라 이용할 수 있습니다.",
     ),
     "disclaimerPrivacyContent": MessageLookupByLibrary.simpleMessage(
-      "본 소프트웨어는 구독 URL, 노드 정보, 구성 내용, 방문한 웹사이트, 연결 기록, 트래픽 내용, 로그를 수집하거나 업로드하지 않습니다. 이 데이터는 사용자의 기기에만 저장되며 개발자는 접근할 수 없습니다.\n\n본 소프트웨어는 프로필을 업데이트할 때 사용자가 입력한 구독 URL을 가져오거나 업데이트를 확인할 때 GitHub에 접속하는 등 기능이 필요할 때만 네트워크에 접속합니다.\n\n본 소프트웨어에는 어떤 플랫폼에서도 분석 또는 비정상 종료 보고 서비스가 포함되어 있지 않습니다.",
+      "Nexo는 이용 권한을 확인하고 설정, 서버 목록 및 업데이트를 받기 위해 Nexo 서비스에 접속합니다. 이러한 요청에는 인증과 요청한 기능에 필요한 정보가 포함됩니다. VPN으로 라우팅되는 트래픽은 선택한 서버를 거칩니다.\n\n설정과 설정 파일의 로컬 복사본은 기기에 저장됩니다. 로그를 내보내거나 선택한 위치에 백업을 저장할 수 있습니다. 외부 구독을 가져오거나 리소스를 불러올 때도 지정한 출처에 접속합니다.",
     ),
     "disclaimerPrivacyTitle": MessageLookupByLibrary.simpleMessage(
-      "데이터 수집 및 개인정보 보호",
+      "데이터 및 네트워크 요청",
     ),
     "disclaimerResponsibilityContent": MessageLookupByLibrary.simpleMessage(
-      "본 소프트웨어의 사용이 거주지에서 적법한지 확인할 책임은 사용자에게 있으며, 본 소프트웨어로 한 모든 행위와 그 결과에 대한 법적 책임은 사용자 본인이 부담합니다.\n\n가져오는 구독, 노드, 구성은 사용자 본인의 선택입니다. 출처의 적법성, 콘텐츠의 안전성, 서비스의 신뢰성은 사용자와 해당 제공자 사이의 문제입니다.",
+      "본인에게 적용되는 규칙에 따라 Nexo를 사용하세요. 공격, 사기, 악성 프로그램 유포 또는 타인의 권리 침해에 서비스를 사용하지 마세요. 액세스 키와 구독 링크는 안전하게 보관하세요.",
     ),
     "disclaimerResponsibilityTitle": MessageLookupByLibrary.simpleMessage(
-      "사용자의 책임",
+      "안전한 사용",
     ),
     "disclaimerRestateHint": MessageLookupByLibrary.simpleMessage(
-      "위 문구를 입력하세요",
+      "위의 이용 조건 문구 입력",
     ),
     "disclaimerRestateMismatch": MessageLookupByLibrary.simpleMessage(
-      "문구와 일치하지 않습니다",
+      "문구가 일치하지 않습니다",
     ),
     "disclaimerRestateTip": MessageLookupByLibrary.simpleMessage(
-      "내용을 이해했는지 확인하기 위해 아래 입력란에 다음 문구를 그대로 입력하세요.",
+      "이용 조건을 이해했는지 확인하기 위해 아래 문구를 입력하세요:",
     ),
-    "disclaimerRestateTitle": MessageLookupByLibrary.simpleMessage("문구 다시 입력"),
+    "disclaimerRestateTitle": MessageLookupByLibrary.simpleMessage("이용 조건 확인"),
     "disclaimerSoftwareContent": MessageLookupByLibrary.simpleMessage(
-      "본 소프트웨어는 Clash.Meta(mihomo) 코어를 기반으로 한 오픈 소스 네트워크 프록시 클라이언트입니다. 구성 관리, 규칙 기반 라우팅, 트래픽 전달과 같은 로컬 도구만 제공합니다.",
+      "Nexo는 Nexo VPN 서비스에 연결하고 연결 설정을 관리하는 앱입니다.",
     ),
-    "disclaimerSoftwareTitle": MessageLookupByLibrary.simpleMessage(
-      "소프트웨어의 성격",
-    ),
+    "disclaimerSoftwareTitle": MessageLookupByLibrary.simpleMessage("Nexo 소개"),
     "disclaimerThirdPartyContent": MessageLookupByLibrary.simpleMessage(
-      "구독 링크, 구성 파일, 규칙 세트, 스크립트, 외부 리소스, 외부 링크는 모두 제3자가 제공합니다. 개발자는 이들의 적법성, 정확성, 안전성, 가용성을 심사하거나 보증할 수 없으며 보증하지 않습니다.\n\n제3자 콘텐츠로 인한 데이터 유출, 금전적 손실, 계정 정지 및 기타 손해는 사용자와 해당 제3자 사이에서 해결해야 하며, 개발자는 이에 대해 책임을 지지 않습니다.",
+      "다른 제공업체의 구독, 설정, 규칙 및 스크립트를 추가할 수 있습니다. 출처를 확인하고 신뢰할 수 있는 리소스만 추가하세요. 해당 리소스의 내용과 이용 가능 여부는 각 제공업체에 따라 다릅니다.",
     ),
-    "disclaimerThirdPartyTitle": MessageLookupByLibrary.simpleMessage(
-      "제3자 콘텐츠",
-    ),
+    "disclaimerThirdPartyTitle": MessageLookupByLibrary.simpleMessage("외부 설정"),
     "disclaimerUsageContent": MessageLookupByLibrary.simpleMessage(
-      "본 소프트웨어는 학습, 교류, 기술 연구와 같은 비상업적 용도로만 제공됩니다. 유료 배포, 끼워 팔기, 상업 서비스의 일부로 사용, 본 소프트웨어의 이름을 내세운 영업 등 어떠한 상업적 목적의 사용도 엄격히 금지되며, 이에 국한되지 않습니다. 모든 상업 활동은 본 소프트웨어 및 개발자와 무관합니다.\n\n거주 국가 또는 지역의 법령을 위반하는 용도로 본 소프트웨어를 사용하는 것은 엄격히 금지됩니다. 여기에는 합법적으로 부과된 네트워크 접속 제한 우회, 불법 콘텐츠 유포, 네트워크 공격, 타인의 합법적 권리 침해가 포함되며 이에 국한되지 않습니다.",
+      "이용 가능한 서버, 기능 및 이용 기간은 액세스 키 또는 구독에 따라 다릅니다. 이용 권한을 받거나 갱신할 때 표시되는 가격, 기간 및 갱신 조건을 확인하세요.",
     ),
-    "disclaimerUsageTitle": MessageLookupByLibrary.simpleMessage("사용 제한"),
+    "disclaimerUsageTitle": MessageLookupByLibrary.simpleMessage("이용 권한 및 구독"),
     "disclaimerWarrantyContent": MessageLookupByLibrary.simpleMessage(
-      "본 소프트웨어는 “있는 그대로”, “이용 가능한 상태로” 제공되며, 상품성, 특정 목적에의 적합성, 비침해성, 중단 없는 이용 가능성, 오류 없음, 보안 취약점 없음에 대한 보증을 포함하되 이에 국한되지 않고 명시적이든 묵시적이든 어떠한 종류의 보증도 하지 않습니다.\n\n개발자는 본 소프트웨어가 사용자의 요구를 충족하거나 중단 및 오류 없이 실행될 것임을 보증하지 않습니다.",
+      "속도와 연결 가능 여부는 선택한 서버, 인터넷 제공업체, 네트워크 제한, 기기 및 설정에 따라 다릅니다. 연결이 끊길 수도 있습니다. 연결에 실패하면 인터넷 접속을 확인하고 이용 가능한 다른 서버나 자동 선택을 시도하세요.",
     ),
-    "disclaimerWarrantyTitle": MessageLookupByLibrary.simpleMessage("보증 부인"),
+    "disclaimerWarrantyTitle": MessageLookupByLibrary.simpleMessage("연결 가능 여부"),
     "disconnected": MessageLookupByLibrary.simpleMessage("연결 끊김"),
     "discoverNewVersion": MessageLookupByLibrary.simpleMessage("새 버전 발견"),
     "dnsCacheCleared": MessageLookupByLibrary.simpleMessage("DNS 캐시를 지웠습니다"),

@@ -312,14 +312,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "back": MessageLookupByLibrary.simpleMessage("戻る"),
     "backgroundBlur": MessageLookupByLibrary.simpleMessage("背景のぼかし"),
     "backup": MessageLookupByLibrary.simpleMessage("バックアップ"),
-    "basedOnFlClash": MessageLookupByLibrary.simpleMessage(
-      "Nexo は FlClash（GPL-3.0）をベースにしています",
-    ),
     "backupAndRestore": MessageLookupByLibrary.simpleMessage("バックアップと復元"),
     "backupFromNewerVersion": MessageLookupByLibrary.simpleMessage(
       "このバックアップは新しいバージョンのアプリで作成されています。アプリを更新してから復元してください",
     ),
     "backupSuccess": MessageLookupByLibrary.simpleMessage("バックアップが完了しました"),
+    "basedOnFlClash": MessageLookupByLibrary.simpleMessage(
+      "Nexo は FlClash（GPL-3.0）をベースにしています",
+    ),
     "basicInfo": MessageLookupByLibrary.simpleMessage("基本情報"),
     "basicStrategy": MessageLookupByLibrary.simpleMessage("基本ポリシー"),
     "batchAdd": MessageLookupByLibrary.simpleMessage("一括追加"),
@@ -538,78 +538,78 @@ class MessageLookup extends MessageLookupByLibrary {
     "disableUDP": MessageLookupByLibrary.simpleMessage("UDPを無効化"),
     "disabled": MessageLookupByLibrary.simpleMessage("無効"),
     "discardChanges": MessageLookupByLibrary.simpleMessage("変更を破棄しますか？"),
-    "disclaimer": MessageLookupByLibrary.simpleMessage("免責事項"),
+    "disclaimer": MessageLookupByLibrary.simpleMessage("利用条件"),
     "disclaimerAcceptContent": MessageLookupByLibrary.simpleMessage(
-      "本ソフトウェアをインストール、複製または使用した時点で、本声明のすべての内容を読み、同意したものとみなされます。いずれかの条項に同意いただけない場合は、直ちに使用を中止し、本ソフトウェアをアンインストールしてください。",
+      "このページはNexoの利用に関する情報を提供し、設定から確認できます。操作の際に別途同意を求められた場合は、確認する前にそのメッセージを読んでください。",
     ),
-    "disclaimerAcceptTitle": MessageLookupByLibrary.simpleMessage("声明への同意"),
+    "disclaimerAcceptTitle": MessageLookupByLibrary.simpleMessage("この利用条件について"),
     "disclaimerAcknowledgeLabel": MessageLookupByLibrary.simpleMessage(
-      "この声明を読み、理解しました",
+      "この利用条件を読み、理解しました",
     ),
     "disclaimerAcknowledgeTip": MessageLookupByLibrary.simpleMessage(
-      "内容を理解したことを確認するため、以下の声明を読み、下のチェックボックスをオンにしてください：",
+      "利用条件を読み、下のチェックボックスを選択してください：",
     ),
-    "disclaimerAcknowledgeTitle": MessageLookupByLibrary.simpleMessage("声明の確認"),
+    "disclaimerAcknowledgeTitle": MessageLookupByLibrary.simpleMessage(
+      "利用条件の確認",
+    ),
     "disclaimerChangesContent": MessageLookupByLibrary.simpleMessage(
-      "開発者はバージョンの更新に伴い本声明を変更することがあり、変更内容は新しいバージョンの公開とともに効力を生じます。更新後も本ソフトウェアを引き続き使用した場合、変更後の声明に同意したものとみなされます。",
+      "サーバー一覧、アプリの機能、このページの情報は、更新に伴って変更されることがあります。現在の利用情報はサブスクリプションに、アプリのバージョンは「アプリについて」に表示されます。",
     ),
-    "disclaimerChangesTitle": MessageLookupByLibrary.simpleMessage("本声明の変更"),
+    "disclaimerChangesTitle": MessageLookupByLibrary.simpleMessage("変更について"),
     "disclaimerDesc": MessageLookupByLibrary.simpleMessage(
-      "Nexo（以下「本ソフトウェア」）をご利用になる前に、本声明の内容をよくお読みになり、十分にご理解ください。「同意する」をタップすると、以下のすべての条項を読み、理解し、承諾したものとみなされます。同意いただけない場合は「終了」をタップし、本ソフトウェアの使用を中止してください。",
+      "このページでは、Nexoの利用、接続、更新、外部設定の使用について説明します。設定からいつでも確認できます。",
     ),
     "disclaimerLiabilityContent": MessageLookupByLibrary.simpleMessage(
-      "適用法で認められる最大限の範囲において、開発者およびすべての貢献者は、本ソフトウェアの使用または使用不能に起因する直接的、間接的、偶発的、特別、懲罰的または結果的な損害（データの消失、機器の損傷、ネットワーク障害、業務の中断、逸失利益、およびそれに起因する法的紛争を含むがこれらに限らない）について、その可能性を知らされていた場合であっても、一切責任を負いません。",
+      "「アプリについて」から更新を確認できます。新しいバージョンがある場合、Nexoは更新パッケージをダウンロードして検証します。インストールには端末が対応する方法が使用され、システムによる確認やアプリの再起動が必要になる場合があります。インストール中はVPN接続が一時的に中断されることがあります。",
     ),
-    "disclaimerLiabilityTitle": MessageLookupByLibrary.simpleMessage("責任の制限"),
+    "disclaimerLiabilityTitle": MessageLookupByLibrary.simpleMessage("アプリの更新"),
     "disclaimerLicenseContent": MessageLookupByLibrary.simpleMessage(
-      "本ソフトウェアは GPL-3.0 ライセンスのもとでオープンソースとして公開されています。同ライセンスを遵守する限り、自由に使用、改変、再配布できますが、派生物も GPL-3.0 で公開し、原著作者の著作権表示を保持する必要があります。\n\n本ソフトウェアに含まれるサードパーティのコンポーネント（Clash.Meta コアを含む）は、それぞれのライセンスに従います。改変版や再配布版に起因する問題について、原著作者は責任を負いません。",
+      "アプリのソースコードはGPL-3.0で配布されています。FlClash、Clash.Meta、その他のコンポーネントのライセンスと著作権表示は保持されます。ソースコードのライセンスとVPNサービスの利用条件は別のものです。",
     ),
     "disclaimerLicenseTitle": MessageLookupByLibrary.simpleMessage(
       "オープンソースライセンス",
     ),
     "disclaimerNoServiceStatement": MessageLookupByLibrary.simpleMessage(
-      "本ソフトウェア自体は、プロキシサーバー、ノード、サブスクリプション、ネットワーク接続サービスを一切提供しておらず、それらのサービス提供者と提携、代理、保証の関係はありません。",
+      "NexoのVPNサーバーは、有効なアクセスキーまたはサブスクリプションに基づいて利用できます。",
     ),
     "disclaimerPrivacyContent": MessageLookupByLibrary.simpleMessage(
-      "本ソフトウェアは、サブスクリプション URL、ノード情報、設定内容、閲覧したウェブサイト、接続記録、通信内容、ログを収集またはアップロードしません。これらのデータは端末内にのみ保存され、開発者がアクセスすることはできません。\n\n本ソフトウェアが外部ネットワークにアクセスするのは、プロファイル更新時に指定されたサブスクリプション URL へアクセスする場合や、アップデート確認時に GitHub へアクセスする場合など、該当する機能を使用したときのみです。\n\n本ソフトウェアには、どのプラットフォームでも統計やクラッシュレポートのサービスは一切組み込まれていません。",
+      "Nexoは、利用権の確認や設定、サーバー一覧、更新の取得のためにNexoのサービスへ接続します。これらのリクエストには、認証や要求された機能に必要な情報が含まれます。VPNにルーティングされる通信は、選択したサーバーを経由します。\n\n設定と設定ファイルのローカルコピーは端末に保存されます。ログのエクスポートや、選択した保存先へのバックアップを行えます。外部サブスクリプションのインポートやリソースの読み込みでも、指定した提供元へ接続します。",
     ),
     "disclaimerPrivacyTitle": MessageLookupByLibrary.simpleMessage(
-      "データ収集とプライバシー",
+      "データとネットワークリクエスト",
     ),
     "disclaimerResponsibilityContent": MessageLookupByLibrary.simpleMessage(
-      "お住まいの国または地域で本ソフトウェアの使用が合法であることはご自身で確認する必要があり、本ソフトウェアを使用したすべての行為とその結果について、ご自身が単独で法的責任を負います。\n\nインポートするサブスクリプション、ノード、設定はご自身の判断で選択したものです。その出所の適法性、内容の安全性、サービスの安定性については、利用者と各提供者の間で解決してください。",
+      "適用される規則に従ってNexoを利用してください。攻撃、詐欺、マルウェアの配布、他者の権利の侵害にサービスを使用しないでください。アクセスキーとサブスクリプションのリンクは安全に保管してください。",
     ),
     "disclaimerResponsibilityTitle": MessageLookupByLibrary.simpleMessage(
-      "利用者の責任",
+      "安全な利用",
     ),
-    "disclaimerRestateHint": MessageLookupByLibrary.simpleMessage("上記の声明を入力"),
+    "disclaimerRestateHint": MessageLookupByLibrary.simpleMessage("上記の利用条件を入力"),
     "disclaimerRestateMismatch": MessageLookupByLibrary.simpleMessage(
-      "声明の内容と一致しません",
+      "文章が一致しません",
     ),
     "disclaimerRestateTip": MessageLookupByLibrary.simpleMessage(
-      "内容を理解したことを確認するため、以下の声明を下の入力欄に正確に入力してください：",
+      "利用条件を理解したことを確認するため、次の文章を入力してください：",
     ),
-    "disclaimerRestateTitle": MessageLookupByLibrary.simpleMessage("声明の復唱"),
+    "disclaimerRestateTitle": MessageLookupByLibrary.simpleMessage("利用条件の確認"),
     "disclaimerSoftwareContent": MessageLookupByLibrary.simpleMessage(
-      "本ソフトウェアは Clash.Meta（mihomo）コアをベースとしたオープンソースのネットワークプロキシクライアントであり、設定管理、ルールによる振り分け、トラフィック転送などのローカルツール機能のみを提供します。",
+      "Nexoは、NexoのVPNサービスへの接続と接続設定の管理を行うアプリです。",
     ),
-    "disclaimerSoftwareTitle": MessageLookupByLibrary.simpleMessage(
-      "ソフトウェアの性質",
-    ),
+    "disclaimerSoftwareTitle": MessageLookupByLibrary.simpleMessage("Nexoについて"),
     "disclaimerThirdPartyContent": MessageLookupByLibrary.simpleMessage(
-      "サブスクリプションリンク、設定ファイル、ルールセット、スクリプト、外部リソース、外部リンクはすべて第三者が提供するものであり、開発者はその適法性、正確性、安全性、可用性を審査または保証することはできず、また行いません。\n\nサードパーティのコンテンツの使用に起因する情報漏えい、財産上の損失、アカウント停止その他の損失は、利用者と第三者の間で解決するものとし、開発者は一切責任を負いません。",
+      "他の提供元のサブスクリプション、設定、ルール、スクリプトを追加できます。提供元を確認し、信頼できるリソースだけを追加してください。その内容や利用可否は、それぞれの提供元によって異なります。",
     ),
-    "disclaimerThirdPartyTitle": MessageLookupByLibrary.simpleMessage(
-      "サードパーティのコンテンツ",
-    ),
+    "disclaimerThirdPartyTitle": MessageLookupByLibrary.simpleMessage("外部設定"),
     "disclaimerUsageContent": MessageLookupByLibrary.simpleMessage(
-      "本ソフトウェアは学習、交流、技術研究などの非商用目的でのみ使用できます。有償配布、抱き合わせ販売、商用サービスの一部としての利用、本ソフトウェアの名義での事業活動など、あらゆる商用目的での使用を固く禁じます。いかなる商業行為も本ソフトウェアおよび開発者とは一切関係ありません。\n\nお住まいの国または地域の法令に違反する目的での使用を固く禁じます。これには、法に基づくネットワークアクセス制限の回避、違法情報の拡散、サイバー攻撃、他者の権利の侵害などが含まれますが、これらに限りません。",
+      "利用できるサーバー、機能、利用期間は、アクセスキーまたはサブスクリプションによって異なります。利用開始や更新の際に表示される料金、期間、更新条件を確認してください。",
     ),
-    "disclaimerUsageTitle": MessageLookupByLibrary.simpleMessage("使用の制限"),
+    "disclaimerUsageTitle": MessageLookupByLibrary.simpleMessage(
+      "利用とサブスクリプション",
+    ),
     "disclaimerWarrantyContent": MessageLookupByLibrary.simpleMessage(
-      "本ソフトウェアは「現状のまま」かつ「提供可能な範囲で」提供され、商品性、特定目的への適合性、非侵害、継続的な可用性、エラーやセキュリティ上の脆弱性がないことの保証を含め、明示または黙示を問わずいかなる保証も伴いません。\n\n開発者は、本ソフトウェアが利用者の要件を満たすこと、また中断やエラーなく動作することを保証しません。",
+      "速度や利用可否は、選択したサーバー、インターネット接続事業者、ネットワーク上の制限、端末、設定によって異なります。接続が中断されることもあります。接続できない場合はインターネットへの接続を確認し、別の利用可能なサーバーや自動選択を試してください。",
     ),
-    "disclaimerWarrantyTitle": MessageLookupByLibrary.simpleMessage("無保証"),
+    "disclaimerWarrantyTitle": MessageLookupByLibrary.simpleMessage("接続の利用可否"),
     "disconnected": MessageLookupByLibrary.simpleMessage("切断済み"),
     "discoverNewVersion": MessageLookupByLibrary.simpleMessage(
       "新しいバージョンが見つかりました",

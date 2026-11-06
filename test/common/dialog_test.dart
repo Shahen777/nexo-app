@@ -450,7 +450,9 @@ void main() {
     expect(find.byType(TextField), findsNothing);
     expect(_restateConfirmButton(tester).onPressed, isNull);
 
-    await tester.tap(find.text('I have read and understand this access statement'));
+    await tester.tap(
+      find.text('I have read and understand this access statement'),
+    );
     await tester.pump();
     expect(_restateConfirmButton(tester).onPressed, isNotNull);
     await tester.tap(find.text('Confirm'));

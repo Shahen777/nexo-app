@@ -391,9 +391,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Desenfoque de fondo",
     ),
     "backup": MessageLookupByLibrary.simpleMessage("Copia de seguridad"),
-    "basedOnFlClash": MessageLookupByLibrary.simpleMessage(
-      "Nexo está basado en FlClash (GPL-3.0)",
-    ),
     "backupAndRestore": MessageLookupByLibrary.simpleMessage(
       "Copia de seguridad y restauración",
     ),
@@ -402,6 +399,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "backupSuccess": MessageLookupByLibrary.simpleMessage(
       "Copia de seguridad completada",
+    ),
+    "basedOnFlClash": MessageLookupByLibrary.simpleMessage(
+      "Nexo está basado en FlClash (GPL-3.0)",
     ),
     "basicInfo": MessageLookupByLibrary.simpleMessage("Información básica"),
     "basicStrategy": MessageLookupByLibrary.simpleMessage(
@@ -677,91 +677,91 @@ class MessageLookup extends MessageLookupByLibrary {
     "discardChanges": MessageLookupByLibrary.simpleMessage(
       "¿Descartar los cambios?",
     ),
-    "disclaimer": MessageLookupByLibrary.simpleMessage("Aviso legal"),
+    "disclaimer": MessageLookupByLibrary.simpleMessage("Condiciones de uso"),
     "disclaimerAcceptContent": MessageLookupByLibrary.simpleMessage(
-      "Al instalar, copiar o usar el Software, se considera que has leído y aceptado esta declaración en su totalidad. Si no estás de acuerdo con alguno de sus términos, deja de usar el Software y desinstálalo de inmediato.",
+      "Esta página ofrece información sobre el uso de Nexo y está disponible en Ajustes. Si alguna acción solicita su consentimiento por separado, lea su mensaje antes de confirmar.",
     ),
-    "disclaimerAcceptTitle": MessageLookupByLibrary.simpleMessage("Aceptación"),
+    "disclaimerAcceptTitle": MessageLookupByLibrary.simpleMessage(
+      "Acerca de estas condiciones",
+    ),
     "disclaimerAcknowledgeLabel": MessageLookupByLibrary.simpleMessage(
-      "He leído y entiendo esta declaración",
+      "He leído y comprendo esta declaración de acceso",
     ),
     "disclaimerAcknowledgeTip": MessageLookupByLibrary.simpleMessage(
-      "Para confirmar que lo entiendes, lee la siguiente declaración y marca la casilla de abajo:",
+      "Lea la declaración de acceso y marque la casilla siguiente:",
     ),
     "disclaimerAcknowledgeTitle": MessageLookupByLibrary.simpleMessage(
-      "Confirma la declaración",
+      "Confirmar las condiciones de acceso",
     ),
     "disclaimerChangesContent": MessageLookupByLibrary.simpleMessage(
-      "Los desarrolladores pueden revisar esta declaración con cualquier versión, y la revisión entra en vigor cuando se publique dicha versión. Seguir usando el Software después de actualizar implica que aceptas la declaración revisada.",
+      "Las listas de servidores, las funciones de la aplicación y la información de esta página pueden cambiar con las actualizaciones. La información de acceso actual figura en su suscripción y la versión de la aplicación en «Acerca de».",
     ),
-    "disclaimerChangesTitle": MessageLookupByLibrary.simpleMessage(
-      "Cambios en esta declaración",
-    ),
+    "disclaimerChangesTitle": MessageLookupByLibrary.simpleMessage("Cambios"),
     "disclaimerDesc": MessageLookupByLibrary.simpleMessage(
-      "Antes de usar Nexo (“el Software”), lee con atención esta declaración y asegúrate de entenderla por completo. Pulsar “Aceptar” significa que has leído, comprendido y aceptado todos los términos siguientes. Si no estás de acuerdo, pulsa “Salir” y deja de usar el Software.",
+      "Esta página explica el acceso a Nexo, las conexiones, las actualizaciones y el uso de configuraciones externas. Puede volver a consultarla en Ajustes en cualquier momento.",
     ),
     "disclaimerLiabilityContent": MessageLookupByLibrary.simpleMessage(
-      "En la máxima medida permitida por la ley aplicable, ni los desarrolladores ni ningún colaborador serán responsables de ningún daño directo, indirecto, incidental, especial, punitivo o emergente derivado del uso o de la imposibilidad de usar el Software, incluidos, entre otros, la pérdida de datos, los daños al dispositivo, los fallos de red, la interrupción de la actividad, el lucro cesante o cualquier disputa legal resultante, incluso si se les hubiera advertido de la posibilidad de tales daños.",
+      "Busque actualizaciones en «Acerca de». Cuando hay una nueva versión, Nexo descarga y verifica el paquete de actualización. La instalación utiliza el método compatible con su dispositivo y puede requerir una confirmación del sistema y reiniciar la aplicación. La conexión VPN puede interrumpirse brevemente durante la instalación.",
     ),
     "disclaimerLiabilityTitle": MessageLookupByLibrary.simpleMessage(
-      "Limitación de responsabilidad",
+      "Actualizaciones de la aplicación",
     ),
     "disclaimerLicenseContent": MessageLookupByLibrary.simpleMessage(
-      "El Software es de código abierto bajo la licencia GPL-3.0. Puedes usarlo, modificarlo y distribuirlo libremente siempre que cumplas dicha licencia, que exige que las obras derivadas se publiquen también bajo GPL-3.0 y que se conserven los avisos de derechos de autor originales.\n\nLos componentes de terceros del Software, incluido el núcleo Clash.Meta, siguen sus propias licencias. Los autores originales no se hacen responsables de ningún problema derivado de versiones modificadas o redistribuidas.",
+      "El código fuente de la aplicación se distribuye bajo GPL-3.0. FlClash, Clash.Meta y los demás componentes conservan sus licencias y avisos de derechos de autor. La licencia del código fuente es independiente de las condiciones de acceso al servicio VPN.",
     ),
     "disclaimerLicenseTitle": MessageLookupByLibrary.simpleMessage(
-      "Licencia de código abierto",
+      "Licencias del código abierto",
     ),
     "disclaimerNoServiceStatement": MessageLookupByLibrary.simpleMessage(
-      "El Software en sí no proporciona ningún servidor proxy, nodo, suscripción ni servicio de acceso a la red, y no mantiene ninguna relación de asociación, representación ni garantía con ningún proveedor de dichos servicios.",
+      "El acceso a los servidores VPN de Nexo requiere una clave de acceso o una suscripción válida.",
     ),
     "disclaimerPrivacyContent": MessageLookupByLibrary.simpleMessage(
-      "El Software no recopila ni sube tus URL de suscripción, los detalles de los nodos, el contenido de las configuraciones, los sitios web visitados, los registros de conexión, el contenido del tráfico ni los registros. Estos datos permanecen en tu dispositivo y los desarrolladores no tienen acceso a ellos.\n\nEl Software solo accede a la red cuando usas una función que lo necesita, como obtener la URL de suscripción que indicaste al actualizar un perfil o conectarse a GitHub al buscar actualizaciones.\n\nEl Software no incluye ningún servicio de analítica ni de informes de fallos en ninguna plataforma.",
+      "Nexo contacta con su servicio para comprobar el acceso y obtener configuraciones, listas de servidores y actualizaciones. Estas solicitudes incluyen la información necesaria para la autenticación y la función solicitada. El tráfico enrutado por la VPN pasa por el servidor seleccionado.\n\nLos ajustes y las copias locales de las configuraciones se guardan en su dispositivo. Puede exportar registros y guardar copias de seguridad en el destino que elija. Al importar suscripciones externas o cargar recursos, la aplicación también contacta con las fuentes que indique.",
     ),
     "disclaimerPrivacyTitle": MessageLookupByLibrary.simpleMessage(
-      "Recopilación de datos y privacidad",
+      "Datos y solicitudes de red",
     ),
     "disclaimerResponsibilityContent": MessageLookupByLibrary.simpleMessage(
-      "Eres responsable de asegurarte de que el uso del Software sea legal donde vives, y asumes tú solo la responsabilidad legal de todo lo que hagas con él y de sus consecuencias.\n\nLas suscripciones, los nodos y las configuraciones que importas son decisión tuya. Que su origen sea legal, su contenido seguro y su servicio fiable es un asunto entre tú y sus proveedores.",
+      "Utilice Nexo de acuerdo con las normas que le sean aplicables. No use el servicio para ataques, fraudes, programas maliciosos ni para vulnerar los derechos de otras personas. Guarde sus claves de acceso y enlaces de suscripción de forma segura.",
     ),
     "disclaimerResponsibilityTitle": MessageLookupByLibrary.simpleMessage(
-      "Tu responsabilidad",
+      "Uso seguro",
     ),
     "disclaimerRestateHint": MessageLookupByLibrary.simpleMessage(
-      "Escribe la declaración anterior",
+      "Escriba la declaración de acceso anterior",
     ),
     "disclaimerRestateMismatch": MessageLookupByLibrary.simpleMessage(
-      "No coincide con la declaración",
+      "El texto no coincide",
     ),
     "disclaimerRestateTip": MessageLookupByLibrary.simpleMessage(
-      "Para confirmar que lo entiendes, escribe la siguiente declaración completa en el campo de abajo:",
+      "Para confirmar que comprende las condiciones de acceso, escriba el texto siguiente:",
     ),
     "disclaimerRestateTitle": MessageLookupByLibrary.simpleMessage(
-      "Repite la declaración",
+      "Confirmar las condiciones de acceso",
     ),
     "disclaimerSoftwareContent": MessageLookupByLibrary.simpleMessage(
-      "El Software es un cliente proxy de red de código abierto basado en el núcleo Clash.Meta (mihomo). Solo ofrece herramientas locales como la gestión de configuración, el enrutamiento basado en reglas y el reenvío de tráfico.",
+      "Nexo es una aplicación para conectarse al servicio VPN Nexo y gestionar los ajustes de conexión.",
     ),
     "disclaimerSoftwareTitle": MessageLookupByLibrary.simpleMessage(
-      "Naturaleza del software",
+      "Acerca de Nexo",
     ),
     "disclaimerThirdPartyContent": MessageLookupByLibrary.simpleMessage(
-      "Los enlaces de suscripción, los archivos de configuración, los conjuntos de reglas, los scripts, los recursos externos y los enlaces externos los proporcionan terceros. Los desarrolladores no pueden revisar ni garantizar, ni lo hacen, su legalidad, exactitud, seguridad o disponibilidad.\n\nCualquier fuga de datos, pérdida económica, bloqueo de cuenta u otra pérdida causada por contenido de terceros debe resolverse entre tú y el tercero; los desarrolladores no asumen ninguna responsabilidad por ello.",
+      "Puede añadir suscripciones, configuraciones, reglas y scripts de otros proveedores. Compruebe su origen y añada solo recursos de confianza. Su contenido y disponibilidad dependen de esos proveedores.",
     ),
     "disclaimerThirdPartyTitle": MessageLookupByLibrary.simpleMessage(
-      "Contenido de terceros",
+      "Configuraciones externas",
     ),
     "disclaimerUsageContent": MessageLookupByLibrary.simpleMessage(
-      "El Software está destinado únicamente a usos no comerciales, como el aprendizaje, el intercambio y la investigación técnica. Queda estrictamente prohibido usarlo con cualquier fin comercial, incluidos, entre otros, la distribución de pago, la venta en paquete, su uso como parte de un servicio comercial o hacer negocio en nombre del Software. Cualquier actividad comercial no guarda relación con el Software ni con sus desarrolladores.\n\nQueda estrictamente prohibido usar el Software para cualquier fin que infrinja las leyes y normativas de tu país o región, incluidos, entre otros, eludir restricciones de acceso a la red impuestas legalmente, difundir contenido ilegal, lanzar ataques a la red o vulnerar los derechos legítimos de otras personas.",
+      "Los servidores, las funciones y el período de acceso disponibles dependen de su clave o suscripción. Compruebe el precio, la duración y las condiciones de renovación que se muestran al obtener o renovar el acceso.",
     ),
     "disclaimerUsageTitle": MessageLookupByLibrary.simpleMessage(
-      "Restricciones de uso",
+      "Acceso y suscripciones",
     ),
     "disclaimerWarrantyContent": MessageLookupByLibrary.simpleMessage(
-      "El Software se proporciona “tal cual” y “según disponibilidad”, sin garantía de ningún tipo, expresa o implícita, incluidas, entre otras, las garantías de comerciabilidad, idoneidad para un fin concreto, no infracción, disponibilidad ininterrumpida, ausencia de errores o ausencia de vulnerabilidades de seguridad.\n\nLos desarrolladores no garantizan que el Software satisfaga tus necesidades ni que funcione sin interrupciones ni errores.",
+      "La velocidad y la disponibilidad dependen del servidor seleccionado, del proveedor de Internet, de las restricciones de red, del dispositivo y de los ajustes. La conexión puede interrumpirse. Si falla, compruebe su acceso a Internet y pruebe otro servidor disponible o la selección automática.",
     ),
     "disclaimerWarrantyTitle": MessageLookupByLibrary.simpleMessage(
-      "Sin garantía",
+      "Disponibilidad de la conexión",
     ),
     "disconnected": MessageLookupByLibrary.simpleMessage("Desconectado"),
     "discoverNewVersion": MessageLookupByLibrary.simpleMessage(

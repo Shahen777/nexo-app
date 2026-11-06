@@ -366,9 +366,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "back": MessageLookupByLibrary.simpleMessage("Back"),
     "backgroundBlur": MessageLookupByLibrary.simpleMessage("Background blur"),
     "backup": MessageLookupByLibrary.simpleMessage("Backup"),
-    "basedOnFlClash": MessageLookupByLibrary.simpleMessage(
-      "Nexo is based on FlClash (GPL-3.0)",
-    ),
     "backupAndRestore": MessageLookupByLibrary.simpleMessage(
       "Backup and restore",
     ),
@@ -376,6 +373,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "This backup comes from a newer version of the app. Update the app before restoring it",
     ),
     "backupSuccess": MessageLookupByLibrary.simpleMessage("Backup successful"),
+    "basedOnFlClash": MessageLookupByLibrary.simpleMessage(
+      "Nexo is based on FlClash (GPL-3.0)",
+    ),
     "basicInfo": MessageLookupByLibrary.simpleMessage("Basic info"),
     "basicStrategy": MessageLookupByLibrary.simpleMessage("Basic strategies"),
     "batchAdd": MessageLookupByLibrary.simpleMessage("Batch add"),
@@ -632,91 +632,91 @@ class MessageLookup extends MessageLookupByLibrary {
     "discardChanges": MessageLookupByLibrary.simpleMessage(
       "Discard the changes?",
     ),
-    "disclaimer": MessageLookupByLibrary.simpleMessage("Disclaimer"),
+    "disclaimer": MessageLookupByLibrary.simpleMessage("Terms of use"),
     "disclaimerAcceptContent": MessageLookupByLibrary.simpleMessage(
-      "By installing, copying, or using the Software, you are deemed to have read and agreed to this entire statement. If you disagree with any of its terms, stop using and uninstall the Software immediately.",
+      "This page provides information about using Nexo and is available in Settings. If an action separately asks for your agreement, read its message before confirming.",
     ),
-    "disclaimerAcceptTitle": MessageLookupByLibrary.simpleMessage("Acceptance"),
+    "disclaimerAcceptTitle": MessageLookupByLibrary.simpleMessage(
+      "About these terms",
+    ),
     "disclaimerAcknowledgeLabel": MessageLookupByLibrary.simpleMessage(
-      "I have read and understand this statement",
+      "I have read and understand this access statement",
     ),
     "disclaimerAcknowledgeTip": MessageLookupByLibrary.simpleMessage(
-      "To confirm you understand, read the following statement and check the box below:",
+      "Read the access statement and select the checkbox below:",
     ),
     "disclaimerAcknowledgeTitle": MessageLookupByLibrary.simpleMessage(
-      "Confirm the statement",
+      "Confirm access terms",
     ),
     "disclaimerChangesContent": MessageLookupByLibrary.simpleMessage(
-      "The developers may revise this statement with any release, and the revision takes effect when that release is published. Continuing to use the Software after updating means you accept the revised statement.",
+      "Server lists, app features, and the information on this page may change with updates. Current access information is shown in your subscription, and the app version is shown in About.",
     ),
-    "disclaimerChangesTitle": MessageLookupByLibrary.simpleMessage(
-      "Changes to this statement",
-    ),
+    "disclaimerChangesTitle": MessageLookupByLibrary.simpleMessage("Changes"),
     "disclaimerDesc": MessageLookupByLibrary.simpleMessage(
-      "Before using Nexo (\"the Software\"), please read this statement carefully and make sure you understand all of it. Tapping \"Agree\" means you have read, understood, and accept every term below. If you do not agree, tap \"Exit\" and stop using the Software.",
+      "This page explains Nexo access, connections, updates, and the use of external configurations. You can return to it in Settings at any time.",
     ),
     "disclaimerLiabilityContent": MessageLookupByLibrary.simpleMessage(
-      "To the maximum extent permitted by applicable law, neither the developers nor any contributor shall be liable for any direct, indirect, incidental, special, punitive, or consequential damages arising from the use of or inability to use the Software, including but not limited to data loss, device damage, network failures, business interruption, lost profits, or any resulting legal dispute, even if advised of the possibility of such damages.",
+      "Check for updates in About. When a new version is available, Nexo downloads and verifies the update package. Installation uses the method supported on your device and may require system confirmation and an app restart. The VPN connection may briefly stop during installation.",
     ),
     "disclaimerLiabilityTitle": MessageLookupByLibrary.simpleMessage(
-      "Limitation of liability",
+      "App updates",
     ),
     "disclaimerLicenseContent": MessageLookupByLibrary.simpleMessage(
-      "The Software is open source under the GPL-3.0 license. You may use, modify, and distribute it freely as long as you comply with that license, which requires derivative works to be released under GPL-3.0 as well and the original copyright notices to be kept.\n\nThird-party components in the Software, including the Clash.Meta core, follow their own licenses. The original authors are not responsible for any issue arising from modified or redistributed versions.",
+      "The app\'s source code is distributed under GPL-3.0. FlClash, Clash.Meta, and other components retain their licenses and copyright notices. The source-code license is separate from the conditions for access to the VPN service.",
     ),
     "disclaimerLicenseTitle": MessageLookupByLibrary.simpleMessage(
-      "Open-source license",
+      "Open-source licenses",
     ),
     "disclaimerNoServiceStatement": MessageLookupByLibrary.simpleMessage(
-      "The Software itself does not provide any proxy server, node, subscription, or network access service, and has no partnership, agency, or guarantee relationship with any provider of such services.",
+      "Access to Nexo VPN servers is provided under a valid access key or subscription.",
     ),
     "disclaimerPrivacyContent": MessageLookupByLibrary.simpleMessage(
-      "The Software does not collect or upload your subscription URLs, node details, configuration content, visited websites, connection records, traffic content, or logs. This data stays on your device and the developers have no access to it.\n\nThe Software only reaches the network when you use a feature that needs it, such as fetching the subscription URL you provided when updating a profile, or contacting GitHub when checking for updates.\n\nThe Software includes no analytics or crash reporting service on any platform.",
+      "Nexo contacts its service to check access and obtain configurations, server lists, and updates. These requests include the information needed for authentication and the requested function. Traffic routed through the VPN passes through the selected server.\n\nSettings and local configuration copies are stored on your device. You can export logs and save backups to a destination you choose. Importing external subscriptions or loading resources also contacts the sources you specify.",
     ),
     "disclaimerPrivacyTitle": MessageLookupByLibrary.simpleMessage(
-      "Data collection and privacy",
+      "Data and network requests",
     ),
     "disclaimerResponsibilityContent": MessageLookupByLibrary.simpleMessage(
-      "You are responsible for making sure that using the Software is lawful where you live, and you alone bear the legal responsibility for everything you do with it and its consequences.\n\nThe subscriptions, nodes, and configurations you import are your own choice. Whether their source is lawful, their content is safe, and their service is reliable is a matter between you and their providers.",
+      "Use Nexo in accordance with the rules that apply to you. Do not use the service for attacks, fraud, malware, or violations of other people\'s rights. Store your access keys and subscription links securely.",
     ),
     "disclaimerResponsibilityTitle": MessageLookupByLibrary.simpleMessage(
-      "Your responsibility",
+      "Safe use",
     ),
     "disclaimerRestateHint": MessageLookupByLibrary.simpleMessage(
-      "Enter the statement above",
+      "Enter the access statement above",
     ),
     "disclaimerRestateMismatch": MessageLookupByLibrary.simpleMessage(
-      "Does not match the statement",
+      "The text does not match",
     ),
     "disclaimerRestateTip": MessageLookupByLibrary.simpleMessage(
-      "To confirm you understand, enter the following statement in full in the field below:",
+      "To confirm that you understand the access terms, enter the text below:",
     ),
     "disclaimerRestateTitle": MessageLookupByLibrary.simpleMessage(
-      "Restate the statement",
+      "Confirm access terms",
     ),
     "disclaimerSoftwareContent": MessageLookupByLibrary.simpleMessage(
-      "The Software is an open-source network proxy client built on the Clash.Meta (mihomo) core. It only provides local tooling such as configuration management, rule-based routing, and traffic forwarding.",
+      "Nexo is an app for connecting to the Nexo VPN service and managing connection settings.",
     ),
     "disclaimerSoftwareTitle": MessageLookupByLibrary.simpleMessage(
-      "Nature of the software",
+      "About Nexo",
     ),
     "disclaimerThirdPartyContent": MessageLookupByLibrary.simpleMessage(
-      "Subscription links, configuration files, rule sets, scripts, external resources, and external links are all provided by third parties. The developers cannot and do not review or guarantee their legality, accuracy, security, or availability.\n\nAny data leak, financial loss, account ban, or other loss caused by third-party content is to be settled between you and the third party; the developers bear no responsibility for it.",
+      "You can add subscriptions, configurations, rules, and scripts from other providers. Check their source and add only resources you trust. Their content and availability depend on those providers.",
     ),
     "disclaimerThirdPartyTitle": MessageLookupByLibrary.simpleMessage(
-      "Third-party content",
+      "External configurations",
     ),
     "disclaimerUsageContent": MessageLookupByLibrary.simpleMessage(
-      "The Software is intended only for non-commercial uses such as learning, exchange, and technical research. Using it for any commercial purpose is strictly prohibited, including but not limited to paid distribution, bundled sales, use as part of a commercial service, or doing business in the name of the Software. Any commercial activity is unrelated to the Software and its developers.\n\nUsing the Software for anything that violates the laws and regulations of your country or region is strictly prohibited, including but not limited to bypassing lawfully imposed network access restrictions, spreading illegal content, launching network attacks, or infringing the lawful rights of others.",
+      "The available servers, features, and access period depend on your key or subscription. Check the price, duration, and renewal conditions shown when obtaining or renewing access.",
     ),
     "disclaimerUsageTitle": MessageLookupByLibrary.simpleMessage(
-      "Restrictions on use",
+      "Access and subscriptions",
     ),
     "disclaimerWarrantyContent": MessageLookupByLibrary.simpleMessage(
-      "The Software is provided \"as is\" and \"as available\", without warranty of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, non-infringement, uninterrupted availability, freedom from errors, or freedom from security vulnerabilities.\n\nThe developers do not guarantee that the Software will meet your needs or that it will run without interruption or error.",
+      "Speed and availability depend on the selected server, internet provider, network restrictions, device, and settings. Connections may be interrupted. If a connection fails, check your internet access and try another available server or automatic selection.",
     ),
     "disclaimerWarrantyTitle": MessageLookupByLibrary.simpleMessage(
-      "No warranty",
+      "Connection availability",
     ),
     "disconnected": MessageLookupByLibrary.simpleMessage("Disconnected"),
     "discoverNewVersion": MessageLookupByLibrary.simpleMessage(
