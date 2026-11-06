@@ -189,45 +189,44 @@ void main() {
 
   for (final type in [null, SheetType.bottomSheet]) {
     for (final brightness in Brightness.values) {
-      testWidgets(
-        'toolbar masks scrolling content on '
-        '${type == null ? 'a page' : 'a sheet'} in ${brightness.name} mode',
-        (tester) async {
-          final scaffold = CommonScaffold(title: 'title', body: _list());
-          await tester.pumpWidget(
-            TestApp(
-              wrapInProviderScope: true,
-              theme: ThemeData(brightness: brightness),
-              child: type == null
-                  ? scaffold
-                  : SheetProvider(type: type, child: scaffold),
-            ),
-          );
-          await tester.pumpAndSettle();
+      testWidgets('toolbar masks scrolling content on '
+          '${type == null ? 'a page' : 'a sheet'} in ${brightness.name} mode', (
+        tester,
+      ) async {
+        final scaffold = CommonScaffold(title: 'title', body: _list());
+        await tester.pumpWidget(
+          TestApp(
+            wrapInProviderScope: true,
+            theme: ThemeData(brightness: brightness),
+            child: type == null
+                ? scaffold
+                : SheetProvider(type: type, child: scaffold),
+          ),
+        );
+        await tester.pumpAndSettle();
 
-          final header = find.ancestor(
-            of: find.byType(AppBar),
-            matching: find.byType(FloatingHeader),
-          );
-          final cover = find
-              .descendant(of: header, matching: find.byType(DecoratedBox))
-              .first;
-          final decoration = tester.widget<DecoratedBox>(cover).decoration;
-          final gradient = (decoration as BoxDecoration).gradient;
-          expect(gradient, isA<LinearGradient>());
-          final scrim = gradient! as LinearGradient;
-          expect(scrim.colors.first.a, 1);
-          expect(scrim.colors[1].a, 1);
-          expect(scrim.colors.last.a, 0);
-          final coverRect = tester.getRect(cover);
-          expect(
-            coverRect.top + coverRect.height * scrim.stops![1],
-            closeTo(tester.getRect(header).bottom, 0.01),
-          );
-          expect(coverRect.bottom, greaterThan(tester.getRect(header).bottom));
-          expect(tester.takeException(), isNull);
-        },
-      );
+        final header = find.ancestor(
+          of: find.byType(AppBar),
+          matching: find.byType(FloatingHeader),
+        );
+        final cover = find
+            .descendant(of: header, matching: find.byType(DecoratedBox))
+            .first;
+        final decoration = tester.widget<DecoratedBox>(cover).decoration;
+        final gradient = (decoration as BoxDecoration).gradient;
+        expect(gradient, isA<LinearGradient>());
+        final scrim = gradient! as LinearGradient;
+        expect(scrim.colors.first.a, 1);
+        expect(scrim.colors[1].a, 1);
+        expect(scrim.colors.last.a, 0);
+        final coverRect = tester.getRect(cover);
+        expect(
+          coverRect.top + coverRect.height * scrim.stops![1],
+          closeTo(tester.getRect(header).bottom, 0.01),
+        );
+        expect(coverRect.bottom, greaterThan(tester.getRect(header).bottom));
+        expect(tester.takeException(), isNull);
+      });
     }
   }
 
