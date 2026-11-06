@@ -423,13 +423,16 @@ class _ServerPicker extends ConsumerWidget {
                     color: Colors.white,
                   ),
                 const SizedBox(width: 8),
-                Text(
-                  testing ? NexoStrings.speedTesting : NexoStrings.speedTest,
-                  style: _manrope(
-                    context,
-                    AppTextStyle.subheadline,
-                    weight: 650,
-                    color: Colors.white,
+                Flexible(
+                  child: Text(
+                    testing ? NexoStrings.speedTesting : NexoStrings.speedTest,
+                    textAlign: TextAlign.center,
+                    style: _manrope(
+                      context,
+                      AppTextStyle.subheadline,
+                      weight: 650,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ],
