@@ -147,12 +147,18 @@ void main() {
           tester,
           UpdateDownloadDialog(
             release: const {},
-            download: (_, {required cancelToken, required onProgress, platform}) async {
-              token = cancelToken;
-              final cancelled = await token.whenCancel;
-              await cleaned.future;
-              throw cancelled;
-            },
+            download:
+                (
+                  _, {
+                  required cancelToken,
+                  required onProgress,
+                  platform,
+                }) async {
+                  token = cancelToken;
+                  final cancelled = await token.whenCancel;
+                  await cleaned.future;
+                  throw cancelled;
+                },
             install: (_) async => installed = true,
           ),
         );
