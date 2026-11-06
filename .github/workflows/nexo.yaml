@@ -73,7 +73,7 @@ jobs:
             exit 1
           fi
       - name: Test widgets
-        run: dart run tool/test.dart test/widgets test/common/request_test.dart test/common/desktop_updater_test.dart test/common/update_download_test.dart test/providers/common_action_test.dart test/setup_test.dart -- --reporter expanded
+        run: dart run tool/test.dart test/widgets test/common/dialog_test.dart test/common/request_test.dart test/common/desktop_updater_test.dart test/common/update_download_test.dart test/l10n test/lint/dynamic_message_key_test.dart test/providers/common_action_test.dart test/setup_test.dart -- --reporter expanded
 
   build:
     if: ${{ !inputs.ui_only }}

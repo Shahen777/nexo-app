@@ -366,7 +366,7 @@ void main() {
       expect(
         tester
             .getTopLeft(
-              find.descendant(of: view, matching: find.text('Disclaimer')),
+              find.descendant(of: view, matching: find.text('Terms of use')),
             )
             .dy,
         greaterThanOrEqualTo(macOSTrafficLightsArea.height),
@@ -407,22 +407,23 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Agree'));
     await tester.pumpAndSettle();
-    expect(find.text('Restate the statement'), findsOneWidget);
+    expect(find.text('Confirm access terms'), findsOneWidget);
     expect(_restateConfirmButton(tester).onPressed, isNull);
 
+    final prefix = _noServiceStatement(tester).substring(0, 12);
     final field = find.byType(TextField);
-    await tester.enterText(field, 'The Software itself');
+    await tester.enterText(field, prefix);
     await tester.pump();
-    expect(find.text('Does not match the statement'), findsNothing);
+    expect(find.text('The text does not match'), findsNothing);
     expect(_restateConfirmButton(tester).onPressed, isNull);
 
-    await tester.enterText(field, 'The Software itself provides');
+    await tester.enterText(field, '$prefix!');
     await tester.pump();
-    expect(find.text('Does not match the statement'), findsOneWidget);
+    expect(find.text('The text does not match'), findsOneWidget);
 
     await tester.tap(find.text('Cancel'));
     await tester.pumpAndSettle();
-    expect(find.text('Restate the statement'), findsNothing);
+    expect(find.text('Confirm access terms'), findsNothing);
     expect(find.byType(DisclaimerView), findsOneWidget);
 
     await tester.tap(find.text('Agree'));
@@ -445,11 +446,11 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Agree'));
     await tester.pumpAndSettle();
-    expect(find.text('Confirm the statement'), findsOneWidget);
+    expect(find.text('Confirm access terms'), findsOneWidget);
     expect(find.byType(TextField), findsNothing);
     expect(_restateConfirmButton(tester).onPressed, isNull);
 
-    await tester.tap(find.text('I have read and understand this statement'));
+    await tester.tap(find.text('I have read and understand this access statement'));
     await tester.pump();
     expect(_restateConfirmButton(tester).onPressed, isNotNull);
     await tester.tap(find.text('Confirm'));
@@ -486,19 +487,19 @@ void main() {
 
     await tester.showKeyboard(field);
     tester.testTextInput.updateEditingValue(
-      const TextEditingValue(
-        text: 'The Softwarexy',
-        composing: TextRange(start: 12, end: 14),
+      TextEditingValue(
+        text: '${statement.substring(0, 12)}xy',
+        composing: const TextRange(start: 12, end: 14),
       ),
     );
     await tester.pump();
-    expect(find.text('Does not match the statement'), findsNothing);
+    expect(find.text('The text does not match'), findsNothing);
 
     tester.testTextInput.updateEditingValue(
-      const TextEditingValue(text: 'The Softwarexy'),
+      TextEditingValue(text: '${statement.substring(0, 12)}xy'),
     );
     await tester.pump();
-    expect(find.text('Does not match the statement'), findsOneWidget);
+    expect(find.text('The text does not match'), findsOneWidget);
 
     await tester.tap(find.text('Cancel'));
     await tester.pumpAndSettle();
@@ -512,7 +513,8 @@ void main() {
   ) async {
     await _pumpHost(tester, homeBuilder: (_) => const DisclaimerView());
 
-    expect(find.text('Disclaimer'), findsWidgets);
+    expect(find.text('Terms of use'), findsWidgets);
+    expect(find.text(_noServiceStatement(tester)), findsOneWidget);
     expect(find.text('Agree'), findsNothing);
     expect(find.text('Exit'), findsNothing);
   });

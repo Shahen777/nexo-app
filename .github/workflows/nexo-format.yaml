@@ -3,6 +3,11 @@ name: nexo-format
 # Formats Dart code in the cloud (no Dart SDK on the maintainer's Mac) and commits the result.
 on:
   workflow_dispatch:
+    inputs:
+      generate_localizations:
+        description: Regenerate Dart localizations from source ARB files
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -17,6 +22,14 @@ jobs:
           channel: stable
           flutter-version: '3.47.6'
       - run: flutter pub get
+      - name: Generate localizations
+        if: inputs.generate_localizations
+        run: |
+          set -euo pipefail
+          cp pubspec.yaml /tmp/nexo-format-pubspec.yaml
+          trap 'cp /tmp/nexo-format-pubspec.yaml pubspec.yaml' EXIT
+          yq -i '.hooks.user_defines.setup.build_assets = false | .hooks.user_defines.rust_api.build_assets = false' pubspec.yaml
+          dart run intl_utils:generate
       - run: dart format lib test tool plugins setup.dart
       - name: Commit
         run: |

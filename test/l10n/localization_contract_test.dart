@@ -70,4 +70,22 @@ void main() {
       }
     }
   });
+
+  test('generated Nexo terms match source text in every locale', () {
+    for (final entry in lookups.entries) {
+      final source =
+          jsonDecode(File('arb/intl_${entry.key}.arb').readAsStringSync())
+              as Map<String, dynamic>;
+      for (final message in source.entries.where(
+        (message) => message.key.startsWith('disclaimer'),
+      )) {
+        expect(
+          Function.apply(entry.value.messages[message.key]! as Function, []),
+          message.value,
+          reason: '${entry.key}.${message.key} must use the current Nexo terms',
+        );
+      }
+    }
+  });
+
 }
