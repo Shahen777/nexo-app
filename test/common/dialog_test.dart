@@ -309,7 +309,7 @@ void main() {
 
       final agreed = requestDisclaimerConsent();
       await tester.pumpAndSettle();
-      expect(find.text('Data collection and privacy'), findsOneWidget);
+      expect(find.text('Data and network requests'), findsOneWidget);
       await _agreeAndRestate(tester);
       expect(await agreed, isTrue);
 
