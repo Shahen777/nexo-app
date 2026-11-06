@@ -71,12 +71,14 @@ class _UpdateDownloadDialogState extends ConsumerState<UpdateDownloadDialog> {
         Navigator.of(context).pop(false);
         return;
       }
-      started = await (widget.install?.call(path) ??
-          launchUpdateInstaller(
-            path,
-            platform: platform,
-            installAndroid: (path) async => await app?.installApk(path) == true,
-          ));
+      started =
+          await (widget.install?.call(path) ??
+              launchUpdateInstaller(
+                path,
+                platform: platform,
+                installAndroid: (path) async =>
+                    await app?.installApk(path) == true,
+              ));
     } catch (error) {
       if (_cancelToken.isCancelled) return;
       commonPrint.log(

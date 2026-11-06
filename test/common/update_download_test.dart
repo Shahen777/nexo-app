@@ -47,7 +47,9 @@ void main() {
       return ResponseBody.fromBytes(
         bytes,
         200,
-        headers: {Headers.contentLengthHeader: ['${bytes.length}']},
+        headers: {
+          Headers.contentLengthHeader: ['${bytes.length}'],
+        },
       );
     });
     request = Request(downloadClient: client);
@@ -63,16 +65,19 @@ void main() {
     ('android-arm64', 'Nexo.apk'),
     ('android-arm', 'Nexo.apk'),
   ]) {
-    test('a verified $platform download keeps the matching installer extension', () async {
-      final installer = await request.downloadUpdate(
-        release(),
-        platform: platform,
-        cancelToken: CancelToken(),
-        onProgress: (_) {},
-      );
-      expect(installer, path.join(cache.path, 'update', fileName));
-      expect(await File(installer).readAsBytes(), bytes);
-    });
+    test(
+      'a verified $platform download keeps the matching installer extension',
+      () async {
+        final installer = await request.downloadUpdate(
+          release(),
+          platform: platform,
+          cancelToken: CancelToken(),
+          onProgress: (_) {},
+        );
+        expect(installer, path.join(cache.path, 'update', fileName));
+        expect(await File(installer).readAsBytes(), bytes);
+      },
+    );
   }
 
   test('a checksum mismatch removes the downloaded executable', () async {
@@ -85,62 +90,83 @@ void main() {
       ),
       throwsFormatException,
     );
-    expect(await File(path.join(cache.path, 'update', 'Nexo.exe')).exists(), isFalse);
+    expect(
+      await File(path.join(cache.path, 'update', 'Nexo.exe')).exists(),
+      isFalse,
+    );
   });
 
-  test('cancelled downloads never leave an installer available to launch', () async {
-    final entered = Completer<void>();
-    client.httpClientAdapter = _InstallerAdapter((options, cancelled) async {
-      entered.complete();
-      await cancelled;
-      throw DioException.requestCancelled(
-        requestOptions: options,
-        reason: 'test cancellation',
+  test(
+    'cancelled downloads never leave an installer available to launch',
+    () async {
+      final entered = Completer<void>();
+      client.httpClientAdapter = _InstallerAdapter((options, cancelled) async {
+        entered.complete();
+        await cancelled;
+        throw DioException.requestCancelled(
+          requestOptions: options,
+          reason: 'test cancellation',
+        );
+      });
+      final token = CancelToken();
+      final pending = request.downloadUpdate(
+        release(),
+        platform: 'windows',
+        cancelToken: token,
+        onProgress: (_) {},
       );
-    });
-    final token = CancelToken();
-    final pending = request.downloadUpdate(
-      release(),
-      platform: 'windows',
-      cancelToken: token,
-      onProgress: (_) {},
-    );
-    final outcome = expectLater(
-      pending,
-      throwsA(isA<DioException>().having((error) => error.type, 'type', DioExceptionType.cancel)),
-    );
-    await entered.future;
-    token.cancel();
-    await outcome;
-    expect(await File(path.join(cache.path, 'update', 'Nexo.exe')).exists(), isFalse);
-  });
+      final outcome = expectLater(
+        pending,
+        throwsA(
+          isA<DioException>().having(
+            (error) => error.type,
+            'type',
+            DioExceptionType.cancel,
+          ),
+        ),
+      );
+      await entered.future;
+      token.cancel();
+      await outcome;
+      expect(
+        await File(path.join(cache.path, 'update', 'Nexo.exe')).exists(),
+        isFalse,
+      );
+    },
+  );
 
-  test('invalid installer URLs and unsupported platforms never download', () async {
-    var fetched = false;
-    client.httpClientAdapter = _InstallerAdapter((_, _) async {
-      fetched = true;
-      throw StateError('unexpected fetch');
-    });
-    for (final url in ['http://updates.test/Nexo.exe', 'https://u:p@updates.test/Nexo.exe']) {
+  test(
+    'invalid installer URLs and unsupported platforms never download',
+    () async {
+      var fetched = false;
+      client.httpClientAdapter = _InstallerAdapter((_, _) async {
+        fetched = true;
+        throw StateError('unexpected fetch');
+      });
+      for (final url in [
+        'http://updates.test/Nexo.exe',
+        'https://u:p@updates.test/Nexo.exe',
+      ]) {
+        await expectLater(
+          request.downloadUpdate(
+            release(url: url),
+            platform: 'windows',
+            cancelToken: CancelToken(),
+            onProgress: (_) {},
+          ),
+          throwsFormatException,
+        );
+      }
       await expectLater(
         request.downloadUpdate(
-          release(url: url),
-          platform: 'windows',
+          release(),
+          platform: 'macos',
           cancelToken: CancelToken(),
           onProgress: (_) {},
         ),
-        throwsFormatException,
+        throwsUnsupportedError,
       );
-    }
-    await expectLater(
-      request.downloadUpdate(
-        release(),
-        platform: 'macos',
-        cancelToken: CancelToken(),
-        onProgress: (_) {},
-      ),
-      throwsUnsupportedError,
-    );
-    expect(fetched, isFalse);
-  });
+      expect(fetched, isFalse);
+    },
+  );
 }

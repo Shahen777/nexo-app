@@ -90,7 +90,8 @@ class CommonAction extends _$CommonAction {
   DesktopUpdater get desktopUpdater => const DesktopUpdater();
 
   @protected
-  Future<Map<String, dynamic>?> fetchUpdateRelease() => request.checkForUpdate();
+  Future<Map<String, dynamic>?> fetchUpdateRelease() =>
+      request.checkForUpdate();
 
   @protected
   Future<void> clearDownloadedUpdate() => request.removeDownloadedUpdate();
@@ -133,29 +134,30 @@ class CommonAction extends _$CommonAction {
   Future<bool> autoCheckUpdate() async {
     if (!ref.read(appSettingProvider).autoCheckUpdate) return false;
     return await _runUpdateOperation<bool>(() async {
-      try {
-        if (updateHostPlatform == 'macos') {
-          return await desktopUpdater.checkForUpdates(
-            manifestUrl: updateManifestUrl,
-            background: true,
-            safeMode: ref.read(safeModeProvider),
-          );
-        }
-        if (updateHostPlatform == 'windows' ||
-            updateHostPlatform?.startsWith('android-') == true) {
-          await clearDownloadedUpdate();
-        }
-        final release = await fetchUpdateRelease();
-        await _handleUpdateResult(data: release);
-        return release != null;
-      } catch (error) {
-        commonPrint.log(
-          'checkForUpdate failed: ${compactError(error)}',
-          logLevel: LogLevel.warning,
-        );
-        return false;
-      }
-    }) ?? false;
+          try {
+            if (updateHostPlatform == 'macos') {
+              return await desktopUpdater.checkForUpdates(
+                manifestUrl: updateManifestUrl,
+                background: true,
+                safeMode: ref.read(safeModeProvider),
+              );
+            }
+            if (updateHostPlatform == 'windows' ||
+                updateHostPlatform?.startsWith('android-') == true) {
+              await clearDownloadedUpdate();
+            }
+            final release = await fetchUpdateRelease();
+            await _handleUpdateResult(data: release);
+            return release != null;
+          } catch (error) {
+            commonPrint.log(
+              'checkForUpdate failed: ${compactError(error)}',
+              logLevel: LogLevel.warning,
+            );
+            return false;
+          }
+        }) ??
+        false;
   }
 
   TextSpan _releaseSpan(BuildContext context, String tagName, String? body) {
@@ -205,8 +207,7 @@ class CommonAction extends _$CommonAction {
   Future<void> _applyUpdate(Map<String, dynamic> release) async {
     if (ref.read(safeModeProvider)) return;
     final platform = updateHostPlatform;
-    if (platform != 'windows' &&
-        platform?.startsWith('android-') != true) {
+    if (platform != 'windows' && platform?.startsWith('android-') != true) {
       await launchUrl(
         Uri.parse(release['url'] as String),
         mode: LaunchMode.externalApplication,

@@ -127,7 +127,9 @@ void main() {
     return container;
   }
 
-  testWidgets('macOS manual and automatic checks go directly to Sparkle', (tester) async {
+  testWidgets('macOS manual and automatic checks go directly to Sparkle', (
+    tester,
+  ) async {
     final updater = _MacUpdater();
     final action = _MacUpdateAction(updater);
     final container = await pumpApp(tester, action);
@@ -144,57 +146,76 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('macOS automatic checks respect the reminder setting', (tester) async {
+  testWidgets('macOS automatic checks respect the reminder setting', (
+    tester,
+  ) async {
     final updater = _MacUpdater();
     final action = _MacUpdateAction(updater);
     final container = await pumpApp(tester, action);
-    container.read(appSettingProvider.notifier).update(
-      (state) => state.copyWith(autoCheckUpdate: false),
+    container
+        .read(appSettingProvider.notifier)
+        .update((state) => state.copyWith(autoCheckUpdate: false));
+
+    expect(
+      await container.read(commonActionProvider.notifier).autoCheckUpdate(),
+      isFalse,
     );
-
-    expect(await container.read(commonActionProvider.notifier).autoCheckUpdate(), isFalse);
     expect(updater.checks, isEmpty);
   });
 
-  testWidgets('safe mode blocks both manual and automatic native update checks', (tester) async {
-    final updater = _MacUpdater();
-    final action = _MacUpdateAction(updater);
-    final container = await pumpApp(tester, action, safeMode: true);
-    final notifier = container.read(commonActionProvider.notifier);
+  testWidgets(
+    'safe mode blocks both manual and automatic native update checks',
+    (tester) async {
+      final updater = _MacUpdater();
+      final action = _MacUpdateAction(updater);
+      final container = await pumpApp(tester, action, safeMode: true);
+      final notifier = container.read(commonActionProvider.notifier);
 
-    await notifier.checkUpdate();
-    expect(await notifier.autoCheckUpdate(), isFalse);
-    expect(updater.checks, isEmpty);
-    expect(find.byType(AlertDialog), findsNothing);
-  });
+      await notifier.checkUpdate();
+      expect(await notifier.autoCheckUpdate(), isFalse);
+      expect(updater.checks, isEmpty);
+      expect(find.byType(AlertDialog), findsNothing);
+    },
+  );
 
   for (final started in [true, false, null]) {
-    testWidgets('Windows exits through SystemAction only after installer result $started', (tester) async {
-      final action = _WindowsUpdateAction(started);
-      final systemAction = _RecordingSystemAction();
-      final container = await pumpApp(tester, action, systemAction: systemAction);
-      final shown = container.read(commonActionProvider.notifier).checkUpdateResultHandle(
-        data: {'tag_name': 'v0.9.7', 'body': '- In-app updates'},
-        isUser: true,
-      );
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('Update'));
-      await tester.pumpAndSettle();
-
-      expect(action.installs, 1);
-      expect(systemAction.exits, started == true ? 1 : 0);
-      if (started == false) {
-        expect(find.text('Check for updates'), findsOneWidget);
-        await tester.tap(find.byType(TextButton).first);
+    testWidgets(
+      'Windows exits through SystemAction only after installer result $started',
+      (tester) async {
+        final action = _WindowsUpdateAction(started);
+        final systemAction = _RecordingSystemAction();
+        final container = await pumpApp(
+          tester,
+          action,
+          systemAction: systemAction,
+        );
+        final shown = container
+            .read(commonActionProvider.notifier)
+            .checkUpdateResultHandle(
+              data: {'tag_name': 'v0.9.7', 'body': '- In-app updates'},
+              isUser: true,
+            );
         await tester.pumpAndSettle();
-      }
-      await shown;
-      expect(tester.takeException(), isNull);
-    });
+
+        await tester.tap(find.text('Update'));
+        await tester.pumpAndSettle();
+
+        expect(action.installs, 1);
+        expect(systemAction.exits, started == true ? 1 : 0);
+        if (started == false) {
+          expect(find.text('Check for updates'), findsOneWidget);
+          await tester.tap(find.byType(TextButton).first);
+          await tester.pumpAndSettle();
+        }
+        await shown;
+        expect(tester.takeException(), isNull);
+      },
+    );
   }
 
-  testWidgets('automatic cleanup and manifest fetch exclude a manual check', (tester) async {
+  testWidgets('automatic cleanup and manifest fetch exclude a manual check', (
+    tester,
+  ) async {
     final action = _ControlledUpdateAction();
     final cleared = Completer<void>();
     final manifest = Completer<Map<String, dynamic>?>();
@@ -244,70 +265,76 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('manual update ownership lasts through confirmation and installer handoff', (tester) async {
-    final action = _ControlledUpdateAction();
-    final manifest = Completer<Map<String, dynamic>?>();
-    final installer = Completer<bool?>();
-    action.manifests.add(() => manifest.future);
-    action.install = () => installer.future;
-    final container = await pumpApp(tester, action);
-    final notifier = container.read(commonActionProvider.notifier);
-
-    final manual = notifier.checkUpdate();
-    await tester.pump();
-    expect(await notifier.autoCheckUpdate(), isFalse);
-    expect(action.clears, 0);
-    expect(action.fetches, 1);
-
-    manifest.complete({'tag_name': 'v0.9.7', 'body': '- Updates'});
-    await tester.pump();
-    await tester.pump(const Duration(seconds: 1));
-    await tester.pumpAndSettle();
-    expect(find.byType(CommonDialog), findsOneWidget);
-    expect(await notifier.autoCheckUpdate(), isFalse);
-    expect(action.clears, 0);
-    expect(action.fetches, 1);
-
-    await tester.tap(find.text('Update'));
-    await tester.pumpAndSettle();
-    expect(action.installs, 1);
-    expect(await notifier.autoCheckUpdate(), isFalse);
-    expect(action.clears, 0);
-    expect(action.fetches, 1);
-
-    installer.complete(null);
-    await tester.pump();
-    await manual;
-
-    action.manifests.add(() async => null);
-    expect(await notifier.autoCheckUpdate(), isFalse);
-    expect(action.clears, 1);
-    expect(action.fetches, 2);
-    expect(action.installs, 1);
-    expect(tester.takeException(), isNull);
-  });
-
-  for (final failsDuringCleanup in [true, false]) {
-    testWidgets('an update error during ${failsDuringCleanup ? 'cleanup' : 'manifest fetch'} releases operation ownership', (tester) async {
+  testWidgets(
+    'manual update ownership lasts through confirmation and installer handoff',
+    (tester) async {
       final action = _ControlledUpdateAction();
-      if (failsDuringCleanup) {
-        action.clear = () async => throw StateError('cleanup failed');
-      } else {
-        action.manifests.add(() async => throw StateError('manifest failed'));
-      }
+      final manifest = Completer<Map<String, dynamic>?>();
+      final installer = Completer<bool?>();
+      action.manifests.add(() => manifest.future);
+      action.install = () => installer.future;
       final container = await pumpApp(tester, action);
       final notifier = container.read(commonActionProvider.notifier);
 
+      final manual = notifier.checkUpdate();
+      await tester.pump();
       expect(await notifier.autoCheckUpdate(), isFalse);
-      action.clear = null;
-      action.manifests.add(() async => null);
+      expect(action.clears, 0);
+      expect(action.fetches, 1);
 
+      manifest.complete({'tag_name': 'v0.9.7', 'body': '- Updates'});
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pumpAndSettle();
+      expect(find.byType(CommonDialog), findsOneWidget);
       expect(await notifier.autoCheckUpdate(), isFalse);
-      expect(action.clears, 2);
-      expect(action.fetches, failsDuringCleanup ? 1 : 2);
-      expect(action.installs, 0);
-      expect(find.byType(CommonDialog), findsNothing);
+      expect(action.clears, 0);
+      expect(action.fetches, 1);
+
+      await tester.tap(find.text('Update'));
+      await tester.pumpAndSettle();
+      expect(action.installs, 1);
+      expect(await notifier.autoCheckUpdate(), isFalse);
+      expect(action.clears, 0);
+      expect(action.fetches, 1);
+
+      installer.complete(null);
+      await tester.pump();
+      await manual;
+
+      action.manifests.add(() async => null);
+      expect(await notifier.autoCheckUpdate(), isFalse);
+      expect(action.clears, 1);
+      expect(action.fetches, 2);
+      expect(action.installs, 1);
       expect(tester.takeException(), isNull);
-    });
+    },
+  );
+
+  for (final failsDuringCleanup in [true, false]) {
+    testWidgets(
+      'an update error during ${failsDuringCleanup ? 'cleanup' : 'manifest fetch'} releases operation ownership',
+      (tester) async {
+        final action = _ControlledUpdateAction();
+        if (failsDuringCleanup) {
+          action.clear = () async => throw StateError('cleanup failed');
+        } else {
+          action.manifests.add(() async => throw StateError('manifest failed'));
+        }
+        final container = await pumpApp(tester, action);
+        final notifier = container.read(commonActionProvider.notifier);
+
+        expect(await notifier.autoCheckUpdate(), isFalse);
+        action.clear = null;
+        action.manifests.add(() async => null);
+
+        expect(await notifier.autoCheckUpdate(), isFalse);
+        expect(action.clears, 2);
+        expect(action.fetches, failsDuringCleanup ? 1 : 2);
+        expect(action.installs, 0);
+        expect(find.byType(CommonDialog), findsNothing);
+        expect(tester.takeException(), isNull);
+      },
+    );
   }
 }

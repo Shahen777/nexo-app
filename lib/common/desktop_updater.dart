@@ -15,9 +15,7 @@ Uri? macosAppcastUri(String manifestUrl) {
 }
 
 class DesktopUpdater {
-  const DesktopUpdater({
-    this.channel = const MethodChannel('nexo/updater'),
-  });
+  const DesktopUpdater({this.channel = const MethodChannel('nexo/updater')});
 
   final MethodChannel channel;
 
