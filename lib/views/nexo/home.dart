@@ -380,7 +380,12 @@ class _ServerPicker extends ConsumerWidget {
       backgroundColor: _pageColor(context),
       body: ListView(
         shrinkWrap: true,
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+        padding: EdgeInsets.fromLTRB(
+          16,
+          context.contentTopPadding,
+          16,
+          16 + context.bottomInset,
+        ),
         children: [
           for (final proxy in proxies)
             _ServerPickerRow(

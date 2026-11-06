@@ -742,13 +742,10 @@ class CommonScaffoldState extends State<CommonScaffold>
   }
 
   Widget _buildFloatingHeader(Widget appBar) {
-    final top = MediaQuery.paddingOf(context).top;
     return FloatingHeader(
       backgroundColor:
           widget.backgroundColor ??
           SurfaceLevel.page.colorOf(context.colorScheme),
-      fadeStart: top / (top + pageToolbarHeight),
-      overhang: _headerOverhang,
       child: appBar,
     );
   }
@@ -2204,7 +2201,7 @@ class _SheetPop {
 const double appBarActionSpace = 4;
 
 const double _barButtonGap = 8;
-const double _headerOverhang = 16;
+const double _headerOverhang = FloatingHeader.defaultOverhang;
 const double _iconButtonTapPadding = 4;
 
 /// Where a filled button sits from the app bar edge, leading included: the

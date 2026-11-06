@@ -63,18 +63,20 @@ class SheetToolBar extends StatelessWidget {
   }
 }
 
-/// Fades the surface behind [child] toward its foot so content reads through,
-/// easing out over [overhang] past the foot so the fade shows no edge.
+/// Keeps the toolbar legible over scrolling content, fading its surface
+/// through [overhang] below the controls.
 class FloatingHeader extends StatelessWidget {
   const FloatingHeader({
     super.key,
     required this.backgroundColor,
-    this.fadeStart = 0.5,
-    this.overhang = 0,
+    this.fadeStart = 1,
+    this.overhang = defaultOverhang,
     required this.child,
   });
 
-  static const _alpha = 0.9;
+  static const defaultOverhang = 16.0;
+
+  static const _alpha = 1.0;
   static const _fadeSteps = 8;
 
   final Color backgroundColor;
@@ -129,8 +131,8 @@ class FloatingHeader extends StatelessWidget {
   }
 }
 
-/// Floats [header] over [body], fading it out so content reads through it
-/// as it scrolls past; [footer] sits on its own surface.
+/// Floats [header] over [body] with a protected toolbar and a fading edge;
+/// [footer] sits on its own surface.
 class FloatingHeaderBody extends StatelessWidget {
   const FloatingHeaderBody({
     super.key,

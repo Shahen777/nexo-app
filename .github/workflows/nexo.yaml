@@ -3,6 +3,15 @@ name: nexo-build
 # Builds the Nexo app for Android, macOS and Windows; started by hand from the Actions tab.
 on:
   workflow_dispatch:
+    inputs:
+      ui_only:
+        description: Run UI checks without packaging
+        type: boolean
+        default: false
+      baseline:
+        description: Optional baseline commit for reproducing header regressions
+        type: string
+        default: ''
 
 env:
   FLUTTER_VERSION: '3.47.6'
@@ -10,7 +19,50 @@ env:
   NDK_VERSION: r28c
 
 jobs:
+  ui:
+    if: inputs.ui_only
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: plugins/rust_api/rust
+      - name: Get Flutter dependencies
+        run: flutter pub get
+      - name: Check format
+        run: dart format --output=none --set-exit-if-changed lib test tool plugins setup.dart
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+      - name: Skip the unused Go core build hook
+        run: yq -i '.hooks.user_defines.setup.build_assets = false' pubspec.yaml
+      - name: Reproduce regressions on baseline
+        if: inputs.baseline != ''
+        shell: bash
+        env:
+          NEXO_BASELINE: ${{ inputs.baseline }}
+        run: |
+          set -euo pipefail
+          [[ "$NEXO_BASELINE" =~ ^[0-9a-f]{7,40}$ ]]
+          files=(lib/ui/scaffold.dart lib/ui/sheet_header.dart lib/views/nexo/home.dart)
+          restore_sources() { git restore -- "${files[@]}"; }
+          trap restore_sources EXIT
+          for file in "${files[@]}"; do git show "$NEXO_BASELINE:$file" > "$file"; done
+          if flutter test test/widgets/views_smoke_test.dart test/widgets/scrollbar_inset_test.dart --name 'Nexo automatic selection|toolbar masks' --reporter expanded; then
+            echo 'Expected the regression checks to fail against the baseline' >&2
+            exit 1
+          fi
+      - name: Test widgets
+        run: dart run tool/test.dart test/widgets -- --reporter expanded
+
   build:
+    if: ${{ !inputs.ui_only }}
     name: ${{ matrix.platform }}
     runs-on: ${{ matrix.os }}
     env:
