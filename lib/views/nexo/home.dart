@@ -10,6 +10,7 @@ import 'package:fl_clash/views/proxies/card.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'strings.dart';
 
@@ -112,6 +113,11 @@ class NexoHomeView extends ConsumerWidget {
                   const _ServerCard(),
                   const SizedBox(height: 16),
                   _InfoRow(profile: profile),
+                  if (profile.subscriptionInfo?.expireDate != null &&
+                      nexoRenewUrl(profile.url) != null) ...[
+                    const SizedBox(height: 12),
+                    _RenewButton(profile: profile),
+                  ],
                 ],
               ],
             ),
@@ -542,6 +548,81 @@ class _InfoRow extends ConsumerWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _RenewButton extends ConsumerStatefulWidget {
+  const _RenewButton({required this.profile});
+
+  final Profile profile;
+
+  @override
+  ConsumerState<_RenewButton> createState() => _RenewButtonState();
+}
+
+class _RenewButtonState extends ConsumerState<_RenewButton>
+    with WidgetsBindingObserver {
+  bool _opened = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  // Coming back from the browser, the new end date should show at once.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed || !_opened) return;
+    _opened = false;
+    unawaited(_refresh());
+  }
+
+  Future<void> _refresh() async {
+    try {
+      await ref
+          .read(profilesActionProvider.notifier)
+          .updateProfile(widget.profile);
+    } catch (error) {
+      commonPrint.log(
+        'profile refresh after renewal failed: ${compactError(error)}',
+        logLevel: LogLevel.warning,
+      );
+    }
+  }
+
+  void _open() {
+    final url = nexoRenewUrl(widget.profile.url);
+    if (url == null) return;
+    _opened = true;
+    unawaited(launchUrl(url, mode: LaunchMode.externalApplication));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton(
+      onPressed: _open,
+      style: const ButtonStyle(
+        backgroundColor: WidgetStatePropertyAll(_accent),
+        foregroundColor: WidgetStatePropertyAll(Colors.white),
+        minimumSize: WidgetStatePropertyAll(Size.fromHeight(48)),
+      ),
+      child: Text(
+        NexoStrings.renew,
+        style: _manrope(
+          context,
+          AppTextStyle.subheadline,
+          weight: 650,
+          color: Colors.white,
+        ),
       ),
     );
   }

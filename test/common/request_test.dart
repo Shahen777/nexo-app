@@ -113,6 +113,29 @@ void main() {
     });
   });
 
+  group('nexoRenewUrl', () {
+    const site = 'https://updates.test:8444/nexo/update.json';
+
+    test('opens the renewal page of a subscription from the site', () {
+      expect(
+        nexoRenewUrl(
+          'https://updates.test:8444/nexo/sub/token123',
+          site: site,
+        ).toString(),
+        'https://updates.test:8444/renew/token123',
+      );
+    });
+
+    test('offers nothing for another provider or an unset site', () {
+      expect(
+        nexoRenewUrl('https://other.test:8444/nexo/sub/token123', site: site),
+        isNull,
+      );
+      expect(nexoRenewUrl('https://updates.test:8444/nexo/sub/t', site: ''), isNull);
+      expect(nexoRenewUrl('https://updates.test:8444/app', site: site), isNull);
+    });
+  });
+
   group('downloadTarget', () {
     test('sends a URL without credentials unchanged', () {
       final target = downloadTarget('https://example.com/a.yaml?x=1');

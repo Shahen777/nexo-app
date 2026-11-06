@@ -33,6 +33,7 @@ class NexoStrings {
   static const speedTesting = 'Проверяем скорость…';
   static const unavailable = 'Недоступен';
   static const unlimitedAccess = 'Доступ без срока';
+  static const renew = 'Продлить';
 
   static String currentServer(String name) => 'Сейчас: $name';
 

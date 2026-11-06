@@ -137,6 +137,22 @@ class Request {
   }
 }
 
+/// The renewal page of a subscription served by the Nexo site; null for any
+/// other subscription, whose token that site would not know.
+Uri? nexoRenewUrl(String subscriptionUrl, {String site = updateManifestUrl}) {
+  final siteUri = Uri.tryParse(site);
+  final subscription = Uri.tryParse(subscriptionUrl);
+  if (siteUri == null || subscription == null || site.isEmpty) return null;
+  final segments = subscription.pathSegments;
+  final sameSite =
+      subscription.scheme == siteUri.scheme &&
+      subscription.host == siteUri.host &&
+      subscription.port == siteUri.port;
+  if (!sameSite || segments.length < 2) return null;
+  if (segments[segments.length - 2] != 'sub') return null;
+  return siteUri.resolve('/renew/${segments.last}');
+}
+
 /// The manifest key of the installer this device can run.
 String? get updatePlatform => switch (Abi.current()) {
   Abi.androidArm64 => 'android-arm64',
