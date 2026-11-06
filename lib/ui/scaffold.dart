@@ -2201,7 +2201,6 @@ class _SheetPop {
 const double appBarActionSpace = 4;
 
 const double _barButtonGap = 8;
-const double _headerOverhang = FloatingHeader.defaultOverhang;
 const double _iconButtonTapPadding = 4;
 
 /// Where a filled button sits from the app bar edge, leading included: the

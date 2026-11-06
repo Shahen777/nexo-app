@@ -36,6 +36,16 @@ jobs:
           workspaces: plugins/rust_api/rust
       - name: Get Flutter dependencies
         run: flutter pub get
+      - name: Fetch CA certificates
+        shell: bash
+        env:
+          CA_BUNDLE: cacert-2026-09-25.pem
+          CA_BUNDLE_SHA256: a41b5d356aea97a529fe27e0f7316d2f9d946d75927476cf9cf1b90637d00505
+        run: |
+          bundle=core/Clash.Meta/component/ca/ca-certificates.crt
+          mkdir -p "$(dirname "$bundle")"
+          curl -fsSL --retry 3 -o "$bundle" "https://curl.se/ca/$CA_BUNDLE"
+          echo "$CA_BUNDLE_SHA256  $bundle" | sha256sum -c -
       - name: Check format
         run: dart format --output=none --set-exit-if-changed lib test tool plugins setup.dart
       - name: Analyze
