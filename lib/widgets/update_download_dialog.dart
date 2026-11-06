@@ -41,12 +41,14 @@ class UpdateDownloadDialog extends ConsumerStatefulWidget {
 class _UpdateDownloadDialogState extends ConsumerState<UpdateDownloadDialog> {
   final _cancelToken = CancelToken();
   final _progress = ValueNotifier<double?>(null);
+  Future<void>? _runFuture;
+  bool _closing = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) unawaited(_run());
+      if (mounted && !_cancelToken.isCancelled) _runFuture = _run();
     });
   }
 
@@ -54,7 +56,7 @@ class _UpdateDownloadDialogState extends ConsumerState<UpdateDownloadDialog> {
     var started = false;
     try {
       if (ref.read(safeModeProvider)) {
-        Navigator.of(context).pop(false);
+        _finish(false);
         return;
       }
       final platform = widget.platform ?? updatePlatform;
@@ -63,12 +65,12 @@ class _UpdateDownloadDialogState extends ConsumerState<UpdateDownloadDialog> {
         platform: platform,
         cancelToken: _cancelToken,
         onProgress: (progress) {
-          if (mounted) _progress.value = progress;
+          if (mounted && !_cancelToken.isCancelled) _progress.value = progress;
         },
       );
       if (!mounted || _cancelToken.isCancelled) return;
       if (ref.read(safeModeProvider)) {
-        Navigator.of(context).pop(false);
+        _finish(false);
         return;
       }
       started =
@@ -86,7 +88,20 @@ class _UpdateDownloadDialogState extends ConsumerState<UpdateDownloadDialog> {
         logLevel: LogLevel.warning,
       );
     }
-    if (mounted) Navigator.of(context).pop(started);
+    if (!_cancelToken.isCancelled) _finish(started);
+  }
+
+  Future<void> _cancel() async {
+    if (_closing || _cancelToken.isCancelled) return;
+    _cancelToken.cancel();
+    await _runFuture;
+    _finish(null);
+  }
+
+  void _finish(bool? result) {
+    if (!mounted || _closing) return;
+    _closing = true;
+    Navigator.of(context).pop(result);
   }
 
   @override
@@ -98,17 +113,28 @@ class _UpdateDownloadDialogState extends ConsumerState<UpdateDownloadDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return CommonDialog(
-      title: context.appLocalizations.updateDownloading,
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text(context.appLocalizations.cancel),
+    return PopScope<bool>(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) {
+          _closing = true;
+          _cancelToken.cancel();
+        } else {
+          unawaited(_cancel());
+        }
+      },
+      child: CommonDialog(
+        title: context.appLocalizations.updateDownloading,
+        actions: [
+          TextButton(
+            onPressed: _cancel,
+            child: Text(context.appLocalizations.cancel),
+          ),
+        ],
+        child: ValueListenableBuilder(
+          valueListenable: _progress,
+          builder: (_, progress, _) => LinearProgressIndicator(value: progress),
         ),
-      ],
-      child: ValueListenableBuilder(
-        valueListenable: _progress,
-        builder: (_, progress, _) => LinearProgressIndicator(value: progress),
       ),
     );
   }

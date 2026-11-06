@@ -108,7 +108,7 @@ void main() {
   });
 
   testWidgets(
-    'cancelling disposes the download and prevents late installation',
+    'Cancel prevents installation when the download finishes before the dismissal animation',
     (tester) async {
       final downloaded = Completer<String>();
       late CancelToken token;
@@ -125,17 +125,60 @@ void main() {
         ),
       );
       await tester.tap(find.text('Cancel'));
-      await tester.pumpAndSettle();
-      expect(await result.future, isNull);
       expect(token.isCancelled, isTrue);
-
+      expect(result.isCompleted, isFalse);
       downloaded.complete(r'C:\cache\Nexo.exe');
-      await tester.pump();
+      await tester.pumpAndSettle();
 
+      expect(await result.future, isNull);
       expect(installed, isFalse);
       expect(tester.takeException(), isNull);
     },
   );
+
+  for (final cancelWithBack in [false, true]) {
+    testWidgets(
+      '${cancelWithBack ? 'Back' : 'Cancel'} keeps operation ownership until cancelled-download cleanup finishes',
+      (tester) async {
+        final cleaned = Completer<void>();
+        late CancelToken token;
+        var installed = false;
+        final result = await open(
+          tester,
+          UpdateDownloadDialog(
+            release: const {},
+            download: (_, {required cancelToken, required onProgress, platform}) async {
+              token = cancelToken;
+              final cancelled = await token.whenCancel;
+              await cleaned.future;
+              throw cancelled;
+            },
+            install: (_) async => installed = true,
+          ),
+        );
+
+        if (cancelWithBack) {
+          await tester.binding.handlePopRoute();
+        } else {
+          await tester.tap(find.text('Cancel'));
+        }
+        expect(token.isCancelled, isTrue);
+        await tester.pump();
+        expect(result.isCompleted, isFalse);
+        expect(find.byType(UpdateDownloadDialog), findsOneWidget);
+        expect(installed, isFalse);
+
+        cleaned.complete();
+        await tester.pumpAndSettle();
+
+        expect(await result.future, isNull);
+        expect(find.byType(UpdateDownloadDialog), findsNothing);
+        expect(find.text('open'), findsOneWidget);
+        expect(installed, isFalse);
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
 
   testWidgets('safe mode starts neither a download nor an installer', (
     tester,
