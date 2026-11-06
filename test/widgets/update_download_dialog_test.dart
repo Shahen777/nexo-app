@@ -87,47 +87,50 @@ void main() {
     },
   );
 
-  testWidgets('installer handoff disables Cancel and Back until the launcher completes', (tester) async {
-    final downloaded = Completer<String>();
-    final installer = Completer<bool>();
-    late CancelToken token;
-    var installCalls = 0;
-    final result = await open(
-      tester,
-      UpdateDownloadDialog(
-        release: const {},
-        platform: 'windows',
-        download: (_, {required cancelToken, required onProgress, platform}) {
-          token = cancelToken;
-          onProgress(1);
-          return downloaded.future;
-        },
-        install: (_) {
-          installCalls++;
-          return installer.future;
-        },
-      ),
-    );
+  testWidgets(
+    'installer handoff disables Cancel and Back until the launcher completes',
+    (tester) async {
+      final downloaded = Completer<String>();
+      final installer = Completer<bool>();
+      late CancelToken token;
+      var installCalls = 0;
+      final result = await open(
+        tester,
+        UpdateDownloadDialog(
+          release: const {},
+          platform: 'windows',
+          download: (_, {required cancelToken, required onProgress, platform}) {
+            token = cancelToken;
+            onProgress(1);
+            return downloaded.future;
+          },
+          install: (_) {
+            installCalls++;
+            return installer.future;
+          },
+        ),
+      );
 
-    downloaded.complete(r'C:\cache\Nexo.exe');
-    await tester.pump();
-    final cancel = find.widgetWithText(TextButton, 'Cancel');
-    expect(installCalls, 1);
-    expect(tester.widget<TextButton>(cancel).onPressed, isNull);
-    await tester.tap(cancel);
-    await tester.binding.handlePopRoute();
-    await tester.pump();
-    expect(result.isCompleted, isFalse);
-    expect(token.isCancelled, isFalse);
-    expect(find.byType(UpdateDownloadDialog), findsOneWidget);
+      downloaded.complete(r'C:\cache\Nexo.exe');
+      await tester.pump();
+      final cancel = find.widgetWithText(TextButton, 'Cancel');
+      expect(installCalls, 1);
+      expect(tester.widget<TextButton>(cancel).onPressed, isNull);
+      await tester.tap(cancel);
+      await tester.binding.handlePopRoute();
+      await tester.pump();
+      expect(result.isCompleted, isFalse);
+      expect(token.isCancelled, isFalse);
+      expect(find.byType(UpdateDownloadDialog), findsOneWidget);
 
-    installer.complete(true);
-    await tester.pumpAndSettle();
+      installer.complete(true);
+      await tester.pumpAndSettle();
 
-    expect(await result.future, isTrue);
-    expect(find.byType(UpdateDownloadDialog), findsNothing);
-    expect(tester.takeException(), isNull);
-  });
+      expect(await result.future, isTrue);
+      expect(find.byType(UpdateDownloadDialog), findsNothing);
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets('a failed download never invokes the installer', (tester) async {
     var installed = false;
