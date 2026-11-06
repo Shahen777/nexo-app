@@ -8,6 +8,10 @@ on:
         description: Run UI checks without packaging
         type: boolean
         default: false
+      skip_native_tests:
+        description: Skip macOS native tests when native code is unchanged
+        type: boolean
+        default: false
       baseline:
         description: Optional baseline commit for reproducing header regressions
         type: string
@@ -182,7 +186,7 @@ jobs:
         run: flutter test test/common/request_test.dart test/widgets/update_dialog_test.dart test/l10n/localization_contract_test.dart test/setup_test.dart
 
       - name: Test macOS updater
-        if: matrix.platform == 'macos'
+        if: matrix.platform == 'macos' && !inputs.skip_native_tests
         shell: bash
         run: |
           flutter build macos --debug --dart-define=SAFE_MODE=true

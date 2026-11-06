@@ -218,37 +218,70 @@ void main() {
     expect(find.byType(CommonPopupMenu), findsNothing);
   });
 
-  testWidgets('about view renders version and link sections', (tester) async {
-    final container = _containerFor(tester);
+  for (final size in [const Size(390, 844), const Size(1400, 1000)]) {
+    for (final brightness in Brightness.values) {
+      testWidgets(
+        'about view shows only Nexo, version and the updater at '
+        '${size.width} dp in ${brightness.name} mode',
+        (tester) async {
+          final container = _containerFor(tester, size: size);
+          tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+          addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
 
-    await tester.pumpWidget(
-      UncontrolledProviderScope(
-        container: container,
-        child: const TestApp(child: AboutView()),
-      ),
-    );
-    await tester.pump();
+          await tester.pumpWidget(
+            UncontrolledProviderScope(
+              container: container,
+              child: TestApp(
+                theme: ThemeData(brightness: brightness),
+                child: const AboutView(),
+              ),
+            ),
+          );
+          await tester.pump();
 
-    expect(find.byType(AboutView), findsOneWidget);
-    expect(find.text('Telegram'), findsOneWidget);
-    final hero = find.byWidgetPredicate(
-      (widget) => widget.runtimeType.toString() == '_AboutHero',
-    );
-    expect(
-      tester.getRect(hero).top,
-      tester.getRect(find.byType(AppBar)).bottom + 12,
-    );
-    expect(tester.takeException(), null);
+          final l10n = AppLocalizations.current;
+          expect(find.byType(AboutView), findsOneWidget);
+          expect(find.text('Nexo'), findsOneWidget);
+          expect(find.text('v${globalState.packageInfo.version}'), findsOneWidget);
+          expect(
+            find.widgetWithText(TonalButton, l10n.checkUpdate),
+            findsOneWidget,
+          );
+          for (final removed in [
+            'June2',
+            'Arue',
+            'Telegram',
+            'GPL-3.0',
+            l10n.more,
+            l10n.project,
+            l10n.core,
+            l10n.basedOnFlClash,
+            l10n.otherContributors,
+            l10n.appIconDesign,
+            l10n.desc,
+          ]) {
+            expect(find.text(removed), findsNothing);
+          }
+          expect(find.textContaining('github.com'), findsNothing);
+          expect(find.textContaining('t.me/'), findsNothing);
+          expect(find.byGlyph(AppGlyphs.openExternal), findsNothing);
+          expect(find.byType(CircleAvatar), findsNothing);
+          final hero = find.byWidgetPredicate(
+            (widget) => widget.runtimeType.toString() == '_AboutHero',
+          );
+          expect(
+            tester.getRect(hero).top,
+            tester.getRect(find.byType(AppBar)).bottom + 12,
+          );
+          expect(tester.takeException(), null);
 
-    final scrollables = find.byType(Scrollable);
-    if (scrollables.evaluate().isNotEmpty) {
-      for (var index = 0; index < 4; index++) {
-        await tester.drag(scrollables.first, const Offset(0, -400));
-        await tester.pump();
-      }
+          await tester.drag(find.byType(Scrollable).first, const Offset(0, -400));
+          await tester.pump();
+          expect(tester.takeException(), null);
+        },
+      );
     }
-    expect(tester.takeException(), null);
-  });
+  }
 
   testWidgets('about view follows update-check loading state', (tester) async {
     final container = _containerFor(tester);

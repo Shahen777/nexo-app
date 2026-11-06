@@ -9,41 +9,11 @@ import 'package:fl_clash/ui/ui.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-@immutable
-class Contributor {
-  final String avatar;
-  final String name;
-
-  const Contributor({required this.avatar, required this.name});
-}
-
 class AboutView extends ConsumerWidget {
   const AboutView({super.key});
 
-  static const _contributors = [
-    Contributor(avatar: 'assets/images/avatar/june2.jpg', name: 'June2'),
-    Contributor(avatar: 'assets/images/avatar/arue.jpg', name: 'Arue'),
-  ];
-
   Future<void> _checkUpdate(WidgetRef ref) {
     return ref.read(commonActionProvider.notifier).checkUpdate();
-  }
-
-  Widget _buildLinkItem({
-    required Glyph glyph,
-    required String title,
-    required String url,
-    required String label,
-  }) {
-    return ListItem(
-      leading: _LinkBadge(glyph: glyph),
-      title: Text(title),
-      subtitle: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis),
-      trailing: const GlyphIcon(AppGlyphs.openExternal),
-      onTap: () {
-        dialogs.openUrl(url);
-      },
-    );
   }
 
   @override
@@ -73,49 +43,6 @@ class AboutView extends ConsumerWidget {
                 level: MessageLevel.success,
               );
             },
-          ),
-          const SizedBox(height: 8),
-          generateSection(
-            title: appLocalizations.more,
-            items: [
-              _buildLinkItem(
-                glyph: AppGlyphs.code,
-                title: appLocalizations.project,
-                url: 'https://github.com/$repository',
-                label: 'github.com/$repository',
-              ),
-              _buildLinkItem(
-                glyph: AppGlyphs.code,
-                title: appLocalizations.basedOnFlClash,
-                url: 'https://github.com/chen08209/FlClash',
-                label: 'github.com/chen08209/FlClash',
-              ),
-              _buildLinkItem(
-                glyph: AppGlyphs.cpu,
-                title: appLocalizations.core,
-                url: 'https://github.com/chen08209/Clash.Meta/tree/FlClash',
-                label: 'github.com/chen08209/Clash.Meta',
-              ),
-              _buildLinkItem(
-                glyph: AppGlyphs.send,
-                title: 'Telegram',
-                url: 'https://t.me/FlClash',
-                label: 't.me/FlClash',
-              ),
-            ],
-          ),
-          generateSection(
-            title: appLocalizations.otherContributors,
-            items: [
-              for (final contributor in _contributors)
-                ListItem(
-                  leading: CircleAvatar(
-                    foregroundImage: AssetImage(contributor.avatar),
-                  ),
-                  title: Text(contributor.name),
-                  subtitle: Text(appLocalizations.appIconDesign),
-                ),
-            ],
           ),
         ],
       ),
@@ -168,33 +95,10 @@ class _AboutHero extends StatelessWidget {
             style: AppTextStyle.title2.of(context, emphasized: true),
           ),
           const SizedBox(height: 10),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            alignment: WrapAlignment.center,
-            children: [
-              _Pill(
-                label: 'v${globalState.packageInfo.version}',
-                color: colorScheme.primary,
-                foregroundColor: colorScheme.onPrimary,
-              ),
-              _Pill(
-                label: 'GPL-3.0',
-                color: context.raisedSurfaceLevel.colorOf(colorScheme),
-                foregroundColor: colorScheme.onSurfaceVariant,
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 420),
-            child: Text(
-              appLocalizations.desc,
-              textAlign: TextAlign.center,
-              style: AppTextStyle.subheadline
-                  .of(context)
-                  .copyWith(color: colorScheme.onSurfaceVariant, height: 1.5),
-            ),
+          _Pill(
+            label: 'v${globalState.packageInfo.version}',
+            color: colorScheme.primary,
+            foregroundColor: colorScheme.onPrimary,
           ),
           const SizedBox(height: 20),
           TonalButton(
@@ -231,33 +135,6 @@ class _Pill extends StatelessWidget {
           style: AppTextStyle.caption1
               .of(context, emphasized: true)
               .copyWith(color: foregroundColor),
-        ),
-      ),
-    );
-  }
-}
-
-class _LinkBadge extends StatelessWidget {
-  final Glyph glyph;
-
-  const _LinkBadge({required this.glyph});
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
-    return DecoratedBox(
-      decoration: ShapeDecoration(
-        color: context.raisedSurfaceLevel.colorOf(colorScheme),
-        shape: AppShape.md,
-      ),
-      child: SizedBox.square(
-        dimension: 40,
-        child: Center(
-          child: GlyphIcon(
-            glyph,
-            size: 20,
-            color: colorScheme.onSurfaceVariant,
-          ),
         ),
       ),
     );
