@@ -43,6 +43,7 @@ class _UpdateDownloadDialogState extends ConsumerState<UpdateDownloadDialog> {
   final _progress = ValueNotifier<double?>(null);
   Future<void>? _runFuture;
   bool _closing = false;
+  bool _installing = false;
 
   @override
   void initState() {
@@ -73,6 +74,7 @@ class _UpdateDownloadDialogState extends ConsumerState<UpdateDownloadDialog> {
         _finish(false);
         return;
       }
+      setState(() => _installing = true);
       started =
           await (widget.install?.call(path) ??
               launchUpdateInstaller(
@@ -92,7 +94,7 @@ class _UpdateDownloadDialogState extends ConsumerState<UpdateDownloadDialog> {
   }
 
   Future<void> _cancel() async {
-    if (_closing || _cancelToken.isCancelled) return;
+    if (_closing || _installing || _cancelToken.isCancelled) return;
     _cancelToken.cancel();
     await _runFuture;
     _finish(null);
@@ -127,7 +129,7 @@ class _UpdateDownloadDialogState extends ConsumerState<UpdateDownloadDialog> {
         title: context.appLocalizations.updateDownloading,
         actions: [
           TextButton(
-            onPressed: _cancel,
+            onPressed: _installing ? null : _cancel,
             child: Text(context.appLocalizations.cancel),
           ),
         ],
