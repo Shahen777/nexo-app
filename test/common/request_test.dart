@@ -131,7 +131,10 @@ void main() {
         nexoRenewUrl('https://other.test:8444/nexo/sub/token123', site: site),
         isNull,
       );
-      expect(nexoRenewUrl('https://updates.test:8444/nexo/sub/t', site: ''), isNull);
+      expect(
+        nexoRenewUrl('https://updates.test:8444/nexo/sub/t', site: ''),
+        isNull,
+      );
       expect(nexoRenewUrl('https://updates.test:8444/app', site: site), isNull);
     });
   });
