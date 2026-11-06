@@ -69,7 +69,7 @@ jobs:
             exit 1
           fi
       - name: Test widgets
-        run: dart run tool/test.dart test/widgets -- --reporter expanded
+        run: dart run tool/test.dart test/widgets test/common/request_test.dart test/common/desktop_updater_test.dart test/common/update_download_test.dart test/providers/common_action_test.dart test/setup_test.dart -- --reporter expanded
 
   build:
     if: ${{ !inputs.ui_only }}
@@ -181,6 +181,17 @@ jobs:
         if: matrix.platform == 'android'
         run: flutter test test/common/request_test.dart test/widgets/update_dialog_test.dart test/l10n/localization_contract_test.dart test/setup_test.dart
 
+      - name: Test macOS updater
+        if: matrix.platform == 'macos'
+        shell: bash
+        run: |
+          flutter build macos --debug --dart-define=SAFE_MODE=true
+          xcodebuild test -workspace macos/Runner.xcworkspace -scheme Runner \
+            -configuration Debug -destination 'platform=macOS,arch=x86_64' \
+            -only-testing:RunnerTests -parallel-testing-enabled NO \
+            -derivedDataPath build/macos CODE_SIGN_IDENTITY=- \
+            CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM='' -quiet
+
       - name: Build
         shell: bash
         env:
@@ -227,6 +238,21 @@ jobs:
             exit 1
           fi
           check_slices "$rust_library"
+          check_slices "$app/Contents/Frameworks/Sparkle.framework/Versions/B/Sparkle"
+          python3 - "$app/Contents/Info.plist" <<'PY'
+          import base64, plistlib, sys
+          with open(sys.argv[1], 'rb') as f:
+              built = plistlib.load(f)
+          with open('macos/Runner/Info.plist', 'rb') as f:
+              source = plistlib.load(f)
+          key = built['SUPublicEDKey']
+          assert key == source['SUPublicEDKey']
+          assert len(base64.b64decode(key, validate=True)) == 32
+          assert built['SURequireSignedFeed'] is True
+          assert built['SUVerifyUpdateBeforeExtraction'] is True
+          assert built['SUSignedFeedFailureExpirationInterval'] == 0
+          PY
+          codesign --verify --deep --strict "$app"
 
       - name: Upload
         uses: actions/upload-artifact@v4

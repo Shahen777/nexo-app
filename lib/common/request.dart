@@ -24,9 +24,10 @@ class Request {
     _read = read;
   }
 
-  Request() {
+  Request({Dio? downloadClient}) {
     dio = Dio(BaseOptions(headers: {'User-Agent': browserUa}));
-    _clashDio = Dio();
+    _clashDio = downloadClient ?? Dio();
+    if (downloadClient != null) return;
     _clashDio.httpClientAdapter = IOHttpClientAdapter(
       createHttpClient: () {
         final client = HttpClient();
@@ -101,9 +102,10 @@ class Request {
     );
   }
 
-  Future<String> get _updateFilePath async {
+  Future<String> _updateFilePath(String? platform) async {
+    final fileName = updateInstallerFileName(platform);
     final cacheDir = await appPath.cacheDir.future;
-    return join(cacheDir.path, 'update', 'Nexo.apk');
+    return join(cacheDir.path, 'update', fileName);
   }
 
   /// Returns the installer's path once its checksum matches the release's.
@@ -111,29 +113,53 @@ class Request {
     Map<String, dynamic> release, {
     required CancelToken cancelToken,
     required void Function(double progress) onProgress,
+    String? platform,
   }) async {
-    final path = await _updateFilePath;
-    await _clashDio.download(
-      release['url'] as String,
-      path,
-      cancelToken: cancelToken,
-      options: Options(receiveTimeout: const Duration(seconds: 60)),
-      onReceiveProgress: (received, total) {
-        if (total > 0) onProgress(received / total);
-      },
-    );
-    final digest = await sha256.bind(File(path).openRead()).first;
-    if (digest.toString() != release['sha256']) {
-      await File(path).delete();
-      throw const FormatException('The installer checksum does not match');
+    final url = Uri.parse(release['url'] as String);
+    final expectedHash = release['sha256'] as String;
+    if (url.scheme != 'https' ||
+        url.host.isEmpty ||
+        url.userInfo.isNotEmpty ||
+        !RegExp(r'^[a-fA-F0-9]{64}$').hasMatch(expectedHash)) {
+      throw const FormatException('Invalid installer URL or checksum');
     }
-    return path;
+    final path = await _updateFilePath(platform ?? updatePlatform);
+    final file = File(path);
+    try {
+      if (cancelToken.isCancelled) throw cancelToken.cancelError!;
+      await file.parent.create(recursive: true);
+      await _clashDio.download(
+        url.toString(),
+        path,
+        cancelToken: cancelToken,
+        options: Options(
+          receiveTimeout: const Duration(seconds: 60),
+          followRedirects: false,
+        ),
+        onReceiveProgress: (received, total) {
+          if (total > 0) onProgress(received / total);
+        },
+      );
+      if (cancelToken.isCancelled) throw cancelToken.cancelError!;
+      final digest = await sha256.bind(file.openRead()).first;
+      if (digest.toString() != expectedHash.toLowerCase()) {
+        throw const FormatException('The installer checksum does not match');
+      }
+      if (cancelToken.isCancelled) throw cancelToken.cancelError!;
+      return path;
+    } catch (_) {
+      if (await file.exists()) await file.delete();
+      rethrow;
+    }
   }
 
   /// An installed update leaves its installer behind in the cache.
   Future<void> removeDownloadedUpdate() async {
-    final file = File(await _updateFilePath);
-    if (await file.exists()) await file.delete();
+    final cacheDir = await appPath.cacheDir.future;
+    for (final name in ['Nexo.apk', 'Nexo.exe']) {
+      final file = File(join(cacheDir.path, 'update', name));
+      if (await file.exists()) await file.delete();
+    }
   }
 }
 
@@ -152,6 +178,12 @@ Uri? nexoRenewUrl(String subscriptionUrl, {String site = updateManifestUrl}) {
   if (segments[segments.length - 2] != 'sub') return null;
   return siteUri.resolve('/renew/${segments.last}');
 }
+
+String updateInstallerFileName(String? platform) => switch (platform) {
+  'android-arm64' || 'android-arm' => 'Nexo.apk',
+  'windows' => 'Nexo.exe',
+  _ => throw UnsupportedError('No downloadable installer for $platform'),
+};
 
 /// The manifest key of the installer this device can run.
 String? get updatePlatform => switch (Abi.current()) {

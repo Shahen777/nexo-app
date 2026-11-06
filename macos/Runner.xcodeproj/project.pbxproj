@@ -21,6 +21,9 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		B74E52012FF1000000000001 /* NexoUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74E52012FF1000000000002 /* NexoUpdater.swift */; };
+		B74E52012FF1000000000003 /* UpdaterConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74E52012FF1000000000004 /* UpdaterConfiguration.swift */; };
+		B74E52012FF1000000000005 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = B74E52012FF1000000000006 /* Sparkle */; };
 		331C80D8294CF71000263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C80D7294CF71000263BE5 /* RunnerTests.swift */; };
 		335BBD1B22A9A15E00E9071D /* GeneratedPluginRegistrant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335BBD1A22A9A15E00E9071D /* GeneratedPluginRegistrant.swift */; };
 		33CC10F12044A3C60003C045 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC10F02044A3C60003C045 /* AppDelegate.swift */; };
@@ -74,6 +77,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B74E52012FF1000000000002 /* NexoUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NexoUpdater.swift; sourceTree = "<group>"; };
+		B74E52012FF1000000000004 /* UpdaterConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterConfiguration.swift; sourceTree = "<group>"; };
 		331C80D5294CF71000263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		331C80D7294CF71000263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
 		333000ED22D3DE5D00554162 /* Warnings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Warnings.xcconfig; sourceTree = "<group>"; };
@@ -110,6 +115,7 @@
 			files = (
 				78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */,
 				F5131FDD2EF0F1A500A1748D /* LaunchAtLogin in Frameworks */,
+				B74E52012FF1000000000005 /* Sparkle in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -183,6 +189,8 @@
 			children = (
 				33CC10F02044A3C60003C045 /* AppDelegate.swift */,
 				33CC11122044BFA00003C045 /* MainFlutterWindow.swift */,
+				B74E52012FF1000000000002 /* NexoUpdater.swift */,
+				B74E52012FF1000000000004 /* UpdaterConfiguration.swift */,
 				33E51913231747F40026EE4D /* DebugProfile.entitlements */,
 				33E51914231749380026EE4D /* Release.entitlements */,
 				33CC11242044D66E0003C045 /* Resources */,
@@ -232,6 +240,7 @@
 			name = Runner;
 			packageProductDependencies = (
 				78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */,
+				B74E52012FF1000000000006 /* Sparkle */,
 			);
 			productName = Runner;
 			productReference = 33CC10ED2044A3C60003C045 /* Nexo.app */;
@@ -280,6 +289,7 @@
 			packageReferences = (
 				781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "FlutterGeneratedPluginSwiftPackage" */,
 				F5131FDB2EF0F1A500A1748D /* XCRemoteSwiftPackageReference "LaunchAtLogin" */,
+				B74E52012FF1000000000007 /* XCRemoteSwiftPackageReference "Sparkle" */,
 			);
 			productRefGroup = 33CC10EE2044A3C60003C045 /* Products */;
 			projectDirPath = "";
@@ -386,6 +396,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */,
+				B74E52012FF1000000000001 /* NexoUpdater.swift in Sources */,
+				B74E52012FF1000000000003 /* UpdaterConfiguration.swift in Sources */,
 				33CC10F12044A3C60003C045 /* AppDelegate.swift in Sources */,
 				335BBD1B22A9A15E00E9071D /* GeneratedPluginRegistrant.swift in Sources */,
 			);
@@ -758,6 +770,14 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		B74E52012FF1000000000007 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = exactVersion;
+				version = 2.10.1;
+			};
+		};
 		F5131FDB2EF0F1A500A1748D /* XCRemoteSwiftPackageReference "LaunchAtLogin" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin";
@@ -769,6 +789,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		B74E52012FF1000000000006 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B74E52012FF1000000000007 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
 		78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FlutterGeneratedPluginSwiftPackage;

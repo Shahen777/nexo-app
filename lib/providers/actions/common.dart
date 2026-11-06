@@ -4,6 +4,7 @@ part of '../action.dart';
 class CommonAction extends _$CommonAction {
   CoreController get _core => ref.read(coreHandlerProvider);
   bool _isUpdatingTraffic = false;
+  bool _updateInProgress = false;
 
   @override
   void build() {}
@@ -82,21 +83,79 @@ class CommonAction extends _$CommonAction {
     }
   }
 
-  Future<bool> autoCheckUpdate() async {
-    if (system.isAndroid) unawaited(request.removeDownloadedUpdate());
-    if (!ref.read(appSettingProvider).autoCheckUpdate) return false;
-    final Map<String, dynamic>? res;
+  @protected
+  String? get updateHostPlatform => updatePlatform;
+
+  @protected
+  DesktopUpdater get desktopUpdater => const DesktopUpdater();
+
+  @protected
+  Future<Map<String, dynamic>?> fetchUpdateRelease() => request.checkForUpdate();
+
+  @protected
+  Future<void> clearDownloadedUpdate() => request.removeDownloadedUpdate();
+
+  Future<T?> _runUpdateOperation<T>(Future<T> Function() operation) async {
+    if (ref.read(safeModeProvider) || _updateInProgress) return null;
+    _updateInProgress = true;
     try {
-      res = await request.checkForUpdate();
-    } catch (error) {
-      commonPrint.log(
-        'checkForUpdate failed: ${compactError(error)}',
-        logLevel: LogLevel.warning,
-      );
-      return false;
+      return await operation();
+    } finally {
+      _updateInProgress = false;
     }
-    await checkUpdateResultHandle(data: res);
-    return res != null;
+  }
+
+  Future<void> checkUpdate() async {
+    if (ref.read(loadingProvider(LoadingTag.checkUpdate))) return;
+    await _runUpdateOperation<void>(() async {
+      if (updateHostPlatform == 'macos') {
+        await globalState.loadingRun(
+          () => desktopUpdater.checkForUpdates(
+            manifestUrl: updateManifestUrl,
+            background: false,
+            safeMode: ref.read(safeModeProvider),
+          ),
+          title: currentAppLocalizations.checkUpdate,
+          tag: LoadingTag.checkUpdate,
+        );
+        return;
+      }
+      final result = await globalState.loadingRun(
+        () async => (release: await fetchUpdateRelease()),
+        title: currentAppLocalizations.checkUpdate,
+        tag: LoadingTag.checkUpdate,
+      );
+      if (result == null) return;
+      await _handleUpdateResult(data: result.release, isUser: true);
+    });
+  }
+
+  Future<bool> autoCheckUpdate() async {
+    if (!ref.read(appSettingProvider).autoCheckUpdate) return false;
+    return await _runUpdateOperation<bool>(() async {
+      try {
+        if (updateHostPlatform == 'macos') {
+          return await desktopUpdater.checkForUpdates(
+            manifestUrl: updateManifestUrl,
+            background: true,
+            safeMode: ref.read(safeModeProvider),
+          );
+        }
+        if (updateHostPlatform == 'windows' ||
+            updateHostPlatform?.startsWith('android-') == true) {
+          await clearDownloadedUpdate();
+        }
+        final release = await fetchUpdateRelease();
+        await _handleUpdateResult(data: release);
+        return release != null;
+      } catch (error) {
+        commonPrint.log(
+          'checkForUpdate failed: ${compactError(error)}',
+          logLevel: LogLevel.warning,
+        );
+        return false;
+      }
+    }) ?? false;
   }
 
   TextSpan _releaseSpan(BuildContext context, String tagName, String? body) {
@@ -144,18 +203,20 @@ class CommonAction extends _$CommonAction {
   }
 
   Future<void> _applyUpdate(Map<String, dynamic> release) async {
-    if (!system.isAndroid) {
+    if (ref.read(safeModeProvider)) return;
+    final platform = updateHostPlatform;
+    if (platform != 'windows' &&
+        platform?.startsWith('android-') != true) {
       await launchUrl(
         Uri.parse(release['url'] as String),
         mode: LaunchMode.externalApplication,
       );
       return;
     }
-    final started = await dialogs.showCommonDialog<bool>(
-      dismissible: false,
-      child: UpdateDownloadDialog(release: release),
-    );
-    if (started == false) {
+    final started = await downloadAndInstallUpdate(release, platform: platform);
+    if (started == true && platform == 'windows') {
+      await ref.read(systemActionProvider.notifier).handleExit();
+    } else if (started == false) {
       await dialogs.showAlert(
         title: currentAppLocalizations.checkUpdate,
         message: TextSpan(text: currentAppLocalizations.updateFailed),
@@ -163,10 +224,29 @@ class CommonAction extends _$CommonAction {
     }
   }
 
+  @protected
+  Future<bool?> downloadAndInstallUpdate(
+    Map<String, dynamic> release, {
+    required String? platform,
+  }) => dialogs.showCommonDialog<bool>(
+    dismissible: false,
+    child: UpdateDownloadDialog(release: release, platform: platform),
+  );
+
   Future<void> checkUpdateResultHandle({
     Map<String, dynamic>? data,
     bool isUser = false,
   }) async {
+    await _runUpdateOperation<void>(
+      () => _handleUpdateResult(data: data, isUser: isUser),
+    );
+  }
+
+  Future<void> _handleUpdateResult({
+    Map<String, dynamic>? data,
+    bool isUser = false,
+  }) async {
+    if (ref.read(safeModeProvider)) return;
     if (data != null) {
       final context = globalState.navigatorKey.currentContext!;
       final res = await dialogs.showMessage(
@@ -182,24 +262,24 @@ class CommonAction extends _$CommonAction {
               TextSpan(text: '\n${currentAppLocalizations.updateVpnTip}'),
           ],
         ),
-        confirmText: system.isAndroid
+        confirmText:
+            updateHostPlatform == 'windows' ||
+                updateHostPlatform?.startsWith('android-') == true
             ? currentAppLocalizations.update
             : currentAppLocalizations.goDownload,
         cancelText: isUser ? null : currentAppLocalizations.noLongerRemind,
       );
       if (res == true) {
-        unawaited(_applyUpdate(data));
+        await _applyUpdate(data);
       } else if (!isUser && res == false) {
         ref
             .read(appSettingProvider.notifier)
             .update((state) => state.copyWith(autoCheckUpdate: false));
       }
     } else if (isUser) {
-      unawaited(
-        dialogs.showAlert(
-          title: currentAppLocalizations.checkUpdate,
-          message: TextSpan(text: currentAppLocalizations.checkUpdateError),
-        ),
+      await dialogs.showAlert(
+        title: currentAppLocalizations.checkUpdate,
+        message: TextSpan(text: currentAppLocalizations.checkUpdateError),
       );
     }
   }

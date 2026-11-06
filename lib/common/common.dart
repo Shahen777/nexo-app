@@ -8,6 +8,7 @@ export 'constant.dart';
 export 'context.dart';
 export 'converter.dart';
 export 'datetime.dart';
+export 'desktop_updater.dart';
 export 'dialog.dart';
 export 'exception.dart';
 export 'file.dart';

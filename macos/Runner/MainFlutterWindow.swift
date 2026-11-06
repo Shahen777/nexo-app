@@ -27,6 +27,7 @@ class MainFlutterWindow: NSWindow {
             }
         }
         
+        (NSApp.delegate as? AppDelegate)?.configureUpdater(messenger: flutterViewController.engine.binaryMessenger)
         RegisterGeneratedPlugins(registry: flutterViewController)
         super.awakeFromNib()
     }
