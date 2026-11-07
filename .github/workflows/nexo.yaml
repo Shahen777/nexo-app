@@ -183,7 +183,7 @@ jobs:
 
       - name: Test update code
         if: matrix.platform == 'android'
-        run: flutter test test/common/request_test.dart test/widgets/update_dialog_test.dart test/l10n/localization_contract_test.dart test/setup_test.dart
+        run: flutter test test/common/request_test.dart test/common/migration_test.dart test/widgets/update_dialog_test.dart test/l10n/localization_contract_test.dart test/setup_test.dart
 
       - name: Test macOS updater
         if: matrix.platform == 'macos' && !inputs.skip_native_tests

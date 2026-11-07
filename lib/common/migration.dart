@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:fl_clash/common/constant.dart';
 import 'package:fl_clash/database/database.dart';
 import 'package:fl_clash/enum/enum.dart';
@@ -82,23 +84,40 @@ class _AppMigrationStore implements MigrationStore {
 class Migration {
   final MigrationStore _store;
   final MigrationTransform _migrateV0;
+  final bool _tunByDefault;
 
-  Migration({required MigrationStore store, MigrationTransform? migrateV0})
-    : _store = store,
-      _migrateV0 = migrateV0 ?? oldToNowTask;
+  Migration({
+    required MigrationStore store,
+    MigrationTransform? migrateV0,
+    bool tunByDefault = false,
+  }) : _store = store,
+       _migrateV0 = migrateV0 ?? oldToNowTask,
+       _tunByDefault = tunByDefault;
 
   static const currentVersion = 1;
 
   /// One-off setting changes for upgrades, apart from [currentVersion], which
   /// backups carry and an older app refuses when it is newer than its own.
-  static const upgradeVersion = 4;
+  static const upgradeVersion = 5;
 
-  static const Map<int, Config Function(Config config)> _upgrades = {
+  static const _newInstallUpgrades = {5};
+
+  Map<int, Config Function(Config config)> get _upgrades => {
     1: _resetThemeColors,
     2: _keepGlassLook,
     3: _followSystemColors,
     4: _turnOffSidebarBlur,
+    5: _enableTun,
   };
+
+  // Apps that ignore the system proxy, such as Electron ones, leak past it.
+  Config _enableTun(Config config) => _tunByDefault
+      ? config.copyWith(
+          patchClashConfig: config.patchClashConfig.copyWith(
+            tun: config.patchClashConfig.tun.copyWith(enable: true),
+          ),
+        )
+      : config;
 
   Future<Config> run() async {
     final configMap = await _store.getConfigMap();
@@ -112,9 +131,10 @@ class Migration {
       return config;
     }
     var upgraded = config;
-    if (installed) {
-      for (var version = from + 1; version <= upgradeVersion; version++) {
-        upgraded = _upgrades[version]!(upgraded);
+    final upgrades = _upgrades;
+    for (var version = from + 1; version <= upgradeVersion; version++) {
+      if (installed || _newInstallUpgrades.contains(version)) {
+        upgraded = upgrades[version]!(upgraded);
       }
     }
     if (upgraded != config && !await _store.saveConfig(upgraded)) {
@@ -250,4 +270,7 @@ String? _getStoredDavPassword(Map<String, Object?>? configMap) {
   return password is String && password.isNotEmpty ? password : null;
 }
 
-final migration = Migration(store: const _AppMigrationStore());
+final migration = Migration(
+  store: const _AppMigrationStore(),
+  tunByDefault: Platform.isMacOS || Platform.isWindows,
+);

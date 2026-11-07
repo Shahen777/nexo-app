@@ -307,6 +307,30 @@ void main() {
         expect(await upgrade(4), isTrue);
       });
 
+      test('turns on TUN once where it is the default', () async {
+        Future<bool> upgrade(
+          int from, {
+          required bool tunByDefault,
+          bool installed = true,
+        }) async {
+          final store = _FakeMigrationStore(
+            configMap: installed ? _createConfigMap() : null,
+            version: installed ? Migration.currentVersion : 0,
+            upgradeVersion: from,
+          );
+          final config = await Migration(
+            store: store,
+            tunByDefault: tunByDefault,
+          ).run();
+          return config.patchClashConfig.tun.enable;
+        }
+
+        expect(await upgrade(4, tunByDefault: true), isTrue);
+        expect(await upgrade(0, tunByDefault: true, installed: false), isTrue);
+        expect(await upgrade(5, tunByDefault: true), isFalse);
+        expect(await upgrade(4, tunByDefault: false), isFalse);
+      });
+
       test('a new install only records it', () async {
         final store = _FakeMigrationStore(
           configMap: null,
