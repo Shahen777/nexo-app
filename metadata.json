@@ -1,0 +1,49 @@
+{
+  "cli_version": "0.12.2",
+  "checkpoint_id": "01M6W2RWK7EPF10YR1B2JF9BKJ",
+  "strategy": "manual-commit",
+  "branch": "feat/desktop-tun",
+  "checkpoints_count": 12,
+  "files_touched": [
+    ".github/workflows/nexo.yaml",
+    "lib/common/migration.dart",
+    "test/common/migration_test.dart"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 11605,
+    "cache_creation_tokens": 7644620,
+    "cache_read_tokens": 508000686,
+    "output_tokens": 1697702,
+    "api_call_count": 1517,
+    "subagent_tokens": {
+      "input_tokens": 1935,
+      "cache_creation_tokens": 1005168,
+      "cache_read_tokens": 9959379,
+      "output_tokens": 123474,
+      "api_call_count": 132
+    }
+  },
+  "redaction": {
+    "replacements": 4475,
+    "layers": {
+      "betterleaks": 43,
+      "connection_string": 0,
+      "credential_key": 0,
+      "credential_value": 155,
+      "credentialed_uri": 1,
+      "entropy": 4588,
+      "key_context": 56,
+      "provider_token": 0,
+      "shell_stdin": 14
+    }
+  }
+}
