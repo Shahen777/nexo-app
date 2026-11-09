@@ -1,0 +1,61 @@
+name: nexo-ios
+
+# Builds the Go Core for iOS as an xcframework the Network Extension links.
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/ios]
+    paths:
+      - 'core/**'
+      - '.github/workflows/nexo-ios.yaml'
+
+env:
+  GO_VERSION: '1.27.1'
+
+jobs:
+  core:
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache-dependency-path: core/go.sum
+
+      - name: Fetch CA certificates
+        env:
+          CA_BUNDLE: cacert-2026-09-25.pem
+          CA_BUNDLE_SHA256: a41b5d356aea97a529fe27e0f7316d2f9d946d75927476cf9cf1b90637d00505
+        run: |
+          bundle=core/Clash.Meta/component/ca/ca-certificates.crt
+          curl -fsSL --retry 3 -o "$bundle" "https://curl.se/ca/$CA_BUNDLE"
+          echo "$CA_BUNDLE_SHA256  $bundle" | shasum -a 256 -c -
+
+      - name: Bind Core
+        working-directory: core
+        run: |
+          set -euo pipefail
+          tools="$RUNNER_TEMP/gomobile"
+          mkdir -p "$tools"
+          go build -o "$tools/" golang.org/x/mobile/cmd/gomobile golang.org/x/mobile/cmd/gobind
+          export PATH="$tools:$PATH"
+          # gomobile builds a generated main module, so the go line of go.mod would not set GODEBUG on its own.
+          godebug=$(go list -f '{{.DefaultGODEBUG}}' ./cmd/core)
+          tags=$(sed -n 's/^tags: *//p' ../build_config.yaml)
+          ldflags=$(sed -n 's/^go_ldflags: *"\(.*\)"/\1/p' ../build_config.yaml)
+          gomobile bind -target=ios,iossimulator -iosversion=15.0 -prefix=Nexo \
+            -tags="$tags" -ldflags="$ldflags -X=runtime.godebugDefault=$godebug" \
+            -o "$RUNNER_TEMP/NexoCore.xcframework" ./mobile
+          du -sh "$RUNNER_TEMP/NexoCore.xcframework"
+          find "$RUNNER_TEMP/NexoCore.xcframework" -name '*.h' -path '*ios-arm64/*' | head -5
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: nexo-ios-core
+          path: ${{ runner.temp }}/NexoCore.xcframework

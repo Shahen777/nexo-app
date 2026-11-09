@@ -113,8 +113,9 @@ func handleDecryptConfig(params DecryptConfigParams) (string, error) {
 }
 
 // mihomo writes the NTP time with settimeofday, which Android's app seccomp
-// policy answers by killing the process rather than with EPERM.
-var systemTimeWritable = runtime.GOOS != "android"
+// policy answers by killing the process rather than with EPERM; an iOS
+// extension may not set the clock either.
+var systemTimeWritable = runtime.GOOS != "android" && runtime.GOOS != "ios"
 
 func loadConfig(path string) (*config.Config, error) {
 	buf, err := os.ReadFile(path)
