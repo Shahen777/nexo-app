@@ -1,6 +1,7 @@
 name: nexo-ios
 
 # Builds the Go Core for iOS as an xcframework, then the unsigned iOS app that links it.
+# Intel runners: GitHub often fails to hand out arm64 macOS runners at all.
 on:
   workflow_dispatch:
   push:
@@ -12,7 +13,7 @@ env:
 
 jobs:
   core:
-    runs-on: macos-15
+    runs-on: macos-15-intel
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -60,7 +61,7 @@ jobs:
 
   app:
     needs: core
-    runs-on: macos-15
+    runs-on: macos-15-intel
     steps:
       - name: Checkout
         uses: actions/checkout@v4
