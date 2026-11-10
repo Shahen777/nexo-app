@@ -11,9 +11,23 @@ void main(List<String> args) async {
     }
     await FlutterRustBridgeNativeAssetsBuilder(
       cratePath: 'rust',
-      extraCargoEnvironmentVariables: _bindgenEnvironment(input),
+      extraCargoEnvironmentVariables: {
+        ..._bindgenEnvironment(input),
+        ..._iosEnvironment(input),
+      },
     ).run(input: input, output: output);
   });
+}
+
+// rustc links for iOS 10 unless told otherwise, and the C objects then need
+// symbols, such as ___chkstk_darwin, that only later iOS releases export.
+Map<String, String> _iosEnvironment(BuildInput input) {
+  if (!input.config.buildCodeAssets || input.config.code.targetOS != OS.iOS) {
+    return const {};
+  }
+  return {
+    'IPHONEOS_DEPLOYMENT_TARGET': '${input.config.code.iOS.targetVersion}.0',
+  };
 }
 
 // rquickjs runs bindgen on Android, which must load the NDK's libclang; Linux
