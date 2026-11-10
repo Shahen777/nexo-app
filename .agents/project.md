@@ -75,6 +75,10 @@ latest releases. Two are held back:
 - `test` 1.32.0 needs `test_api` 0.7.14, and `flutter_test` on Flutter 3.47 pins
   0.7.12. It moves with the SDK.
 
+`libc` is held at 0.2.189 in `plugins/rust_api/rust/Cargo.lock`: 0.2.190 no longer exposes the `_dyld_*`
+functions on iOS, and `backtrace` 0.3.76 (through `flutter_rust_bridge`) calls them there. It moves once a
+`backtrace` release stops needing them or `libc` restores them.
+
 When an upgrade fails version solving, record the blocker here with
 what has to change upstream before the pin can move, so the next
 `flutter pub outdated` run does not rediscover it.
