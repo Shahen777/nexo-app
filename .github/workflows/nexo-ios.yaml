@@ -88,7 +88,7 @@ jobs:
 
       - name: Install iOS Rust targets
         working-directory: plugins/rust_api/rust
-        run: rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios
+        run: rustup target add aarch64-apple-ios aarch64-apple-ios-sim
 
       - name: Fetch CA certificates
         env:
