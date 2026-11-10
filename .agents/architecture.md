@@ -23,6 +23,20 @@ Android lib mode:
   initializes and synchronizes Android shared state, and closes the native service path exactly once.
 - Because Core is in the application process on Android, application RSS already includes Core memory.
 
+iOS lib mode:
+
+- `gomobile bind -target=ios` builds the same `core/mobile` package into `NexoCore.xcframework`
+  (`.github/workflows/nexo-ios.yaml`, placed at `ios/Frameworks/`, not committed). Files built for Android carry
+  `android || ios`; desktop-only files exclude `ios`, because `GOOS=ios` also satisfies `darwin`.
+- Two Cores run. The app links one for every method call, exactly as Android does through `CoreLib` and
+  `ios/Runner/ServicePlugin.swift` on the same `service`/`core` channels. The Packet Tunnel extension
+  (`ios/PacketTunnel/`) links another, started with `QuickSetup` from the `SharedState` the app writes to the App
+  Group container, and is the only one that opens listeners or carries traffic.
+- While the tunnel runs, `CoreRouting` in `ios/Shared/NexoShared.swift` mirrors calls that change its behavior to
+  the extension and answers traffic and connection queries from it alone. The Core's home is the App Group
+  container, so profiles and spilled responses are readable by both processes.
+- The extension must stay under iOS's ~50 MiB limit; `core/memlimit_ios.go` sets the Go memory limit for it.
+
 Desktop core mode:
 
 - Go core runs as a separate process with `CGO_ENABLED=0`.

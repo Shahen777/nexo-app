@@ -103,7 +103,7 @@ class Service {
         deliver(listener);
       } catch (error) {
         commonPrint.log(
-          'Unable to dispatch Android $label: $error',
+          'Unable to dispatch service $label: $error',
           logLevel: LogLevel.error,
         );
       }
@@ -162,4 +162,4 @@ class Service {
   }
 }
 
-Service? get service => system.isAndroid ? Service() : null;
+Service? get service => system.hasCoreService ? Service() : null;

@@ -37,6 +37,11 @@ class System {
 
   bool get isAndroid => Platform.isAndroid;
 
+  bool get isIOS => Platform.isIOS;
+
+  /// The Core runs as a library under a native VPN service rather than as a process.
+  bool get hasCoreService => isAndroid || isIOS;
+
   bool get isLinux => Platform.isLinux;
 
   bool get isTV => _isTV;

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:fl_clash/common/common.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -14,8 +15,17 @@ class AppPath {
   Completer<Directory> cacheDir = Completer();
 
   @visibleForTesting
-  static Future<Directory> Function() supportDirectory =
-      getApplicationSupportDirectory;
+  static Future<Directory> Function() supportDirectory = system.isIOS
+      ? _sharedContainerDirectory
+      : getApplicationSupportDirectory;
+
+  // The tunnel extension is another process and reads the profiles from the App Group container.
+  static Future<Directory> _sharedContainerDirectory() async {
+    final path = await const MethodChannel(
+      '$packageName/service',
+    ).invokeMethod<String>('homeDir');
+    return Directory(path!);
+  }
 
   @visibleForTesting
   static Future<Directory> Function() temporaryDirectory =

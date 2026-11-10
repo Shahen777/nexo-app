@@ -40,7 +40,10 @@ class _AndroidContainerState extends ConsumerState<AndroidManager>
         debouncer.call(FunctionTag.saveSharedFile, () async {
           await preferences.saveShareState(next);
         }, duration: const Duration(seconds: 1));
-        if (prev?.needSyncSharedState != next.needSyncSharedState) {
+        // The iOS tunnel starts in another process and reads its setup from the synced state.
+        if (system.isIOS) {
+          service?.syncState(next);
+        } else if (prev?.needSyncSharedState != next.needSyncSharedState) {
           service?.syncState(next.needSyncSharedState);
         }
       }

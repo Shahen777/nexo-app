@@ -94,7 +94,7 @@ class CoreLib extends CoreHandlerInterface {
     _connectedCompleter = Completer<bool>();
     final stopped = await _service?.shutdown() ?? true;
     if (!stopped) {
-      throw StateError('Android Core service shutdown failed');
+      throw StateError('Core service shutdown failed');
     }
     return CoreLifecycleResult(
       revision: revision,
@@ -116,14 +116,19 @@ class CoreLib extends CoreHandlerInterface {
   // that ends, so once it takes the command the Core's own answer is moot.
   @override
   Future<bool> startListener() async {
-    await super.startListener();
+    // On iOS the tunnel extension runs its own Core, which owns the listener port.
+    if (!system.isIOS) {
+      await super.startListener();
+    }
     return await _service?.start() ?? false;
   }
 
   @override
   Future<bool> stopListener() async {
     final serviceStopped = await _service?.stop() ?? false;
-    await super.stopListener();
+    if (!system.isIOS) {
+      await super.stopListener();
+    }
     return serviceStopped;
   }
 
@@ -167,4 +172,4 @@ class CoreLib extends CoreHandlerInterface {
   }
 }
 
-CoreLib? get coreLib => system.isAndroid ? CoreLib() : null;
+CoreLib? get coreLib => system.hasCoreService ? CoreLib() : null;

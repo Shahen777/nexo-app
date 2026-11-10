@@ -135,7 +135,7 @@ class _ConnectButton extends ConsumerWidget {
 
   void _toggle(WidgetRef ref) {
     if (connecting) return;
-    if (system.isAndroid) {
+    if (system.isAndroid || system.isIOS) {
       unawaited(HapticFeedback.mediumImpact());
     }
     ref.read(commonActionProvider.notifier).toggleRunning();

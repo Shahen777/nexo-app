@@ -1,15 +1,13 @@
 name: nexo-ios
 
-# Builds the Go Core for iOS as an xcframework the Network Extension links.
+# Builds the Go Core for iOS as an xcframework, then the unsigned iOS app that links it.
 on:
   workflow_dispatch:
   push:
     branches: [feat/ios]
-    paths:
-      - 'core/**'
-      - '.github/workflows/nexo-ios.yaml'
 
 env:
+  FLUTTER_VERSION: '3.47.6'
   GO_VERSION: '1.27.1'
 
 jobs:
@@ -59,3 +57,62 @@ jobs:
         with:
           name: nexo-ios-core
           path: ${{ runner.temp }}/NexoCore.xcframework
+
+  app:
+    needs: core
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Download Core
+        uses: actions/download-artifact@v4
+        with:
+          name: nexo-ios-core
+          path: ios/Frameworks/NexoCore.xcframework
+
+      - name: Setup Xcode
+        run: |
+          latest=$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)
+          sudo xcode-select -s "$latest"
+          xcodebuild -version
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Install iOS Rust targets
+        working-directory: plugins/rust_api/rust
+        run: rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios
+
+      - name: Fetch CA certificates
+        env:
+          CA_BUNDLE: cacert-2026-09-25.pem
+          CA_BUNDLE_SHA256: a41b5d356aea97a529fe27e0f7316d2f9d946d75927476cf9cf1b90637d00505
+        run: |
+          bundle=core/Clash.Meta/component/ca/ca-certificates.crt
+          curl -fsSL --retry 3 -o "$bundle" "https://curl.se/ca/$CA_BUNDLE"
+          echo "$CA_BUNDLE_SHA256  $bundle" | shasum -a 256 -c -
+
+      - name: Build
+        run: |
+          flutter config --enable-swift-package-manager
+          flutter pub get
+          flutter build ios --release --no-codesign
+
+      - name: Report size
+        run: |
+          app=build/ios/iphoneos/Runner.app
+          du -sh "$app" "$app/PlugIns/PacketTunnel.appex"
+          ls -la "$app/PlugIns"
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: nexo-ios-unsigned
+          path: build/ios/iphoneos/Runner.app
