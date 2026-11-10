@@ -103,7 +103,11 @@ jobs:
         run: |
           flutter config --enable-swift-package-manager
           flutter pub get
-          flutter build ios --release --no-codesign
+          # Flutter hides Xcode's own errors behind a generic signing hint, so keep the verbose log.
+          if ! flutter build ios --release --no-codesign -v > "$RUNNER_TEMP/build.log" 2>&1; then
+            grep -E "error:|requires a development team|Signing for|BUILD FAILED" "$RUNNER_TEMP/build.log" | sort -u | head -60
+            exit 1
+          fi
 
       - name: Report size
         run: |
