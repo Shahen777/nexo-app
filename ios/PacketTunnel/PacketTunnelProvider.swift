@@ -37,7 +37,7 @@ final class TunCallbacks: NSObject, NexoMobileTunHandlerProtocol {
         ret0_?.pointee = true
     }
 
-    func resolvePackage(_ uid: Int32) throws -> String {
+    func resolvePackage(_ uid: Int32, error: NSErrorPointer) -> String {
         ""
     }
 
