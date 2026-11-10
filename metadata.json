@@ -1,0 +1,45 @@
+{
+  "cli_version": "0.12.2",
+  "checkpoint_id": "01M72M5MEKHKNVQ9DF883J29MN",
+  "strategy": "manual-commit",
+  "branch": "feat/ios",
+  "checkpoints_count": 8,
+  "files_touched": null,
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 50,
+    "cache_creation_tokens": 14366,
+    "cache_read_tokens": 6693918,
+    "output_tokens": 13043,
+    "api_call_count": 17,
+    "subagent_tokens": {
+      "input_tokens": 0,
+      "cache_creation_tokens": 0,
+      "cache_read_tokens": 0,
+      "output_tokens": 0,
+      "api_call_count": 0
+    }
+  },
+  "redaction": {
+    "replacements": 5044,
+    "layers": {
+      "betterleaks": 43,
+      "connection_string": 0,
+      "credential_key": 0,
+      "credential_value": 161,
+      "credentialed_uri": 1,
+      "entropy": 5128,
+      "key_context": 81,
+      "provider_token": 0,
+      "shell_stdin": 14
+    }
+  }
+}
