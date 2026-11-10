@@ -105,9 +105,17 @@ jobs:
           flutter pub get
           # Flutter hides Xcode's own errors behind a generic signing hint, so keep the verbose log.
           if ! flutter build ios --release --no-codesign -v > "$RUNNER_TEMP/build.log" 2>&1; then
-            grep -E "error:|requires a development team|Signing for|BUILD FAILED" "$RUNNER_TEMP/build.log" | sort -u | head -60
+            grep -i -E "error|requires a development team|Signing for|failed" "$RUNNER_TEMP/build.log" | sort -u | head -80
+            grep -A20 "The following build commands failed" "$RUNNER_TEMP/build.log" || true
             exit 1
           fi
+
+      - name: Upload build log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nexo-ios-build-log
+          path: ${{ runner.temp }}/build.log
 
       - name: Report size
         run: |
