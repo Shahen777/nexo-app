@@ -376,9 +376,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "back": MessageLookupByLibrary.simpleMessage("Назад"),
     "backgroundBlur": MessageLookupByLibrary.simpleMessage("Размытие фона"),
     "backup": MessageLookupByLibrary.simpleMessage("Резервное копирование"),
-    "basedOnFlClash": MessageLookupByLibrary.simpleMessage(
-      "Nexo основан на FlClash (GPL-3.0)",
-    ),
     "backupAndRestore": MessageLookupByLibrary.simpleMessage(
       "Резервное копирование и восстановление",
     ),
@@ -387,6 +384,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "backupSuccess": MessageLookupByLibrary.simpleMessage(
       "Резервная копия создана",
+    ),
+    "basedOnFlClash": MessageLookupByLibrary.simpleMessage(
+      "Nexo основан на FlClash (GPL-3.0)",
     ),
     "basicInfo": MessageLookupByLibrary.simpleMessage("Основная информация"),
     "basicStrategy": MessageLookupByLibrary.simpleMessage("Базовые политики"),
@@ -998,9 +998,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "inputRuleContent": MessageLookupByLibrary.simpleMessage(
       "Введите содержимое правила",
     ),
-    "installedAppsPermissionDeniedMessage": MessageLookupByLibrary.simpleMessage(
-      "Разрешение на список приложений отклонено, поэтому установленные приложения недоступны. Предоставьте его вручную в системных настройках.",
-    ),
+    "installedAppsPermissionDeniedMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "Разрешение на список приложений отклонено, поэтому установленные приложения недоступны. Предоставьте его вручную в системных настройках.",
+        ),
     "installedAppsPermissionDesc": MessageLookupByLibrary.simpleMessage(
       "Эта система не выдаёт список установленных приложений без разрешения. Предоставьте его, чтобы настроить прокси для отдельных приложений.",
     ),
@@ -1959,6 +1960,26 @@ class MessageLookup extends MessageLookupByLibrary {
     "unnamed": MessageLookupByLibrary.simpleMessage("Без названия"),
     "unpinWindow": MessageLookupByLibrary.simpleMessage("Открепить окно"),
     "update": MessageLookupByLibrary.simpleMessage("Обновить"),
+    "updateChecksumFailed": MessageLookupByLibrary.simpleMessage(
+      "Файл не прошёл проверку целостности.",
+    ),
+    "updateDownloadFailed": MessageLookupByLibrary.simpleMessage(
+      "Не удалось скачать обновление.",
+    ),
+    "updateDownloading": MessageLookupByLibrary.simpleMessage(
+      "Скачиваем обновление…",
+    ),
+    "updateInstallFailed": MessageLookupByLibrary.simpleMessage(
+      "Не удалось установить обновление.",
+    ),
+    "updateMirror": MessageLookupByLibrary.simpleMessage("Зеркало обновлений"),
+    "updateMirrorDesc": MessageLookupByLibrary.simpleMessage(
+      "Сервер с обновлениями. Пустое поле — только GitHub.",
+    ),
+    "updateNow": MessageLookupByLibrary.simpleMessage("Обновить"),
+    "updatePermissionRequired": MessageLookupByLibrary.simpleMessage(
+      "Разрешите установку из этого приложения, затем проверьте обновления ещё раз.",
+    ),
     "upload": MessageLookupByLibrary.simpleMessage("Отдача"),
     "uploadBandwidth": MessageLookupByLibrary.simpleMessage("Скорость отдачи"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),

@@ -309,14 +309,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "back": MessageLookupByLibrary.simpleMessage("뒤로"),
     "backgroundBlur": MessageLookupByLibrary.simpleMessage("배경 흐림"),
     "backup": MessageLookupByLibrary.simpleMessage("백업"),
-    "basedOnFlClash": MessageLookupByLibrary.simpleMessage(
-      "Nexo는 FlClash(GPL-3.0)를 기반으로 합니다",
-    ),
     "backupAndRestore": MessageLookupByLibrary.simpleMessage("백업 및 복원"),
     "backupFromNewerVersion": MessageLookupByLibrary.simpleMessage(
       "이 백업은 더 최신 버전의 앱에서 만들어졌습니다. 복원하기 전에 앱을 업데이트하세요",
     ),
     "backupSuccess": MessageLookupByLibrary.simpleMessage("백업 완료"),
+    "basedOnFlClash": MessageLookupByLibrary.simpleMessage(
+      "Nexo는 FlClash(GPL-3.0)를 기반으로 합니다",
+    ),
     "basicInfo": MessageLookupByLibrary.simpleMessage("기본 정보"),
     "basicStrategy": MessageLookupByLibrary.simpleMessage("기본 전략"),
     "batchAdd": MessageLookupByLibrary.simpleMessage("일괄 추가"),
@@ -1583,6 +1583,26 @@ class MessageLookup extends MessageLookupByLibrary {
     "unnamed": MessageLookupByLibrary.simpleMessage("이름 없음"),
     "unpinWindow": MessageLookupByLibrary.simpleMessage("창 고정 해제"),
     "update": MessageLookupByLibrary.simpleMessage("업데이트"),
+    "updateChecksumFailed": MessageLookupByLibrary.simpleMessage(
+      "다운로드한 파일이 무결성 검사를 통과하지 못했습니다.",
+    ),
+    "updateDownloadFailed": MessageLookupByLibrary.simpleMessage(
+      "업데이트를 다운로드하지 못했습니다.",
+    ),
+    "updateDownloading": MessageLookupByLibrary.simpleMessage(
+      "업데이트를 다운로드하는 중…",
+    ),
+    "updateInstallFailed": MessageLookupByLibrary.simpleMessage(
+      "업데이트를 설치하지 못했습니다.",
+    ),
+    "updateMirror": MessageLookupByLibrary.simpleMessage("업데이트 미러"),
+    "updateMirrorDesc": MessageLookupByLibrary.simpleMessage(
+      "업데이트를 제공하는 서버입니다. 비워 두면 GitHub만 사용합니다.",
+    ),
+    "updateNow": MessageLookupByLibrary.simpleMessage("업데이트"),
+    "updatePermissionRequired": MessageLookupByLibrary.simpleMessage(
+      "이 앱의 설치를 허용한 다음 업데이트를 다시 확인하세요.",
+    ),
     "upload": MessageLookupByLibrary.simpleMessage("업로드"),
     "uploadBandwidth": MessageLookupByLibrary.simpleMessage("업로드 대역폭"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),

@@ -86,7 +86,9 @@ class CommonAction extends _$CommonAction {
     if (!ref.read(appSettingProvider).autoCheckUpdate) return false;
     final Map<String, dynamic>? res;
     try {
-      res = await request.checkForUpdate();
+      res = await request.checkForUpdate(
+        mirrorBase: ref.read(appSettingProvider).updateMirror,
+      );
     } catch (error) {
       commonPrint.log(
         'checkForUpdate failed: ${compactError(error)}',
@@ -96,6 +98,21 @@ class CommonAction extends _$CommonAction {
     }
     await checkUpdateResultHandle(data: res);
     return res != null;
+  }
+
+  Future<void> userCheckForUpdate() async {
+    if (ref.read(loadingProvider(LoadingTag.checkUpdate))) return;
+    final result = await globalState.loadingRun(
+      () async => (
+        release: await request.checkForUpdate(
+          mirrorBase: ref.read(appSettingProvider).updateMirror,
+        ),
+      ),
+      title: currentAppLocalizations.checkUpdate,
+      tag: LoadingTag.checkUpdate,
+    );
+    if (result == null) return;
+    await checkUpdateResultHandle(data: result.release, isUser: true);
   }
 
   TextSpan _releaseSpan(BuildContext context, String tagName, String? body) {
@@ -142,11 +159,21 @@ class CommonAction extends _$CommonAction {
     ];
   }
 
+  List<String> _updateUrls(Map<String, dynamic> data) {
+    final urls = data['urls'];
+    if (urls is! List) return const [];
+    return [
+      for (final url in urls)
+        if (url is String && url.isNotEmpty) url,
+    ];
+  }
+
   Future<void> checkUpdateResultHandle({
     Map<String, dynamic>? data,
     bool isUser = false,
   }) async {
     if (data != null) {
+      final urls = _updateUrls(data);
       final context = globalState.navigatorKey.currentContext!;
       final res = await dialogs.showMessage(
         title: currentAppLocalizations.discoverNewVersion,
@@ -155,15 +182,21 @@ class CommonAction extends _$CommonAction {
           data['tag_name'] as String,
           data['body'] as String?,
         ),
-        confirmText: currentAppLocalizations.goDownload,
+        confirmText: urls.isEmpty
+            ? currentAppLocalizations.goDownload
+            : currentAppLocalizations.updateNow,
         cancelText: isUser ? null : currentAppLocalizations.noLongerRemind,
       );
       if (res == true) {
-        unawaited(
-          launchUrl(
-            Uri.parse('https://github.com/$repository/releases/latest'),
-          ),
-        );
+        if (urls.isEmpty) {
+          unawaited(
+            launchUrl(
+              Uri.parse('https://github.com/$repository/releases/latest'),
+            ),
+          );
+        } else {
+          await _downloadAndInstall(data, urls);
+        }
       } else if (!isUser && res == false) {
         ref
             .read(appSettingProvider.notifier)
@@ -176,6 +209,46 @@ class CommonAction extends _$CommonAction {
           message: TextSpan(text: currentAppLocalizations.checkUpdateError),
         ),
       );
+    }
+  }
+
+  Future<void> _downloadAndInstall(
+    Map<String, dynamic> data,
+    List<String> urls,
+  ) async {
+    final sha256 = data['sha256'];
+    final name = data['name'];
+    if (sha256 is! String || name is! String) return;
+    final path = await showUpdateDownloadDialog(
+      urls: urls,
+      sha256: sha256,
+      fileName: name,
+    );
+    if (path == null) return;
+    final result = await installVerifiedUpdate(path);
+    switch (result) {
+      case UpdateInstallResult.started:
+        if (!system.isAndroid) {
+          await ref.read(systemActionProvider.notifier).handleExit();
+        }
+      case UpdateInstallResult.needsPermission:
+        unawaited(
+          dialogs.showAlert(
+            title: currentAppLocalizations.checkUpdate,
+            message: TextSpan(
+              text: currentAppLocalizations.updatePermissionRequired,
+            ),
+          ),
+        );
+      case UpdateInstallResult.failed:
+        unawaited(
+          dialogs.showAlert(
+            title: currentAppLocalizations.checkUpdate,
+            message: TextSpan(
+              text: currentAppLocalizations.updateInstallFailed,
+            ),
+          ),
+        );
     }
   }
 }

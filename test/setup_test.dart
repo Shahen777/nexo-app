@@ -34,6 +34,23 @@ void main() {
       expect(args, ['dart-define-from-file=env.json', 'split-per-abi']);
     });
 
+    test('a universal apk is not split per ABI', () {
+      final results = setup.createSetupArgParser().parse([
+        'android',
+        '--universal-apk',
+      ]);
+
+      expect(results['universal-apk'], isTrue);
+      expect(
+        setup.createFlutterBuildArgs(
+          platform: 'android',
+          verbose: false,
+          universalApk: true,
+        ),
+        ['dart-define-from-file=env.json'],
+      );
+    });
+
     test('adds verbose to flutter build args with -v', () {
       final args = setup.createFlutterBuildArgs(
         platform: 'android',

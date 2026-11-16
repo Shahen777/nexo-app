@@ -79,6 +79,7 @@ Future<void> main(List<String> args) async {
     arch,
     androidArch: androidArch,
     verbose: verbose,
+    universalApk: results['universal-apk'] == true,
   );
   exit(exitCode);
 }
@@ -107,18 +108,24 @@ ArgParser createSetupArgParser() {
       abbr: 'v',
       negatable: false,
       help: 'Enable verbose Flutter build output',
+    )
+    ..addFlag(
+      'universal-apk',
+      negatable: false,
+      help: 'Build one Android APK for every ABI',
     );
 }
 
 List<String> createFlutterBuildArgs({
   required String platform,
   required bool verbose,
+  bool universalApk = false,
 }) {
   final flutterBuildArgs = <String>[
     if (verbose) 'verbose',
     'dart-define-from-file=env.json',
   ];
-  if (platform == 'android') {
+  if (platform == 'android' && !universalApk) {
     flutterBuildArgs.add('split-per-abi');
   }
   return flutterBuildArgs;
@@ -162,6 +169,7 @@ Future<int> _package(
   String arch, {
   String? androidArch,
   required bool verbose,
+  required bool universalApk,
 }) async {
   final file = File(p.join(rootDir, 'env.json'));
   await file.writeAsString(jsonEncode(createBuildEnvironment(env)));
@@ -169,6 +177,7 @@ Future<int> _package(
   final flutterBuildArgs = createFlutterBuildArgs(
     platform: platform,
     verbose: verbose,
+    universalApk: universalApk,
   );
   final descriptionArgs = <String>[];
   if (platform != 'android') {

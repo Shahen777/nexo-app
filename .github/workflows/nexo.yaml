@@ -1,8 +1,20 @@
 name: nexo-build
 
-# Builds the Nexo app for Android, macOS and Windows; started by hand from the Actions tab.
+# Public downloads. A version tag publishes a stable release; a manual run
+# publishes a prerelease so the files can be checked before the first tag.
 on:
+  push:
+    tags:
+      - 'v*'
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to publish (empty: v<pubspec>-ci.<run id>, prerelease)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
 
 env:
   FLUTTER_VERSION: '3.47.6'
@@ -22,12 +34,17 @@ jobs:
         include:
           - platform: android
             os: ubuntu-latest
+            artifact: nexo-android
           - platform: macos
             os: macos-15-intel
             universal: '1'
-            artifact: nexo-macos-universal
+            artifact: nexo-macos
           - platform: windows
             os: windows-2022
+            artifact: nexo-windows
+          - platform: linux
+            os: ubuntu-22.04
+            artifact: nexo-linux
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -70,7 +87,6 @@ jobs:
       - name: Setup Xcode
         if: matrix.platform == 'macos'
         run: |
-          # newest Xcode the runner image has (macos-14 images do not ship Xcode 26)
           latest=$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)
           sudo xcode-select -s "$latest"
           xcodebuild -version
@@ -89,7 +105,6 @@ jobs:
           add-to-path: true
           link-to-sdk: true
 
-      # Build hooks see a filtered environment, so the universal switch goes through pubspec user_defines.
       - name: Enable universal macOS core
         if: matrix.platform == 'macos' && matrix.universal
         run: |
@@ -119,7 +134,18 @@ jobs:
         shell: bash
         env:
           ANDROID_NDK_HOME: ${{ steps.build-ndk.outputs.ndk-path }}
-        run: dart setup.dart ${{ matrix.platform }} --env stable -v
+        run: |
+          set -euo pipefail
+          dart setup.dart ${{ matrix.platform }} --env stable -v
+          if [[ '${{ matrix.platform }}' == android ]]; then
+            mkdir -p "$RUNNER_TEMP/apks"
+            cp -a dist/*.apk "$RUNNER_TEMP/apks/"
+            dart setup.dart android --env stable --universal-apk -v
+            cp -an dist/*.apk "$RUNNER_TEMP/apks/" || cp -a dist/*.apk "$RUNNER_TEMP/apks/"
+            rm -rf dist
+            mkdir dist
+            cp -a "$RUNNER_TEMP/apks/." dist/
+          fi
 
       - name: Verify universal macOS app
         if: matrix.platform == 'macos'
@@ -164,6 +190,102 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.artifact || format('nexo-{0}', matrix.platform) }}
+          name: ${{ matrix.artifact }}
           path: ./dist
           retention-days: 14
+
+  publish:
+    name: Publish
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download installers
+        uses: actions/download-artifact@v4
+        with:
+          pattern: nexo-*
+          path: dist
+          merge-multiple: true
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Skip native build hooks
+        run: |
+          yq -i '.hooks.user_defines.setup.build_assets = false | .hooks.user_defines.rust_api.build_assets = false' pubspec.yaml
+
+      - name: Resolve version
+        shell: bash
+        env:
+          INPUT_TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            tag="$GITHUB_REF_NAME"
+            version="${tag#v}"
+          else
+            pubspec_version=$(sed -n 's/^version: *//p' pubspec.yaml | cut -d+ -f1)
+            if [[ -n "${INPUT_TAG}" ]]; then
+              tag="${INPUT_TAG}"
+            else
+              tag="v${pubspec_version}-ci.${GITHUB_RUN_ID}"
+            fi
+            version="$pubspec_version"
+          fi
+          version="${version%%-*}"
+          version="${version%%+*}"
+          # v1.2.3-pre.1 and a manual vX.Y.Z-ci.N stay off the stable channel.
+          if [[ "$tag" == *-* ]]; then
+            prerelease=true
+          else
+            prerelease=false
+          fi
+          echo "tag=$tag" >> "$GITHUB_ENV"
+          echo "version=$version" >> "$GITHUB_ENV"
+          echo "prerelease=$prerelease" >> "$GITHUB_ENV"
+
+      - name: Generate release notes
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! dart run tool/changelog.dart render release --tag "$tag" --out release.md; then
+            printf 'Nexo %s\n' "$version" > release.md
+          fi
+          sed "s|VERSION|$version|g" .github/release_template.md >> release.md
+
+      - name: Write latest.json
+        run: |
+          extra=()
+          if [[ "$prerelease" == true ]]; then
+            extra+=(--prerelease)
+          fi
+          dart run tool/release_manifest.dart \
+            --version "$version" \
+            --tag "$tag" \
+            --notes release.md \
+            --dist dist \
+            --repository Shahen777/nexo-app \
+            --out dist/latest.json \
+            "${extra[@]}"
+          find dist -maxdepth 1 -type f ! -name SHA256SUMS -print0 | xargs -0 sha256sum > SHA256SUMS
+          mv SHA256SUMS dist/SHA256SUMS
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.tag }}
+          name: ${{ env.tag }}
+          prerelease: ${{ env.prerelease == 'true' }}
+          body_path: release.md
+          files: dist/*

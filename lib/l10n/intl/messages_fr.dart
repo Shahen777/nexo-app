@@ -392,9 +392,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Flou d’arrière-plan",
     ),
     "backup": MessageLookupByLibrary.simpleMessage("Sauvegarde"),
-    "basedOnFlClash": MessageLookupByLibrary.simpleMessage(
-      "Nexo est basé sur FlClash (GPL-3.0)",
-    ),
     "backupAndRestore": MessageLookupByLibrary.simpleMessage(
       "Sauvegarde et restauration",
     ),
@@ -402,6 +399,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Cette sauvegarde provient d’une version plus récente de l’app. Mettez l’app à jour avant de la restaurer",
     ),
     "backupSuccess": MessageLookupByLibrary.simpleMessage("Sauvegarde réussie"),
+    "basedOnFlClash": MessageLookupByLibrary.simpleMessage(
+      "Nexo est basé sur FlClash (GPL-3.0)",
+    ),
     "basicInfo": MessageLookupByLibrary.simpleMessage("Infos de base"),
     "basicStrategy": MessageLookupByLibrary.simpleMessage("Stratégies de base"),
     "batchAdd": MessageLookupByLibrary.simpleMessage("Ajout groupé"),
@@ -1030,9 +1030,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "inputRuleContent": MessageLookupByLibrary.simpleMessage(
       "Saisissez le contenu de la règle",
     ),
-    "installedAppsPermissionDeniedMessage": MessageLookupByLibrary.simpleMessage(
-      "L’autorisation de la liste des apps a été refusée ; les apps installées ne peuvent donc pas être listées. Veuillez l’accorder manuellement dans les réglages du système.",
-    ),
+    "installedAppsPermissionDeniedMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "L’autorisation de la liste des apps a été refusée ; les apps installées ne peuvent donc pas être listées. Veuillez l’accorder manuellement dans les réglages du système.",
+        ),
     "installedAppsPermissionDesc": MessageLookupByLibrary.simpleMessage(
       "Ce système masque la liste des apps installées tant que l’autorisation n’est pas accordée. Accordez-la pour configurer le proxy par app.",
     ),
@@ -2017,6 +2018,28 @@ class MessageLookup extends MessageLookupByLibrary {
       "Désépingler la fenêtre",
     ),
     "update": MessageLookupByLibrary.simpleMessage("Mettre à jour"),
+    "updateChecksumFailed": MessageLookupByLibrary.simpleMessage(
+      "Le fichier téléchargé n’a pas passé le contrôle d’intégrité.",
+    ),
+    "updateDownloadFailed": MessageLookupByLibrary.simpleMessage(
+      "Impossible de télécharger la mise à jour.",
+    ),
+    "updateDownloading": MessageLookupByLibrary.simpleMessage(
+      "Téléchargement de la mise à jour…",
+    ),
+    "updateInstallFailed": MessageLookupByLibrary.simpleMessage(
+      "Impossible d’installer la mise à jour.",
+    ),
+    "updateMirror": MessageLookupByLibrary.simpleMessage(
+      "Miroir des mises à jour",
+    ),
+    "updateMirrorDesc": MessageLookupByLibrary.simpleMessage(
+      "Serveur qui héberge les mises à jour. Laissez vide pour n’utiliser que GitHub.",
+    ),
+    "updateNow": MessageLookupByLibrary.simpleMessage("Mettre à jour"),
+    "updatePermissionRequired": MessageLookupByLibrary.simpleMessage(
+      "Autorisez l’installation depuis cette app, puis recherchez de nouveau les mises à jour.",
+    ),
     "upload": MessageLookupByLibrary.simpleMessage("Envoi"),
     "uploadBandwidth": MessageLookupByLibrary.simpleMessage(
       "Bande passante d’envoi",
