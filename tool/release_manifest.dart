@@ -18,7 +18,12 @@ Future<void> main(List<String> arguments) async {
               help: 'Release notes file. Empty when omitted.',
             )
             ..addOption('dist', defaultsTo: 'dist')
-            ..addOption('out', defaultsTo: 'dist/latest.json'))
+            ..addOption('out', defaultsTo: 'dist/latest.json')
+            ..addFlag(
+              'prerelease',
+              negatable: false,
+              help: 'Keep this manifest off the stable update channel.',
+            ))
           .parse(arguments);
 
   final notesPath = results['notes'] as String?;
@@ -42,6 +47,7 @@ Future<void> main(List<String> arguments) async {
     repository: results['repository'] as String,
     notes: notes,
     files: files,
+    prerelease: results['prerelease'] as bool,
   );
   final out = File(results['out'] as String);
   await out.parent.create(recursive: true);

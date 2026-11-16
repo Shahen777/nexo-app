@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:fl_clash/common/update_install.dart';
 import 'package:fl_clash/common/update_manifest.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:path/path.dart' as p;
 
 const _sha = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 const _shaB =
@@ -104,6 +108,7 @@ void main() {
           (name: 'Nexo-1.4.0-macos-arm64.dmg', sha256: _shaB, size: 61),
           (name: 'Nexo-1.4.0-linux-amd64.AppImage', sha256: _sha, size: 70),
           (name: 'Nexo-1.4.0-linux-amd64.deb', sha256: _shaB, size: 71),
+          (name: 'Nexo-1.4.0-linux-amd64.rpm', sha256: _sha, size: 72),
           (name: 'SHA256SUMS', sha256: _sha, size: 1),
         ],
       ),
@@ -157,9 +162,19 @@ void main() {
         const UpdateHost(platform: 'linux', arch: 'amd64'),
         preferredKind: 'deb',
       );
+      final rpm = selectUpdateAsset(
+        manifest,
+        const UpdateHost(platform: 'linux', arch: 'amd64'),
+        preferredKind: preferredInstallKind(
+          const UpdateHost(platform: 'linux', arch: 'amd64'),
+          linuxAppImage: false,
+          linuxRpm: true,
+        ),
+      );
 
       expect(image?.kind, 'appimage');
       expect(deb?.kind, 'deb');
+      expect(rpm?.kind, 'rpm');
     });
   });
 
@@ -219,6 +234,44 @@ void main() {
     expect(manifestFromGitHubRelease({'body': 'no tag'}), isNull);
   });
 
+  test('a prerelease tag stays off the stable update channel', () {
+    expect(tagIsPrerelease('v0.9.3-pre.1'), isTrue);
+    expect(tagIsPrerelease('v0.9.2-ci.4'), isTrue);
+    expect(tagIsPrerelease('v1.0.0'), isFalse);
+
+    final pre = parseUpdateManifest({
+      'version': '0.9.3',
+      'tag': 'v0.9.3-pre.1',
+      'assets': <Object>[],
+    });
+    expect(pre.prerelease, isTrue);
+    expect(offerStableUpdate(pre, '0.9.2'), isFalse);
+
+    final stable = parseUpdateManifest({
+      'version': '1.0.0',
+      'tag': 'v1.0.0',
+      'assets': <Object>[],
+    });
+    expect(offerStableUpdate(stable, '0.9.2'), isTrue);
+  });
+
+  test('Fedora is an rpm install and Ubuntu is a deb install', () {
+    expect(
+      osReleaseIsRpm('NAME="Fedora Linux"\nID=fedora\nVERSION_ID="40"\n'),
+      isTrue,
+    );
+    expect(osReleaseIsRpm('ID=rocky\nID_LIKE="rhel centos fedora"\n'), isTrue);
+    expect(osReleaseIsRpm('ID=ubuntu\nID_LIKE=debian\n'), isFalse);
+    expect(
+      preferredInstallKind(
+        const UpdateHost(platform: 'linux', arch: 'amd64'),
+        linuxAppImage: false,
+        linuxRpm: false,
+      ),
+      'deb',
+    );
+  });
+
   test('installer scripts wait for this process and then replace it', () {
     expect(windowsSilentInstallArguments, contains('/RELAUNCH=1'));
     expect(windowsSilentInstallArguments, contains('/VERYSILENT'));
@@ -226,5 +279,15 @@ void main() {
     expect(macOSReplaceScript(), contains('open'));
     expect(linuxAppImageReplaceScript(), contains('chmod +x'));
     expect(linuxRelaunchScript(), contains('kill -0'));
+  });
+
+  test('a writable directory can receive the macOS bundle', () async {
+    final parent = await Directory.systemTemp.createTemp('nexo-mac-');
+    addTearDown(() => parent.delete(recursive: true));
+
+    expect(
+      await macDestinationWritable(p.join(parent.path, 'Nexo.app')),
+      isTrue,
+    );
   });
 }

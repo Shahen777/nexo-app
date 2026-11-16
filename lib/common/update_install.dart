@@ -50,9 +50,29 @@ UpdateInstallResult _installWindows(String path) {
 Future<UpdateInstallResult> _installMacOS(String path) async {
   final destination = macOSInstallDestination();
   if (destination == null) return UpdateInstallResult.failed;
+  // A disk image and an admin-owned copy in /Applications are not writable.
+  // Leaving the app running lets the user drag the opened image into place.
+  if (!await macDestinationWritable(destination)) {
+    await Process.run('open', [path]);
+    return UpdateInstallResult.failed;
+  }
   final staged = await _stageMacApp(path);
   await _spawnReplaceScript(macOSReplaceScript(), [staged, destination]);
   return UpdateInstallResult.started;
+}
+
+/// The parent directory has to accept a new bundle before this process exits.
+Future<bool> macDestinationWritable(String destination) async {
+  final parent = Directory(p.dirname(destination));
+  if (!parent.existsSync()) return false;
+  final probe = File(p.join(parent.path, '.nexo-update-probe-$pid'));
+  try {
+    await probe.writeAsString('ok');
+    await probe.delete();
+    return true;
+  } on FileSystemException {
+    return false;
+  }
 }
 
 Future<UpdateInstallResult> _installLinux(String path) async {

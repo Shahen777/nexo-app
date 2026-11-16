@@ -228,12 +228,14 @@ class UpdateManifest {
     required this.tag,
     required this.notes,
     required this.assets,
+    this.prerelease = false,
   });
 
   final String version;
   final String tag;
   final String? notes;
   final List<UpdateAsset> assets;
+  final bool prerelease;
 }
 
 class UpdateHost {
@@ -261,14 +263,80 @@ UpdateHost currentUpdateHost() {
   };
 }
 
-String preferredInstallKind(UpdateHost host, {required bool linuxAppImage}) {
+String preferredInstallKind(
+  UpdateHost host, {
+  required bool linuxAppImage,
+  required bool linuxRpm,
+}) {
   return switch (host.platform) {
-    'linux' => linuxAppImage ? 'appimage' : 'deb',
+    'linux' =>
+      linuxAppImage
+          ? 'appimage'
+          : linuxRpm
+          ? 'rpm'
+          : 'deb',
     'windows' => 'exe',
     'android' => 'apk',
     'macos' => 'dmg',
     _ => '',
   };
+}
+
+/// `v1.2.3-pre.1` and `v1.2.3-ci.4` are not the stable channel.
+bool tagIsPrerelease(String tag) {
+  final bare = tag.trim().replaceFirst(RegExp(r'^[vV]'), '');
+  return bare.contains('-');
+}
+
+/// A prerelease manifest is not offered to a stable install.
+bool offerStableUpdate(UpdateManifest manifest, String currentVersion) {
+  if (manifest.prerelease) return false;
+  return compareReleaseVersion(manifest.version, currentVersion) > 0;
+}
+
+/// Fedora, RHEL and openSUSE identify themselves in `/etc/os-release`.
+bool osReleaseIsRpm(String contents) {
+  final fields = <String, String>{};
+  for (final line in contents.split('\n')) {
+    final index = line.indexOf('=');
+    if (index <= 0) continue;
+    final key = line.substring(0, index).trim();
+    var value = line.substring(index + 1).trim();
+    if (value.length >= 2 && value.startsWith('"') && value.endsWith('"')) {
+      value = value.substring(1, value.length - 1);
+    }
+    fields[key] = value;
+  }
+  final ids = <String>{
+    if (fields['ID'] != null) fields['ID']!,
+    ...?fields['ID_LIKE']?.split(RegExp(r'\s+')),
+  };
+  const rpmIds = {
+    'fedora',
+    'rhel',
+    'centos',
+    'rocky',
+    'almalinux',
+    'ol',
+    'opensuse',
+    'opensuse-leap',
+    'opensuse-tumbleweed',
+    'sles',
+    'suse',
+    'amzn',
+  };
+  return ids.any(rpmIds.contains);
+}
+
+bool linuxInstallUsesRpm() {
+  if (!Platform.isLinux) return false;
+  final file = File('/etc/os-release');
+  if (!file.existsSync()) return false;
+  try {
+    return osReleaseIsRpm(file.readAsStringSync());
+  } on FileSystemException {
+    return false;
+  }
 }
 
 UpdateManifest parseUpdateManifest(Map<String, dynamic> json) {
@@ -277,7 +345,10 @@ UpdateManifest parseUpdateManifest(Map<String, dynamic> json) {
     throw const FormatException('Update manifest has no version');
   }
   compareReleaseVersion(version, '0.0.0');
-  final tag = json['tag'];
+  final tagValue = json['tag'];
+  final tag = tagValue is String && tagValue.trim().isNotEmpty
+      ? tagValue.trim()
+      : 'v$version';
   final notes = json['notes'] ?? json['body'];
   final rawAssets = json['assets'];
   final assets = <UpdateAsset>[];
@@ -290,9 +361,10 @@ UpdateManifest parseUpdateManifest(Map<String, dynamic> json) {
   }
   return UpdateManifest(
     version: version.trim(),
-    tag: tag is String && tag.trim().isNotEmpty ? tag.trim() : 'v$version',
+    tag: tag,
     notes: notes is String ? notes : null,
     assets: assets,
+    prerelease: json['prerelease'] == true || tagIsPrerelease(tag),
   );
 }
 
@@ -333,13 +405,15 @@ UpdateManifest? manifestFromGitHubRelease(Map<String, dynamic> release) {
   } on FormatException {
     return null;
   }
+  final releaseTag = version.startsWith('v') || version.startsWith('V')
+      ? version
+      : 'v$version';
   return UpdateManifest(
     version: version,
-    tag: version.startsWith('v') || version.startsWith('V')
-        ? version
-        : 'v$version',
+    tag: releaseTag,
     notes: notes is String ? notes : null,
     assets: const [],
+    prerelease: release['prerelease'] == true || tagIsPrerelease(releaseTag),
   );
 }
 
@@ -394,6 +468,7 @@ Map<String, Object?> buildReleaseManifest({
   required String repository,
   required String notes,
   required List<({String name, String sha256, int size})> files,
+  bool prerelease = false,
 }) {
   final assets = <Map<String, Object?>>[];
   for (final file in files) {
@@ -415,6 +490,7 @@ Map<String, Object?> buildReleaseManifest({
     'schema': 1,
     'version': version,
     'tag': tag,
+    'prerelease': prerelease || tagIsPrerelease(tag),
     'notes': notes,
     'assets': assets,
   };

@@ -100,7 +100,7 @@ class Request {
       allowProxy: allowProxy,
     );
     final version = globalState.packageInfo.version;
-    if (compareReleaseVersion(manifest.version, version) <= 0) return null;
+    if (!offerStableUpdate(manifest, version)) return null;
     final host = currentUpdateHost();
     final asset = selectUpdateAsset(
       manifest,
@@ -108,6 +108,7 @@ class Request {
       preferredKind: preferredInstallKind(
         host,
         linuxAppImage: Platform.environment.containsKey('APPIMAGE'),
+        linuxRpm: linuxInstallUsesRpm(),
       ),
     );
     return {
