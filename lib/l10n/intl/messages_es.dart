@@ -391,9 +391,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Desenfoque de fondo",
     ),
     "backup": MessageLookupByLibrary.simpleMessage("Copia de seguridad"),
-    "basedOnFlClash": MessageLookupByLibrary.simpleMessage(
-      "Nexo está basado en FlClash (GPL-3.0)",
-    ),
     "backupAndRestore": MessageLookupByLibrary.simpleMessage(
       "Copia de seguridad y restauración",
     ),
@@ -402,6 +399,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "backupSuccess": MessageLookupByLibrary.simpleMessage(
       "Copia de seguridad completada",
+    ),
+    "basedOnFlClash": MessageLookupByLibrary.simpleMessage(
+      "Nexo está basado en FlClash (GPL-3.0)",
     ),
     "basicInfo": MessageLookupByLibrary.simpleMessage("Información básica"),
     "basicStrategy": MessageLookupByLibrary.simpleMessage(
@@ -1031,9 +1031,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "inputRuleContent": MessageLookupByLibrary.simpleMessage(
       "Introduce el contenido de la regla",
     ),
-    "installedAppsPermissionDeniedMessage": MessageLookupByLibrary.simpleMessage(
-      "Se denegó el permiso de lista de apps, por lo que no se pueden mostrar las apps instaladas. Concédelo manualmente en los ajustes del sistema.",
-    ),
+    "installedAppsPermissionDeniedMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "Se denegó el permiso de lista de apps, por lo que no se pueden mostrar las apps instaladas. Concédelo manualmente en los ajustes del sistema.",
+        ),
     "installedAppsPermissionDesc": MessageLookupByLibrary.simpleMessage(
       "Este sistema oculta la lista de apps instaladas hasta que se concede el permiso. Autorízalo para configurar el proxy por app.",
     ),
@@ -2016,6 +2017,28 @@ class MessageLookup extends MessageLookupByLibrary {
     "unnamed": MessageLookupByLibrary.simpleMessage("Sin nombre"),
     "unpinWindow": MessageLookupByLibrary.simpleMessage("Desfijar ventana"),
     "update": MessageLookupByLibrary.simpleMessage("Actualizar"),
+    "updateChecksumFailed": MessageLookupByLibrary.simpleMessage(
+      "El archivo descargado no superó la comprobación de integridad.",
+    ),
+    "updateDownloadFailed": MessageLookupByLibrary.simpleMessage(
+      "No se pudo descargar la actualización.",
+    ),
+    "updateDownloading": MessageLookupByLibrary.simpleMessage(
+      "Descargando la actualización…",
+    ),
+    "updateInstallFailed": MessageLookupByLibrary.simpleMessage(
+      "No se pudo instalar la actualización.",
+    ),
+    "updateMirror": MessageLookupByLibrary.simpleMessage(
+      "Espejo de actualizaciones",
+    ),
+    "updateMirrorDesc": MessageLookupByLibrary.simpleMessage(
+      "Servidor que aloja las actualizaciones. Déjalo vacío para usar solo GitHub.",
+    ),
+    "updateNow": MessageLookupByLibrary.simpleMessage("Actualizar"),
+    "updatePermissionRequired": MessageLookupByLibrary.simpleMessage(
+      "Permite la instalación desde esta app y vuelve a buscar actualizaciones.",
+    ),
     "upload": MessageLookupByLibrary.simpleMessage("Subida"),
     "uploadBandwidth": MessageLookupByLibrary.simpleMessage(
       "Ancho de banda de subida",

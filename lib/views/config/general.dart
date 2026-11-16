@@ -352,6 +352,15 @@ class GeneralView extends ConsumerWidget {
         select: (state) => state.autoCheckUpdate,
         update: (state, value) => state.copyWith(autoCheckUpdate: value),
       ),
+      ConfigTextItem(
+        title: (l) => l.updateMirror,
+        selector: appSettingProvider.select((state) => state.updateMirror),
+        allowEmpty: true,
+        normalize: (value) => value.trim(),
+        onChanged: (ref, value) => ref
+            .read(appSettingProvider.notifier)
+            .update((state) => state.copyWith(updateMirror: value)),
+      ),
     ];
   }
 
@@ -413,7 +422,10 @@ class GeneralView extends ConsumerWidget {
           generateSection(
             title: appLocalizations.requestsAndUpdates,
             items: _requestItems(),
-            footer: appLocalizations.checkCertificateDesc,
+            footer: [
+              appLocalizations.checkCertificateDesc,
+              appLocalizations.updateMirrorDesc,
+            ].join('\n'),
           ),
           generateSection(
             title: appLocalizations.inbound,

@@ -156,6 +156,13 @@ class App {
     return methodChannel.invokeMethod<bool>('openAppSettings');
   }
 
+  /// `started` opens the system installer, `permission` when the user still
+  /// has to allow installs from this app, `failed` otherwise.
+  Future<String?> installApk(String path) async {
+    if (!Platform.isAndroid) return 'failed';
+    return methodChannel.invokeMethod<String>('installApk', {'path': path});
+  }
+
   Future<AppExitInfo?> getLastExitInfo() async {
     try {
       final raw = await methodChannel

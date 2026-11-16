@@ -1241,6 +1241,81 @@ class AppLocalizations {
     return Intl.message('Download', name: 'goDownload', desc: '', args: []);
   }
 
+  /// `Update`
+  String get updateNow {
+    return Intl.message('Update', name: 'updateNow', desc: '', args: []);
+  }
+
+  /// `Downloading the update…`
+  String get updateDownloading {
+    return Intl.message(
+      'Downloading the update…',
+      name: 'updateDownloading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not download the update.`
+  String get updateDownloadFailed {
+    return Intl.message(
+      'Could not download the update.',
+      name: 'updateDownloadFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The downloaded file failed the integrity check.`
+  String get updateChecksumFailed {
+    return Intl.message(
+      'The downloaded file failed the integrity check.',
+      name: 'updateChecksumFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not install the update.`
+  String get updateInstallFailed {
+    return Intl.message(
+      'Could not install the update.',
+      name: 'updateInstallFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Allow installation from this app, then check for updates again.`
+  String get updatePermissionRequired {
+    return Intl.message(
+      'Allow installation from this app, then check for updates again.',
+      name: 'updatePermissionRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update mirror`
+  String get updateMirror {
+    return Intl.message(
+      'Update mirror',
+      name: 'updateMirror',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Server that hosts updates. Leave empty to use GitHub only.`
+  String get updateMirrorDesc {
+    return Intl.message(
+      'Server that hosts updates. Leave empty to use GitHub only.',
+      name: 'updateMirrorDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Unknown`
   String get unknown {
     return Intl.message('Unknown', name: 'unknown', desc: '', args: []);
@@ -7953,8 +8028,7 @@ class AppLocalizations {
   String customImportDroppedSubRules(num count, Object label) {
     return Intl.plural(
       count,
-      one:
-          '1 SUB-RULE rule was dropped, since custom profiles do not support sub-rules',
+      one: '1 SUB-RULE rule was dropped, since custom profiles do not support sub-rules',
       other:
           '$label SUB-RULE rules were dropped, since custom profiles do not support sub-rules',
       name: 'customImportDroppedSubRules',

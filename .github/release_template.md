@@ -18,6 +18,7 @@
         <tr>
         <td>Android</td>
             <td>
+                <a href="https://github.com/Shahen777/nexo-app/releases/download/vVERSION/Nexo-VERSION-android.apk"><img src="https://img.shields.io/badge/APK-Universal-168039.svg?logo=android"></a><br>
                 <a href="https://github.com/Shahen777/nexo-app/releases/download/vVERSION/Nexo-VERSION-android-arm64-v8a.apk"><img src="https://img.shields.io/badge/APK-ARMv8-168039.svg?logo=android"></a><br>
                 <a href="https://github.com/Shahen777/nexo-app/releases/download/vVERSION/Nexo-VERSION-android-armeabi-v7a.apk"><img src="https://img.shields.io/badge/APK-ARMv7-45bf55.svg?logo=android"></a><br>
                 <a href="https://github.com/Shahen777/nexo-app/releases/download/vVERSION/Nexo-VERSION-android-x86_64.apk"><img src="https://img.shields.io/badge/APK-x64-96ed89.svg?logo=android"></a>
@@ -33,8 +34,7 @@
         <tr>
             <td>macOS</td>
             <td>
-                <a href="https://github.com/Shahen777/nexo-app/releases/download/vVERSION/Nexo-VERSION-macos-arm64.dmg"><img src="https://img.shields.io/badge/DMG-Apple%20Silicon-%23000000.svg?logo=apple"></a><br>
-                <a href="https://github.com/Shahen777/nexo-app/releases/download/vVERSION/Nexo-VERSION-macos-amd64.dmg"><img src="https://img.shields.io/badge/DMG-Intel%20X64-%2300A9E0.svg?logo=apple"></a><br>
+                <a href="https://github.com/Shahen777/nexo-app/releases/download/vVERSION/Nexo-VERSION-macos-universal.dmg"><img src="https://img.shields.io/badge/DMG-Universal-%23000000.svg?logo=apple"></a>
             </td>
         </tr>
         <tr>

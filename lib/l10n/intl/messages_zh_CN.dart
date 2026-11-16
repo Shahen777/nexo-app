@@ -303,14 +303,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "back": MessageLookupByLibrary.simpleMessage("返回"),
     "backgroundBlur": MessageLookupByLibrary.simpleMessage("背景模糊"),
     "backup": MessageLookupByLibrary.simpleMessage("备份"),
-    "basedOnFlClash": MessageLookupByLibrary.simpleMessage(
-      "Nexo 基于 FlClash（GPL-3.0）",
-    ),
     "backupAndRestore": MessageLookupByLibrary.simpleMessage("备份与恢复"),
     "backupFromNewerVersion": MessageLookupByLibrary.simpleMessage(
       "该备份来自更高版本的应用，请先更新应用再恢复",
     ),
     "backupSuccess": MessageLookupByLibrary.simpleMessage("备份成功"),
+    "basedOnFlClash": MessageLookupByLibrary.simpleMessage(
+      "Nexo 基于 FlClash（GPL-3.0）",
+    ),
     "basicInfo": MessageLookupByLibrary.simpleMessage("基础信息"),
     "basicStrategy": MessageLookupByLibrary.simpleMessage("基础策略"),
     "batchAdd": MessageLookupByLibrary.simpleMessage("批量添加"),
@@ -1461,6 +1461,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "unnamed": MessageLookupByLibrary.simpleMessage("未命名"),
     "unpinWindow": MessageLookupByLibrary.simpleMessage("取消置顶"),
     "update": MessageLookupByLibrary.simpleMessage("更新"),
+    "updateChecksumFailed": MessageLookupByLibrary.simpleMessage(
+      "下载的文件未通过完整性校验。",
+    ),
+    "updateDownloadFailed": MessageLookupByLibrary.simpleMessage("无法下载更新。"),
+    "updateDownloading": MessageLookupByLibrary.simpleMessage("正在下载更新…"),
+    "updateInstallFailed": MessageLookupByLibrary.simpleMessage("无法安装更新。"),
+    "updateMirror": MessageLookupByLibrary.simpleMessage("更新镜像"),
+    "updateMirrorDesc": MessageLookupByLibrary.simpleMessage(
+      "托管更新的服务器。留空则只使用 GitHub。",
+    ),
+    "updateNow": MessageLookupByLibrary.simpleMessage("更新"),
+    "updatePermissionRequired": MessageLookupByLibrary.simpleMessage(
+      "请允许此应用安装应用，然后再次检查更新。",
+    ),
     "upload": MessageLookupByLibrary.simpleMessage("上传"),
     "uploadBandwidth": MessageLookupByLibrary.simpleMessage("上行带宽"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),

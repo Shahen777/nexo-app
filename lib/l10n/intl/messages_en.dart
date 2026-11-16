@@ -366,9 +366,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "back": MessageLookupByLibrary.simpleMessage("Back"),
     "backgroundBlur": MessageLookupByLibrary.simpleMessage("Background blur"),
     "backup": MessageLookupByLibrary.simpleMessage("Backup"),
-    "basedOnFlClash": MessageLookupByLibrary.simpleMessage(
-      "Nexo is based on FlClash (GPL-3.0)",
-    ),
     "backupAndRestore": MessageLookupByLibrary.simpleMessage(
       "Backup and restore",
     ),
@@ -376,6 +373,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "This backup comes from a newer version of the app. Update the app before restoring it",
     ),
     "backupSuccess": MessageLookupByLibrary.simpleMessage("Backup successful"),
+    "basedOnFlClash": MessageLookupByLibrary.simpleMessage(
+      "Nexo is based on FlClash (GPL-3.0)",
+    ),
     "basicInfo": MessageLookupByLibrary.simpleMessage("Basic info"),
     "basicStrategy": MessageLookupByLibrary.simpleMessage("Basic strategies"),
     "batchAdd": MessageLookupByLibrary.simpleMessage("Batch add"),
@@ -964,9 +964,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "inputRuleContent": MessageLookupByLibrary.simpleMessage(
       "Enter the rule content",
     ),
-    "installedAppsPermissionDeniedMessage": MessageLookupByLibrary.simpleMessage(
-      "The app list permission was denied, so installed apps cannot be listed. Please grant it manually in system settings.",
-    ),
+    "installedAppsPermissionDeniedMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "The app list permission was denied, so installed apps cannot be listed. Please grant it manually in system settings.",
+        ),
     "installedAppsPermissionDesc": MessageLookupByLibrary.simpleMessage(
       "This system hides the installed app list until the permission is granted. Authorize it to configure the per-app proxy.",
     ),
@@ -1867,6 +1868,26 @@ class MessageLookup extends MessageLookupByLibrary {
     "unnamed": MessageLookupByLibrary.simpleMessage("Unnamed"),
     "unpinWindow": MessageLookupByLibrary.simpleMessage("Unpin window"),
     "update": MessageLookupByLibrary.simpleMessage("Update"),
+    "updateChecksumFailed": MessageLookupByLibrary.simpleMessage(
+      "The downloaded file failed the integrity check.",
+    ),
+    "updateDownloadFailed": MessageLookupByLibrary.simpleMessage(
+      "Could not download the update.",
+    ),
+    "updateDownloading": MessageLookupByLibrary.simpleMessage(
+      "Downloading the update…",
+    ),
+    "updateInstallFailed": MessageLookupByLibrary.simpleMessage(
+      "Could not install the update.",
+    ),
+    "updateMirror": MessageLookupByLibrary.simpleMessage("Update mirror"),
+    "updateMirrorDesc": MessageLookupByLibrary.simpleMessage(
+      "Server that hosts updates. Leave empty to use GitHub only.",
+    ),
+    "updateNow": MessageLookupByLibrary.simpleMessage("Update"),
+    "updatePermissionRequired": MessageLookupByLibrary.simpleMessage(
+      "Allow installation from this app, then check for updates again.",
+    ),
     "upload": MessageLookupByLibrary.simpleMessage("Upload"),
     "uploadBandwidth": MessageLookupByLibrary.simpleMessage("Upload bandwidth"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),

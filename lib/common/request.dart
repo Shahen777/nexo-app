@@ -3,12 +3,14 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:crypto/crypto.dart' as crypto;
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/state.dart';
 import 'package:flutter/foundation.dart' show visibleForTesting;
+import 'package:path/path.dart' as p;
 
 class Request {
   late final Dio dio;
@@ -85,14 +87,204 @@ class Request {
     }
   }
 
-  /// Null when this build is current; throws when GitHub cannot be asked.
-  Future<Map<String, dynamic>?> checkForUpdate() async {
-    final release = await latestRelease();
-    final remoteVersion = release['tag_name'] as String;
+  /// Null when this build is current; throws when no manifest can be read.
+  ///
+  /// [mirrorBase] is asked first. GitHub's `latest.json`, then the releases
+  /// API, are the fallback when that server cannot be reached.
+  Future<Map<String, dynamic>?> checkForUpdate({
+    String? mirrorBase,
+    bool allowProxy = true,
+  }) async {
+    final manifest = await loadUpdateManifest(
+      mirrorBase: mirrorBase,
+      allowProxy: allowProxy,
+    );
     final version = globalState.packageInfo.version;
-    final hasUpdate =
-        compareVersions(remoteVersion.replaceAll('v', ''), version) > 0;
-    return hasUpdate ? release : null;
+    if (compareReleaseVersion(manifest.version, version) <= 0) return null;
+    final host = currentUpdateHost();
+    final asset = selectUpdateAsset(
+      manifest,
+      host,
+      preferredKind: preferredInstallKind(
+        host,
+        linuxAppImage: Platform.environment.containsKey('APPIMAGE'),
+      ),
+    );
+    return {
+      'tag_name': manifest.tag,
+      'body': manifest.notes,
+      if (asset != null) ...{
+        'name': asset.name,
+        'sha256': asset.sha256,
+        'url': asset.url,
+        'urls': assetDownloadUrls(
+          name: asset.name,
+          url: asset.url,
+          mirrorBase: mirrorBase,
+          repository: repository,
+          tag: manifest.tag,
+        ),
+      },
+    };
+  }
+
+  @visibleForTesting
+  Future<UpdateManifest> loadUpdateManifest({
+    String? mirrorBase,
+    bool allowProxy = true,
+  }) async {
+    Object? lastError;
+    for (final url in manifestCandidateUrls(
+      mirrorBase: mirrorBase,
+      repository: repository,
+    )) {
+      for (final throughProxy in [false, if (allowProxy) true]) {
+        if (throughProxy && !_isGitHub(url)) continue;
+        try {
+          return parseUpdateManifest(await _readJsonMap(url, throughProxy));
+        } catch (error) {
+          lastError = error;
+        }
+      }
+    }
+    try {
+      final release = await latestRelease();
+      final manifest = manifestFromGitHubRelease(release);
+      if (manifest != null) return manifest;
+    } catch (error) {
+      lastError = error;
+    }
+    _failUpdate(lastError, 'No update manifest');
+  }
+
+  Future<Map<String, dynamic>> _readJsonMap(
+    String url,
+    bool throughProxy,
+  ) async {
+    final client = throughProxy ? _clashDio : dio;
+    final response = await client.get<String>(
+      url,
+      options: Options(
+        responseType: ResponseType.plain,
+        sendTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 20),
+      ),
+    );
+    final decoded = jsonDecode(response.data ?? '');
+    if (decoded is! Map<String, dynamic>) {
+      throw const FormatException('Update manifest is not an object');
+    }
+    return decoded;
+  }
+
+  /// Downloads [urls] in order, checking SHA-256. GitHub URLs are tried again
+  /// through the running proxy when a direct download fails.
+  Future<String> downloadVerifiedUpdate({
+    required List<String> urls,
+    required String sha256Hex,
+    required String fileName,
+    required void Function(double progress) onProgress,
+    CancelToken? cancelToken,
+    bool allowProxy = true,
+  }) async {
+    final safeName = releaseFileName(fileName);
+    if (safeName == null) {
+      throw const FormatException('Update file name is not safe');
+    }
+    final directory = Directory(
+      p.join((await appPath.cacheDir.future).path, 'update'),
+    );
+    await directory.create(recursive: true);
+    final destination = File(p.join(directory.path, safeName));
+    Object? lastError;
+    for (final url in urls) {
+      try {
+        await _downloadVerified(
+          url: url,
+          client: dio,
+          destination: destination,
+          sha256Hex: sha256Hex,
+          onProgress: onProgress,
+          cancelToken: cancelToken,
+        );
+        return destination.path;
+      } catch (error) {
+        if (_cancelled(error)) rethrow;
+        lastError = error;
+      }
+    }
+    if (allowProxy) {
+      for (final url in urls.where(_isGitHub)) {
+        try {
+          await _downloadVerified(
+            url: url,
+            client: _clashDio,
+            destination: destination,
+            sha256Hex: sha256Hex,
+            onProgress: onProgress,
+            cancelToken: cancelToken,
+          );
+          return destination.path;
+        } catch (error) {
+          if (_cancelled(error)) rethrow;
+          lastError = error;
+        }
+      }
+    }
+    _failUpdate(lastError, 'Update download failed');
+  }
+
+  Never _failUpdate(Object? error, String fallback) {
+    switch (error) {
+      case Exception():
+        throw error;
+      case Error():
+        throw error;
+      default:
+        throw FormatException(fallback);
+    }
+  }
+
+  Future<void> _downloadVerified({
+    required String url,
+    required Dio client,
+    required File destination,
+    required String sha256Hex,
+    required void Function(double progress) onProgress,
+    required CancelToken? cancelToken,
+  }) async {
+    final partial = File('${destination.path}.part');
+    if (partial.existsSync()) await partial.delete();
+    await client.download(
+      url,
+      partial.path,
+      cancelToken: cancelToken,
+      deleteOnError: true,
+      options: Options(
+        followRedirects: true,
+        receiveTimeout: const Duration(minutes: 20),
+        headers: const {'User-Agent': browserUa},
+      ),
+      onReceiveProgress: (received, total) {
+        if (total > 0) onProgress(received / total);
+      },
+    );
+    final digest = (await crypto.sha256.bind(partial.openRead()).first)
+        .toString();
+    if (!sha256Equals(digest, sha256Hex)) {
+      await partial.delete();
+      throw const FormatException('Update checksum does not match');
+    }
+    if (destination.existsSync()) await destination.delete();
+    await partial.rename(destination.path);
+  }
+
+  bool _cancelled(Object error) =>
+      error is DioException && CancelToken.isCancel(error);
+
+  bool _isGitHub(String url) {
+    final host = Uri.tryParse(url)?.host ?? '';
+    return host == 'github.com' || host.endsWith('.githubusercontent.com');
   }
 
   /// The release page redirect still answers once the hourly API quota is spent.

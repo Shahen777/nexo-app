@@ -6,7 +6,10 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:fl_clash/common/constant.dart';
 import 'package:fl_clash/common/request.dart';
+import 'package:fl_clash/common/update_manifest.dart';
+import 'package:fl_clash/state.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class _StalledHttpClient extends Fake implements HttpClient {
   @override
@@ -110,6 +113,59 @@ void main() {
         expect(await request.latestRelease(), {'tag_name': 'v1.2.4'});
       },
     );
+
+    test('reads a mirror manifest and falls back to GitHub', () async {
+      globalState.packageInfo = PackageInfo(
+        appName: 'Nexo',
+        packageName: 'app.nexo.vpn',
+        version: '1.0.0',
+        buildNumber: '1',
+      );
+      final mirror = requestAnswering({
+        'mirror.test': () => ResponseBody.fromString(
+          jsonEncode({
+            'version': '2.0.0',
+            'tag': 'v2.0.0',
+            'notes': '- from the mirror',
+            'assets': <Object>[],
+          }),
+          200,
+          headers: {
+            Headers.contentTypeHeader: [Headers.jsonContentType],
+          },
+        ),
+      });
+
+      final fromMirror = await mirror.checkForUpdate(
+        mirrorBase: 'https://mirror.test/latest.json',
+        allowProxy: false,
+      );
+      expect(fromMirror?['tag_name'], 'v2.0.0');
+      expect(fromMirror?['body'], '- from the mirror');
+
+      final github = requestAnswering({
+        'mirror.test': () => ResponseBody.fromString('down', 500),
+        'github.com': () => ResponseBody.fromString(
+          jsonEncode({
+            'version': '2.1.0',
+            'tag': 'v2.1.0',
+            'notes': '- from GitHub',
+            'assets': <Object>[],
+          }),
+          200,
+          headers: {
+            Headers.contentTypeHeader: [Headers.jsonContentType],
+          },
+        ),
+      });
+
+      final fromGitHub = await github.checkForUpdate(
+        mirrorBase: 'https://mirror.test',
+        allowProxy: false,
+      );
+      expect(fromGitHub?['tag_name'], 'v2.1.0');
+      expect(compareReleaseVersion('2.1.0', '1.0.0'), greaterThan(0));
+    });
 
     test('fails instead of answering when neither endpoint does', () async {
       final request = requestAnswering({
