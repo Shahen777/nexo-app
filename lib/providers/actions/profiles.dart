@@ -41,7 +41,13 @@ class ProfilesAction extends _$ProfilesAction {
     return _core.validateConfigWithData(data);
   }
 
-  Future<void> autoUpdateProfiles() async {
+  Future<void>? _autoUpdating;
+
+  /// The timer, startup and app resume all call this; overlapping calls share one run.
+  Future<void> autoUpdateProfiles() => _autoUpdating ??= _autoUpdateProfiles()
+      .whenComplete(() => _autoUpdating = null);
+
+  Future<void> _autoUpdateProfiles() async {
     for (final id in [
       for (final profile in ref.read(profilesProvider)) profile.id,
     ]) {
@@ -159,6 +165,10 @@ class ProfilesAction extends _$ProfilesAction {
         label: latest.label.takeFirstValid([updated.label]),
         subscriptionInfo: updated.subscriptionInfo,
         lastUpdateDate: updated.lastUpdateDate,
+        autoUpdateDuration:
+            updated.autoUpdateDuration == profile.autoUpdateDuration
+            ? latest.autoUpdateDuration
+            : updated.autoUpdateDuration,
       );
       ref.read(profilesProvider.notifier).put(newProfile);
       if (profile.id == ref.read(currentProfileIdProvider)) {

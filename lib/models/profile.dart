@@ -13,6 +13,14 @@ part 'generated/profile.g.dart';
 typedef ValidateConfig =
     Future<String> Function(String path, String ageSecretKey);
 
+/// The `profile-update-interval` header counts hours, as Clash clients read it.
+Duration? updateIntervalOf(String? header) {
+  final hours = num.tryParse(header?.trim() ?? '');
+  if (hours == null || !hours.isFinite) return null;
+  final minutes = (hours * 60).round();
+  return minutes >= 1 ? Duration(minutes: minutes) : null;
+}
+
 @freezed
 abstract class SubscriptionInfo with _$SubscriptionInfo {
   const factory SubscriptionInfo({
@@ -186,12 +194,14 @@ extension ProfileExtension on Profile {
     final response = await request.getFileResponseForUrl(url);
     final disposition = response.headers.value('content-disposition');
     final userinfo = response.headers.value('subscription-userinfo');
+    final interval = response.headers.value('profile-update-interval');
     return copyWith(
       label: label.takeFirstValid([
         getFileNameForDisposition(disposition),
         defaultLabel,
       ]),
       subscriptionInfo: SubscriptionInfo.formHString(userinfo),
+      autoUpdateDuration: updateIntervalOf(interval) ?? autoUpdateDuration,
     ).saveFile(
       decompressUnlabeled(response.data ?? Uint8List(0)),
       validate: validate,

@@ -496,7 +496,9 @@ class SetupAction extends _$SetupAction {
         ? await setupState.script?.content
         : null;
     final hasScript = scriptContent?.isNotEmpty == true;
-    final profileBase = !isCustom && !hasScript
+    // A base keeps the proxies in the Core, where the chain proxy cannot be added.
+    final chained = setupState.overrides.chainProxy?.isActive == true;
+    final profileBase = !isCustom && !hasScript && !chained
         ? await _core.getProfileBase(profileId)
         : null;
     Map<String, dynamic> rawConfig = isCustom

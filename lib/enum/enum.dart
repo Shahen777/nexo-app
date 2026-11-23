@@ -818,6 +818,8 @@ extension RulePayloadErrorExt on RulePayloadError {
 
 enum ExtendType { standard, script }
 
+enum ChainProxyType { socks5, http }
+
 enum RuleTarget {
   DIRECT('DIRECT'),
   REJECT('REJECT'),

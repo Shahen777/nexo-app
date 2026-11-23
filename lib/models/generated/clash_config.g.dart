@@ -552,6 +552,32 @@ Map<String, dynamic> _$ProfileTunToJson(_ProfileTun instance) =>
       'exclude-dst-port': instance.excludeDstPort,
     };
 
+_ChainProxy _$ChainProxyFromJson(Map<String, dynamic> json) => _ChainProxy(
+  enabled: json['enabled'] as bool? ?? false,
+  type:
+      $enumDecodeNullable(_$ChainProxyTypeEnumMap, json['type']) ??
+      ChainProxyType.socks5,
+  server: json['server'] as String? ?? '',
+  port: (json['port'] as num?)?.toInt() ?? 0,
+  username: json['username'] as String? ?? '',
+  password: json['password'] as String? ?? '',
+);
+
+Map<String, dynamic> _$ChainProxyToJson(_ChainProxy instance) =>
+    <String, dynamic>{
+      'enabled': instance.enabled,
+      'type': _$ChainProxyTypeEnumMap[instance.type]!,
+      'server': instance.server,
+      'port': instance.port,
+      'username': instance.username,
+      'password': instance.password,
+    };
+
+const _$ChainProxyTypeEnumMap = {
+  ChainProxyType.socks5: 'socks5',
+  ChainProxyType.http: 'http',
+};
+
 _ProfileOverrides _$ProfileOverridesFromJson(Map<String, dynamic> json) =>
     _ProfileOverrides(
       dns: json['dns'] == null
@@ -588,6 +614,9 @@ _ProfileOverrides _$ProfileOverridesFromJson(Map<String, dynamic> json) =>
             ),
           ) ??
           const {},
+      chainProxy: json['chain-proxy'] == null
+          ? null
+          : ChainProxy.fromJson(json['chain-proxy'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ProfileOverridesToJson(_ProfileOverrides instance) =>
@@ -609,6 +638,7 @@ Map<String, dynamic> _$ProfileOverridesToJson(_ProfileOverrides instance) =>
           .map((e) => _$TunOverrideKeyEnumMap[e]!)
           .toList(),
       'proxy-providers': instance.proxyProviders,
+      'chain-proxy': instance.chainProxy,
     };
 
 const _$DnsOverrideKeyEnumMap = {

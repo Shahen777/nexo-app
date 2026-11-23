@@ -220,4 +220,17 @@ void main() {
       verifyNever(() => core.validateConfig(any()));
     });
   });
+
+  group('autoUpdateProfiles', () {
+    test(
+      'overlapping calls share one run and a later call starts anew',
+      () async {
+        final action = container.read(profilesActionProvider.notifier);
+        final first = action.autoUpdateProfiles();
+        expect(identical(action.autoUpdateProfiles(), first), isTrue);
+        await first;
+        expect(identical(action.autoUpdateProfiles(), first), isFalse);
+      },
+    );
+  });
 }

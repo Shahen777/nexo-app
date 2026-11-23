@@ -33,6 +33,26 @@ class NexoStrings {
   static const speedTesting = 'Проверяем скорость…';
   static const unavailable = 'Недоступен';
   static const unlimitedAccess = 'Доступ без срока';
+  static const subscription = 'Подписка';
+  static const refresh = 'Обновить';
+  static const refreshing = 'Обновляем…';
+  static const subscriptionRefreshed = 'Подписка обновлена';
+  static const neverRefreshed = 'Ещё не обновлялась';
+
+  static String refreshedAgo(String ago) => 'Обновлена ${ago.toLowerCase()}';
+
+  static const chainProxy = 'Свой прокси';
+  static const chainProxyHint = 'Выход в интернет с IP вашего прокси';
+  static const chainProxyAdd = 'Добавить';
+  static const chainProxyEdit = 'Изменить';
+  static const chainProxyLabel = 'Адрес прокси';
+  static const chainProxyExample = 'socks5://логин:пароль@1.2.3.4:1080';
+  static const chainProxyInvalid =
+      'Не похоже на прокси. Пример: socks5://логин:пароль@1.2.3.4:1080 или '
+      '1.2.3.4:1080:логин:пароль';
+  static const chainProxyEditTitle = 'Прокси (пустое поле — удалить)';
+
+  static String chainProxyVia(String server) => 'Через $server → прокси';
 
   static String currentServer(String name) => 'Сейчас: $name';
 

@@ -90,6 +90,11 @@ class _AppStateManagerState extends ConsumerState<AppStateManager>
     _updateVisible(state);
     if (state == AppLifecycleState.resumed) {
       unawaited(ref.read(locationPermissionsProvider.notifier).refresh());
+      if (globalState.isAttach) {
+        unawaited(
+          ref.read(profilesActionProvider.notifier).autoUpdateProfiles(),
+        );
+      }
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) {
           return;

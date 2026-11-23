@@ -4,9 +4,10 @@ import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/providers/providers.dart';
+import 'package:fl_clash/state.dart';
 import 'package:fl_clash/ui/icons/icons.dart';
-import 'package:fl_clash/ui/ui.dart';
 import 'package:fl_clash/views/proxies/card.dart';
+import 'package:fl_clash/widgets/widgets.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -110,8 +111,15 @@ class NexoHomeView extends ConsumerWidget {
                   ),
                   const SizedBox(height: 28),
                   const _ServerCard(),
+                  const _ServerPings(),
+                  const SizedBox(height: 16),
+                  _ChainProxyCard(profile: profile),
                   const SizedBox(height: 16),
                   _InfoRow(profile: profile),
+                  if (profile.type == ProfileType.url) ...[
+                    const SizedBox(height: 16),
+                    _SubscriptionCard(profile: profile),
+                  ],
                 ],
               ],
             ),
@@ -539,6 +547,233 @@ class _InfoRow extends ConsumerWidget {
                 traffic.up.shortTraffic.show,
               ),
               alignEnd: true,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ServerPings extends ConsumerStatefulWidget {
+  const _ServerPings();
+
+  @override
+  ConsumerState<_ServerPings> createState() => _ServerPingsState();
+}
+
+class _ServerPingsState extends ConsumerState<_ServerPings>
+    with WidgetsBindingObserver, ActivePollingMixin<_ServerPings> {
+  @override
+  Duration get pollInterval => const Duration(minutes: 5);
+
+  @override
+  Future<void> poll(PollGuard isCurrent) async {
+    if (ref.read(coreStatusProvider) != CoreStatus.connected) return;
+    await ref
+        .read(proxiesActionProvider.notifier)
+        .delayTestPageGroup(NexoStrings.appName, matchSearch: false);
+  }
+
+  @override
+  Widget build(BuildContext context) => const SizedBox.shrink();
+}
+
+class _ChainProxyCard extends ConsumerWidget {
+  const _ChainProxyCard({required this.profile});
+
+  final Profile profile;
+
+  void _save(WidgetRef ref, ChainProxy? chain) {
+    ref
+        .read(profilesProvider.notifier)
+        .updateProfile(
+          profile.id,
+          (profile) => profile.copyWith(
+            overrides: profile.overrides.copyWith(chainProxy: chain),
+          ),
+        );
+  }
+
+  Future<void> _edit(WidgetRef ref, ChainProxy? chain) async {
+    final text = await dialogs.showCommonDialog<String>(
+      child: InputDialog(
+        title: chain == null
+            ? NexoStrings.chainProxy
+            : NexoStrings.chainProxyEditTitle,
+        value: chain?.link ?? '',
+        labelText: NexoStrings.chainProxyLabel,
+        hintText: NexoStrings.chainProxyExample,
+        inputFormatters: [FilteringTextInputFormatter.singleLineFormatter],
+        validator: (value) {
+          final next = value?.trim() ?? '';
+          if (next.isEmpty && chain != null) return null;
+          return ChainProxy.tryParse(next) == null
+              ? NexoStrings.chainProxyInvalid
+              : null;
+        },
+      ),
+    );
+    if (text == null) return;
+    _save(ref, text.trim().isEmpty ? null : ChainProxy.tryParse(text));
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final chain = profile.overrides.chainProxy;
+    final entry = ref.watch(proxyNameProvider(NexoStrings.appName));
+    final secondary = _textColor(context).withValues(alpha: 0.58);
+    final subtitle = chain == null
+        ? NexoStrings.chainProxyHint
+        : chain.isActive
+        ? NexoStrings.chainProxyVia(
+            _serverTitle(entry ?? NexoStrings.automatic),
+          )
+        : chain.address;
+    return _NexoCard(
+      onPressed: () => _edit(ref, chain),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  NexoStrings.chainProxy,
+                  style: _manrope(
+                    context,
+                    AppTextStyle.footnote,
+                    weight: 500,
+                    color: secondary,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  chain?.address ?? NexoStrings.chainProxyAdd,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: _manrope(context, AppTextStyle.headline, weight: 650),
+                ),
+                const SizedBox(height: 3),
+                EmojiText(
+                  subtitle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: _manrope(
+                    context,
+                    AppTextStyle.footnote,
+                    weight: 500,
+                    color: secondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          if (chain == null)
+            GlyphIcon(
+              AppGlyphs.chevronForward,
+              size: 18,
+              color: _textColor(context).withValues(alpha: 0.42),
+            )
+          else
+            CommonSwitch(
+              value: chain.enabled,
+              semanticLabel: NexoStrings.chainProxy,
+              onChanged: (value) => _save(ref, chain.copyWith(enabled: value)),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SubscriptionCard extends ConsumerWidget {
+  const _SubscriptionCard({required this.profile});
+
+  final Profile profile;
+
+  Future<void> _refresh(WidgetRef ref) async {
+    final done = await globalState.loadingRun(() async {
+      await ref
+          .read(profilesActionProvider.notifier)
+          .updateProfile(profile, showLoading: true);
+      return true;
+    }, tag: LoadingTag.profiles);
+    if (done == true) {
+      dialogs.showNotifier(NexoStrings.subscriptionRefreshed);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final refreshing = ref.watch(
+      updatingKeysProvider.select((keys) => keys.contains(profile.updatingKey)),
+    );
+    final secondary = _textColor(context).withValues(alpha: 0.58);
+    final updatedAt = profile.lastUpdateDate;
+    return _NexoCard(
+      onPressed: refreshing ? null : () => _refresh(ref),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  NexoStrings.subscription,
+                  style: _manrope(
+                    context,
+                    AppTextStyle.footnote,
+                    weight: 500,
+                    color: secondary,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                if (refreshing)
+                  Text(
+                    NexoStrings.refreshing,
+                    style: _manrope(context, AppTextStyle.subheadline),
+                  )
+                else if (updatedAt == null)
+                  Text(
+                    NexoStrings.neverRefreshed,
+                    style: _manrope(context, AppTextStyle.subheadline),
+                  )
+                else
+                  TickBuilder(
+                    duration: const Duration(minutes: 1),
+                    builder: (context, _) => Text(
+                      NexoStrings.refreshedAgo(
+                        updatedAt.getLastUpdateTimeDesc(context),
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: _manrope(context, AppTextStyle.subheadline),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          SizedBox.square(
+            dimension: 22,
+            child: refreshing
+                ? const CommonCircleLoading(
+                    size: 22,
+                    color: _accent,
+                    semanticLabel: NexoStrings.refreshing,
+                  )
+                : const GlyphIcon(AppGlyphs.refresh, size: 22, color: _accent),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            NexoStrings.refresh,
+            style: _manrope(
+              context,
+              AppTextStyle.subheadline,
+              weight: 650,
+              color: refreshing ? secondary : _accent,
             ),
           ),
         ],

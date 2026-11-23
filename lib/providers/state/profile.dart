@@ -66,6 +66,7 @@ Future<SetupState> setupState(Ref ref, int? profileId) async {
               ),
               tun: state.tunOverride,
               tunOverrideKeys: state.tunOverrideKeys,
+              chainProxy: profile?.overrides.chainProxy,
             ),
           ),
         );

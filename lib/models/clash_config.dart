@@ -1626,6 +1626,103 @@ Map<String, Object?> _withLegacyTunOverride(Map<String, Object?> json) {
   };
 }
 
+/// The user's own proxy, reached through the server the profile selects, so
+/// that only our server's address is visible on the user's network.
+@freezed
+abstract class ChainProxy with _$ChainProxy {
+  const factory ChainProxy({
+    @Default(false) bool enabled,
+    @Default(ChainProxyType.socks5) ChainProxyType type,
+    @Default('') String server,
+    @Default(0) int port,
+    @Default('') String username,
+    @Default('') String password,
+  }) = _ChainProxy;
+
+  factory ChainProxy.fromJson(Map<String, Object?> json) =>
+      _$ChainProxyFromJson(json);
+
+  /// Reads `socks5://user:pass@host:port`, `http://…`, `user:pass@host:port`,
+  /// `host:port` and the sellers' `host:port:user:pass`; no scheme means SOCKS5.
+  static ChainProxy? tryParse(String input) {
+    final text = input.trim();
+    if (text.isEmpty || text.contains(RegExp(r'\s'))) return null;
+    final scheme = RegExp(r'^([a-zA-Z0-9]+)://').firstMatch(text)?.group(1);
+    final type = switch (scheme?.toLowerCase()) {
+      null || 'socks5' || 'socks5h' || 'socks' => ChainProxyType.socks5,
+      'http' => ChainProxyType.http,
+      _ => null,
+    };
+    if (type == null) return null;
+    final rest = scheme == null ? text : text.substring(scheme.length + 3);
+    final parts = rest.split(':');
+    if (scheme == null && !rest.contains('@') && parts.length == 4) {
+      return _of(type, parts[0], parts[1], parts[2], parts[3]);
+    }
+    final uri = Uri.tryParse('scheme://$rest');
+    if (uri == null || uri.path.replaceAll('/', '').isNotEmpty) return null;
+    final (user, pass) = switch (uri.userInfo.indexOf(':')) {
+      -1 => (uri.userInfo, ''),
+      final i => (uri.userInfo.substring(0, i), uri.userInfo.substring(i + 1)),
+    };
+    return _of(
+      type,
+      uri.host,
+      uri.hasPort ? '${uri.port}' : '',
+      Uri.decodeComponent(user),
+      Uri.decodeComponent(pass),
+    );
+  }
+
+  static ChainProxy? _of(
+    ChainProxyType type,
+    String server,
+    String port,
+    String username,
+    String password,
+  ) {
+    final number = int.tryParse(port);
+    if (server.isEmpty || number == null || number < 1 || number > 65535) {
+      return null;
+    }
+    return ChainProxy(
+      enabled: true,
+      type: type,
+      server: server,
+      port: number,
+      username: username,
+      password: password,
+    );
+  }
+}
+
+const chainProxyName = 'Мой прокси';
+
+extension ChainProxyExt on ChainProxy {
+  bool get isActive => enabled && server.isNotEmpty && port > 0;
+
+  String get address => '$server:$port';
+
+  String get link {
+    final auth = username.isEmpty && password.isEmpty
+        ? ''
+        : '${Uri.encodeComponent(username)}:'
+              '${Uri.encodeComponent(password)}@';
+    return '${type.name}://$auth$address';
+  }
+
+  Map<String, dynamic> definition(String dialer) => {
+    'name': chainProxyName,
+    'type': type.name,
+    'server': server,
+    'port': port,
+    if (username.isNotEmpty) 'username': username,
+    if (password.isNotEmpty) 'password': password,
+    if (type == ChainProxyType.socks5) 'udp': true,
+    'dialer-proxy': dialer,
+  };
+}
+
 @freezed
 abstract class ProfileOverrides with _$ProfileOverrides {
   const factory ProfileOverrides({
@@ -1655,6 +1752,7 @@ abstract class ProfileOverrides with _$ProfileOverrides {
     @Default({})
     @JsonKey(name: 'proxy-providers')
     Map<String, ProxyProviderOptions> proxyProviders,
+    @JsonKey(name: 'chain-proxy') ChainProxy? chainProxy,
   }) = _ProfileOverrides;
 
   factory ProfileOverrides.fromJson(Map<String, Object?> json) =>

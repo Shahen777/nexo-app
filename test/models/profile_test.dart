@@ -51,6 +51,23 @@ void main() {
     });
   });
 
+  group('updateIntervalOf', () {
+    test('reads the profile-update-interval header as hours', () {
+      expect(updateIntervalOf('1'), const Duration(hours: 1));
+      expect(updateIntervalOf(' 24 '), const Duration(hours: 24));
+      expect(updateIntervalOf('0.5'), const Duration(minutes: 30));
+    });
+
+    test('ignores missing, invalid, and non-positive values', () {
+      expect(updateIntervalOf(null), isNull);
+      expect(updateIntervalOf(''), isNull);
+      expect(updateIntervalOf('soon'), isNull);
+      expect(updateIntervalOf('0'), isNull);
+      expect(updateIntervalOf('-3'), isNull);
+      expect(updateIntervalOf('Infinity'), isNull);
+    });
+  });
+
   group('Profile factories', () {
     test('normal takes its type from whether it has a url', () {
       expect(Profile.normal().type, ProfileType.file);

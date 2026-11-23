@@ -108,6 +108,49 @@ String? lastMatchTarget(List<String> rules) {
   return null;
 }
 
+const _chainEntryGroup = 'Nexo';
+
+/// Without an entry group or proxied MATCH to dial through, nothing changes.
+@visibleForTesting
+List<String> applyChainProxy(
+  Map rawConfig,
+  List<String> rules,
+  ChainProxy chain,
+) {
+  final builtins = {for (final target in RuleTarget.values) target.value};
+  final groups = [
+    for (final group in rawConfig['proxy-groups'] as List? ?? const [])
+      if (group is Map) group['name'],
+  ];
+  final match = lastMatchTarget(rules);
+  final entry = groups.contains(_chainEntryGroup)
+      ? _chainEntryGroup
+      : match != null && !builtins.contains(match)
+      ? match
+      : null;
+  if (entry == null) return rules;
+  rawConfig['proxies'] = [
+    ...?rawConfig['proxies'] as List?,
+    chain.definition(entry),
+  ];
+  return [for (final rule in rules) _retarget(rule, builtins) ?? rule];
+}
+
+String? _retarget(String rule, Set<String> builtins) {
+  final parsed = Rule.parse(rule);
+  final target = parsed.ruleTarget;
+  if (target == null || builtins.contains(target.toUpperCase())) return null;
+  final fields = rule.split(',');
+  final index = parsed.ruleAction == RuleAction.MATCH
+      ? 1
+      : parsed.ruleAction.hasCommaPayload
+      ? fields.length - 1
+      : 2;
+  if (index >= fields.length || fields[index].trim() != target) return null;
+  fields[index] = chainProxyName;
+  return fields.join(',');
+}
+
 Future<RealProfile> makeRealProfileTask(MakeRealProfileState data) async {
   return compute<MakeRealProfileState, RealProfile>(_makeRealProfileTask, data);
 }
@@ -368,6 +411,9 @@ Future<RealProfile> _makeRealProfileTask(MakeRealProfileState data) async {
     rawConfig['proxy-groups'] = data.proxyGroups
         .map((item) => item.definition)
         .toList();
+  }
+  if (overrides.chainProxy case final chain? when chain.isActive) {
+    rules = applyChainProxy(rawConfig, rules, chain);
   }
   rawConfig['rules'] = rules;
   final yaml = await _encodeYaml(Map<String, dynamic>.from(rawConfig));
