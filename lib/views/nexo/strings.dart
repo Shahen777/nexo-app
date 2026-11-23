@@ -6,6 +6,7 @@ class NexoStrings {
 
   static const appName = 'Nexo';
   static const settings = 'Настройки';
+  static const checkForUpdates = 'Проверить обновления';
   static const advanced = 'Расширенные';
   static const proxies = 'Серверы и группы';
   static const profiles = 'Ключи доступа';

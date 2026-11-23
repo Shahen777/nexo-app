@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/l10n/l10n.dart';
 import 'package:fl_clash/providers/providers.dart';
@@ -49,6 +51,7 @@ class _ToolViewState extends ConsumerState<ToolsView> {
     return generateSection(
       title: appLocalizations.settings,
       items: [
+        const _CheckUpdateItem(),
         const _LocaleItem(),
         const _ThemeItem(),
         const _BackupItem(),
@@ -155,6 +158,21 @@ class _AdvancedPageItem extends StatelessWidget {
       leading: GlyphIcon(glyph),
       title: Text(title),
       widget: page,
+    );
+  }
+}
+
+class _CheckUpdateItem extends ConsumerWidget {
+  const _CheckUpdateItem();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ListItem(
+      leading: const GlyphIcon(AppGlyphs.sync),
+      title: const Text(NexoStrings.checkForUpdates),
+      onTap: () {
+        unawaited(ref.read(commonActionProvider.notifier).userCheckForUpdate());
+      },
     );
   }
 }
