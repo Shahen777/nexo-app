@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.0.2 (2026-11-23)
+
+**Bug Fixes**
+
+- **nexo** Автовыбор can be picked again on phones, and the own proxy moved to Settings (9b8c021)
+
 ## v1.0.1 (2026-11-23)
 
 **Features**

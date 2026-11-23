@@ -2,6 +2,24 @@
   "schemaVersion": 2,
   "versions": [
     {
+      "version": "1.0.2",
+      "tag": "v1.0.2",
+      "date": "2026-11-23",
+      "prerelease": false,
+      "groups": [
+        {
+          "type": "fix",
+          "entries": [
+            {
+              "id": "9b8c021",
+              "scope": "nexo",
+              "text": "Автовыбор can be picked again on phones, and the own proxy moved to Settings"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "version": "1.0.1",
       "tag": "v1.0.1",
       "date": "2026-11-23",
