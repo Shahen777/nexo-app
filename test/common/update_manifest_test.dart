@@ -179,16 +179,38 @@ void main() {
   });
 
   group('mirror urls', () {
-    test('asks the mirror first and keeps GitHub as the fallback', () {
+    test('asks a custom mirror, then ours, and keeps GitHub last', () {
       expect(
         manifestCandidateUrls(
-          mirrorBase: 'https://nl.bingod.ru:9443/latest.json/',
+          mirrorBase: 'https://files.example/latest.json/',
           repository: 'Shahen777/nexo-app',
         ),
         [
+          'https://files.example/latest.json',
+          'https://app.bingod.ru/latest.json',
           'https://nl.bingod.ru:9443/latest.json',
           'https://github.com/Shahen777/nexo-app/releases/latest/download/latest.json',
         ],
+      );
+    });
+
+    test('the NL mirror saved by 1.0.0 goes after Cloudflare', () {
+      expect(
+        manifestCandidateUrls(
+          mirrorBase: 'https://nl.bingod.ru:9443',
+          repository: 'Shahen777/nexo-app',
+        ).take(2),
+        [
+          'https://app.bingod.ru/latest.json',
+          'https://nl.bingod.ru:9443/latest.json',
+        ],
+      );
+      expect(
+        manifestCandidateUrls(
+          mirrorBase: '',
+          repository: 'Shahen777/nexo-app',
+        ).first,
+        'https://app.bingod.ru/latest.json',
       );
       expect(normalizeMirrorBase(''), isNull);
       expect(normalizeMirrorBase('ftp://files.example'), isNull);
@@ -205,6 +227,7 @@ void main() {
           tag: 'v1.4.0',
         ),
         [
+          'https://app.bingod.ru/Nexo-1.4.0-android.apk',
           'https://nl.bingod.ru:9443/Nexo-1.4.0-android.apk',
           'https://github.com/Shahen777/nexo-app/releases/download/v1.4.0/Nexo-1.4.0-android.apk',
         ],

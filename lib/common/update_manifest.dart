@@ -1,7 +1,22 @@
 import 'dart:ffi';
 import 'dart:io';
 
-const defaultUpdateMirror = 'https://nl.bingod.ru:9443';
+/// Ours, in the order to try them: Cloudflare stays reachable where the NL
+/// server's own address is blocked. A custom mirror is asked before them.
+const builtInUpdateMirrors = [
+  'https://app.bingod.ru',
+  'https://nl.bingod.ru:9443',
+];
+
+const defaultUpdateMirror = 'https://app.bingod.ru';
+
+List<String> _mirrorBases(String? mirrorBase) {
+  final custom = normalizeMirrorBase(mirrorBase);
+  return [
+    if (custom != null && !builtInUpdateMirrors.contains(custom)) custom,
+    ...builtInUpdateMirrors,
+  ];
+}
 
 const _sha256Pattern = r'^[0-9a-fA-F]{64}$';
 
@@ -77,9 +92,9 @@ List<String> manifestCandidateUrls({
   required String? mirrorBase,
   required String repository,
 }) {
-  final urls = <String>[];
-  final mirror = normalizeMirrorBase(mirrorBase);
-  if (mirror != null) urls.add('$mirror/latest.json');
+  final urls = [
+    for (final mirror in _mirrorBases(mirrorBase)) '$mirror/latest.json',
+  ];
   urls.add(
     'https://github.com/$repository/releases/latest/download/latest.json',
   );
@@ -95,9 +110,10 @@ List<String> assetDownloadUrls({
 }) {
   final safeName = releaseFileName(name);
   final urls = <String>[];
-  final mirror = normalizeMirrorBase(mirrorBase);
-  if (mirror != null && safeName != null) {
-    urls.add('$mirror/${Uri.encodeComponent(safeName)}');
+  if (safeName != null) {
+    for (final mirror in _mirrorBases(mirrorBase)) {
+      urls.add('$mirror/${Uri.encodeComponent(safeName)}');
+    }
   }
   if (url.trim().isNotEmpty) urls.add(url.trim());
   if (safeName != null && tag.trim().isNotEmpty) {
