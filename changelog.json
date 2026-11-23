@@ -2,14 +2,82 @@
   "schemaVersion": 2,
   "versions": [
     {
-      "version": "0.9.2",
-      "tag": "v0.9.2",
-      "date": "2026-10-24",
+      "version": "1.0.1",
+      "tag": "v1.0.1",
+      "date": "2026-11-23",
       "prerelease": false,
       "groups": [
         {
           "type": "feat",
           "entries": [
+            {
+              "id": "40fbadd",
+              "scope": "nexo",
+              "text": "Refresh the subscription from the home screen, follow the server's update interval, and route traffic through your own proxy behind a Nexo server"
+            },
+            {
+              "id": "e59a573",
+              "scope": "ios",
+              "text": "Add the iOS app with a packet tunnel extension"
+            },
+            {
+              "id": "2e5f221",
+              "scope": "core",
+              "text": "Build the mobile core for ios"
+            }
+          ]
+        },
+        {
+          "type": "fix",
+          "entries": [
+            {
+              "id": "29e00b2",
+              "scope": "update",
+              "text": "Updates download from a mirror that stays reachable in Russia"
+            },
+            {
+              "id": "bbdf5c4",
+              "scope": "ios",
+              "text": "Match the gomobile signature of resolvePackage"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "tag": "v1.0.0",
+      "date": "2026-11-17",
+      "prerelease": false,
+      "groups": [
+        {
+          "type": "breaking",
+          "entries": [
+            {
+              "id": "cb08088",
+              "scope": "network",
+              "text": "Desktop TUN keys follow the profile unless picked; changed values carry over"
+            },
+            {
+              "id": "491fae1",
+              "scope": "views",
+              "text": "DNS and NTP override toggles are removed; picked keys apply to every profile"
+            },
+            {
+              "id": "1677024",
+              "scope": "database",
+              "text": "Custom overwrites are removed; rebuild them as custom profiles"
+            }
+          ]
+        },
+        {
+          "type": "feat",
+          "entries": [
+            {
+              "id": "d2f361d",
+              "scope": "update",
+              "text": "In-app updates from a mirror, with public GitHub downloads"
+            },
             {
               "id": "e8aac17",
               "scope": "access",
@@ -73,50 +141,7 @@
               "id": "09e7e56",
               "scope": "core",
               "text": "Clear the DNS cache by hand or on network change"
-            }
-          ]
-        },
-        {
-          "type": "fix",
-          "entries": [
-            {
-              "id": "99b3381",
-              "scope": "android",
-              "text": "Opening the app no longer reloads a running VPN"
-            }
-          ]
-        },
-        {
-          "type": "perf",
-          "entries": [
-            {
-              "id": "7035edd",
-              "scope": "editor",
-              "text": "Smoother editor for large files and in sheets"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "version": "0.9.1",
-      "tag": "v0.9.1",
-      "date": "2026-10-17",
-      "prerelease": false,
-      "groups": [
-        {
-          "type": "breaking",
-          "entries": [
-            {
-              "id": "cb08088",
-              "scope": "network",
-              "text": "Desktop TUN keys follow the profile unless picked; changed values carry over"
-            }
-          ]
-        },
-        {
-          "type": "feat",
-          "entries": [
+            },
             {
               "id": "f43755c",
               "scope": "l10n",
@@ -166,60 +191,7 @@
               "id": "9bd2286",
               "scope": "ui",
               "text": "iOS-style surfaces, alerts and sheets; clearer TV focus"
-            }
-          ]
-        },
-        {
-          "type": "fix",
-          "entries": [
-            {
-              "id": "5607f70",
-              "scope": "ui",
-              "text": "Fix pasting and Chinese input in text fields"
             },
-            {
-              "id": "5984c16",
-              "scope": "core",
-              "text": "Large profiles no longer crash; downloads trust core CAs"
-            }
-          ]
-        },
-        {
-          "type": "perf",
-          "entries": [
-            {
-              "id": "2201c19",
-              "scope": "android",
-              "text": "Smoother Android UI while the proxy is busy"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "version": "0.9.0",
-      "tag": "v0.9.0",
-      "date": "2026-10-14",
-      "prerelease": false,
-      "groups": [
-        {
-          "type": "breaking",
-          "entries": [
-            {
-              "id": "491fae1",
-              "scope": "views",
-              "text": "DNS and NTP override toggles are removed; picked keys apply to every profile"
-            },
-            {
-              "id": "1677024",
-              "scope": "database",
-              "text": "Custom overwrites are removed; rebuild them as custom profiles"
-            }
-          ]
-        },
-        {
-          "type": "feat",
-          "entries": [
             {
               "id": "491fae1",
               "scope": "views",
@@ -249,40 +221,7 @@
               "id": "2fa2f7f",
               "scope": "core",
               "text": "Share link import and mrs rule sets"
-            }
-          ]
-        },
-        {
-          "type": "fix",
-          "entries": [
-            {
-              "id": "1677024",
-              "scope": "database",
-              "text": "Unreadable settings no longer block startup or restores"
             },
-            {
-              "id": "94a25f4",
-              "scope": "desktop",
-              "text": "Windows and Linux desktop fixes"
-            },
-            {
-              "id": "d780cb8",
-              "scope": "core,helper",
-              "text": "The elevated Core only answers its owner"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "version": "0.8.99",
-      "tag": "v0.8.99",
-      "date": "2026-10-03",
-      "prerelease": false,
-      "groups": [
-        {
-          "type": "feat",
-          "entries": [
             {
               "id": "e131675",
               "scope": "editor",
@@ -327,73 +266,7 @@
               "id": "1e97716",
               "scope": "platform",
               "text": "Tray hotkeys, node delays and a delay test"
-            }
-          ]
-        },
-        {
-          "type": "fix",
-          "entries": [
-            {
-              "id": "ff23f30",
-              "scope": "core",
-              "text": "A changed resource link is now used by the next sync and by auto update"
             },
-            {
-              "id": "e55f6d1",
-              "scope": "core",
-              "text": "DNS lookups no longer fail on networks that report no DNS servers"
-            },
-            {
-              "id": "786a6ab",
-              "scope": "proxies",
-              "text": "Smaller icons in icon-only group headers"
-            },
-            {
-              "id": "1e9955d",
-              "scope": "core,android",
-              "text": "Push notifications reconnect in Doze"
-            },
-            {
-              "id": "bee8f24",
-              "scope": "backup,database",
-              "text": "Restores never apply halfway"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "version": "0.8.98",
-      "tag": "v0.8.98",
-      "date": "2026-09-14",
-      "prerelease": false,
-      "groups": [
-        {
-          "type": "fix",
-          "entries": [
-            {
-              "id": "c5bf5bd",
-              "scope": "resources",
-              "text": "Refresh the geo file size and time after an update finishes"
-            },
-            {
-              "id": "60f371a",
-              "scope": "core",
-              "text": "Keep the core running while Windows sleeps with the app suspended"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "version": "0.8.97",
-      "tag": "v0.8.97",
-      "date": "2026-09-10",
-      "prerelease": false,
-      "groups": [
-        {
-          "type": "feat",
-          "entries": [
             {
               "id": "26cfbaf",
               "scope": "ui",
@@ -423,6 +296,96 @@
               "id": "c6eaa0a",
               "scope": "core",
               "text": "Rework the core IPC and process lifecycle"
+            }
+          ]
+        },
+        {
+          "type": "fix",
+          "entries": [
+            {
+              "id": "646485f",
+              "scope": "update",
+              "text": "Stable updates skip prereleases and match the installed package"
+            },
+            {
+              "id": "99b3381",
+              "scope": "android",
+              "text": "Opening the app no longer reloads a running VPN"
+            },
+            {
+              "id": "5607f70",
+              "scope": "ui",
+              "text": "Fix pasting and Chinese input in text fields"
+            },
+            {
+              "id": "5984c16",
+              "scope": "core",
+              "text": "Large profiles no longer crash; downloads trust core CAs"
+            },
+            {
+              "id": "1677024",
+              "scope": "database",
+              "text": "Unreadable settings no longer block startup or restores"
+            },
+            {
+              "id": "94a25f4",
+              "scope": "desktop",
+              "text": "Windows and Linux desktop fixes"
+            },
+            {
+              "id": "d780cb8",
+              "scope": "core,helper",
+              "text": "The elevated Core only answers its owner"
+            },
+            {
+              "id": "ff23f30",
+              "scope": "core",
+              "text": "A changed resource link is now used by the next sync and by auto update"
+            },
+            {
+              "id": "e55f6d1",
+              "scope": "core",
+              "text": "DNS lookups no longer fail on networks that report no DNS servers"
+            },
+            {
+              "id": "786a6ab",
+              "scope": "proxies",
+              "text": "Smaller icons in icon-only group headers"
+            },
+            {
+              "id": "1e9955d",
+              "scope": "core,android",
+              "text": "Push notifications reconnect in Doze"
+            },
+            {
+              "id": "bee8f24",
+              "scope": "backup,database",
+              "text": "Restores never apply halfway"
+            },
+            {
+              "id": "c5bf5bd",
+              "scope": "resources",
+              "text": "Refresh the geo file size and time after an update finishes"
+            },
+            {
+              "id": "60f371a",
+              "scope": "core",
+              "text": "Keep the core running while Windows sleeps with the app suspended"
+            }
+          ]
+        },
+        {
+          "type": "perf",
+          "entries": [
+            {
+              "id": "7035edd",
+              "scope": "editor",
+              "text": "Smoother editor for large files and in sheets"
+            },
+            {
+              "id": "2201c19",
+              "scope": "android",
+              "text": "Smoother Android UI while the proxy is busy"
             }
           ]
         }
