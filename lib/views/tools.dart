@@ -13,6 +13,7 @@ import 'package:fl_clash/views/config/general.dart';
 import 'package:fl_clash/views/dns_queries.dart';
 import 'package:fl_clash/views/hotkey.dart';
 import 'package:fl_clash/views/logs.dart';
+import 'package:fl_clash/views/nexo/chain_proxy.dart';
 import 'package:fl_clash/views/nexo/strings.dart';
 import 'package:fl_clash/views/profiles/profiles.dart';
 import 'package:fl_clash/views/proxies/proxies.dart';
@@ -52,6 +53,7 @@ class _ToolViewState extends ConsumerState<ToolsView> {
       title: appLocalizations.settings,
       items: [
         const _CheckUpdateItem(),
+        const ChainProxyItem(),
         const _LocaleItem(),
         const _ThemeItem(),
         const _BackupItem(),

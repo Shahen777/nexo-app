@@ -113,8 +113,6 @@ class NexoHomeView extends ConsumerWidget {
                   const _ServerCard(),
                   const _ServerPings(),
                   const SizedBox(height: 16),
-                  _ChainProxyCard(profile: profile),
-                  const SizedBox(height: 16),
                   _InfoRow(profile: profile),
                   if (profile.type == ProfileType.url) ...[
                     const SizedBox(height: 16),
@@ -382,7 +380,7 @@ class _ServerPicker extends ConsumerWidget {
       backgroundColor: _pageColor(context),
       body: ListView(
         shrinkWrap: true,
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+        padding: EdgeInsets.fromLTRB(16, context.contentTopPadding, 16, 16),
         children: [
           for (final proxy in proxies)
             _ServerPickerRow(
@@ -577,115 +575,6 @@ class _ServerPingsState extends ConsumerState<_ServerPings>
 
   @override
   Widget build(BuildContext context) => const SizedBox.shrink();
-}
-
-class _ChainProxyCard extends ConsumerWidget {
-  const _ChainProxyCard({required this.profile});
-
-  final Profile profile;
-
-  void _save(WidgetRef ref, ChainProxy? chain) {
-    ref
-        .read(profilesProvider.notifier)
-        .updateProfile(
-          profile.id,
-          (profile) => profile.copyWith(
-            overrides: profile.overrides.copyWith(chainProxy: chain),
-          ),
-        );
-  }
-
-  Future<void> _edit(WidgetRef ref, ChainProxy? chain) async {
-    final text = await dialogs.showCommonDialog<String>(
-      child: InputDialog(
-        title: chain == null
-            ? NexoStrings.chainProxy
-            : NexoStrings.chainProxyEditTitle,
-        value: chain?.link ?? '',
-        labelText: NexoStrings.chainProxyLabel,
-        hintText: NexoStrings.chainProxyExample,
-        inputFormatters: [FilteringTextInputFormatter.singleLineFormatter],
-        validator: (value) {
-          final next = value?.trim() ?? '';
-          if (next.isEmpty && chain != null) return null;
-          return ChainProxy.tryParse(next) == null
-              ? NexoStrings.chainProxyInvalid
-              : null;
-        },
-      ),
-    );
-    if (text == null) return;
-    _save(ref, text.trim().isEmpty ? null : ChainProxy.tryParse(text));
-  }
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final chain = profile.overrides.chainProxy;
-    final entry = ref.watch(proxyNameProvider(NexoStrings.appName));
-    final secondary = _textColor(context).withValues(alpha: 0.58);
-    final subtitle = chain == null
-        ? NexoStrings.chainProxyHint
-        : chain.isActive
-        ? NexoStrings.chainProxyVia(
-            _serverTitle(entry ?? NexoStrings.automatic),
-          )
-        : chain.address;
-    return _NexoCard(
-      onPressed: () => _edit(ref, chain),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  NexoStrings.chainProxy,
-                  style: _manrope(
-                    context,
-                    AppTextStyle.footnote,
-                    weight: 500,
-                    color: secondary,
-                  ),
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  chain?.address ?? NexoStrings.chainProxyAdd,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: _manrope(context, AppTextStyle.headline, weight: 650),
-                ),
-                const SizedBox(height: 3),
-                EmojiText(
-                  subtitle,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: _manrope(
-                    context,
-                    AppTextStyle.footnote,
-                    weight: 500,
-                    color: secondary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 12),
-          if (chain == null)
-            GlyphIcon(
-              AppGlyphs.chevronForward,
-              size: 18,
-              color: _textColor(context).withValues(alpha: 0.42),
-            )
-          else
-            CommonSwitch(
-              value: chain.enabled,
-              semanticLabel: NexoStrings.chainProxy,
-              onChanged: (value) => _save(ref, chain.copyWith(enabled: value)),
-            ),
-        ],
-      ),
-    );
-  }
 }
 
 class _SubscriptionCard extends ConsumerWidget {

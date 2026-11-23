@@ -294,6 +294,56 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('on a phone the picker keeps Автовыбор below its title', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    const server = '🇦🇹 Вена Fast';
+    const group = Group(
+      name: 'Nexo',
+      type: GroupType.Selector,
+      now: server,
+      all: [
+        Proxy(name: 'Автовыбор', type: 'URLTest', now: server),
+        Proxy(name: server, type: 'Direct'),
+      ],
+    );
+    final container = ProviderContainer(
+      overrides: [
+        currentProfileProvider.overrideWithValue(
+          Profile.normal().copyWith(selectedMap: {'Nexo': server}),
+        ),
+        groupsProvider.overrideWithValue([group]),
+      ],
+    );
+    addTearDown(container.dispose);
+    globalState.container = container;
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const TestApp(child: NexoHomeView()),
+      ),
+    );
+    await tester.pump();
+    await tester.tap(find.text('Сервер'));
+    await tester.pumpAndSettle();
+
+    final title = tester.getRect(find.text('Выберите сервер'));
+    final automatic = find.byWidgetPredicate(
+      (widget) => widget is EmojiText && widget.text == 'Автовыбор',
+    );
+    expect(
+      tester.getRect(automatic.last).top,
+      greaterThanOrEqualTo(title.bottom),
+    );
+    expect(automatic.last.hitTestable(), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('proxies renders populated tab and list layouts', (tester) async {
     tester.view.physicalSize = const Size(1400, 1000);
     tester.view.devicePixelRatio = 1;
